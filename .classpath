@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/corretto-1.8"/>
+	<classpathentry kind="src" path="/CPSC304Project/resources"/>
+	<classpathentry kind="src" path="/CPSC304Project/src"/>
+	<classpathentry kind="src" path="/CPSC304Project/src/test"/>
+	<classpathentry exported="true" kind="lib" path="/CPSC304Project/resources/ojdbc8.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

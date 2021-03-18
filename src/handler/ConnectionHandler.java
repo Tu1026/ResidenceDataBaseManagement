@@ -1,12 +1,13 @@
 package handler;
 
 import model.ConnectionState;
+import oracle.jdbc.driver.OracleDriver;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class ConnectionHandler {
+public final class ConnectionHandler {
     private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
     private Connection connection;
     private static boolean isLoggedIn = false;
@@ -16,9 +17,9 @@ public class ConnectionHandler {
         try {
             // Load the Oracle JDBC driver
             // Note that the path could change for new drivers
-            DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+            DriverManager.registerDriver(new OracleDriver());
         } catch (SQLException e) {
-            System.out.println("Error: initializing oracle library: " + e.getMessage());
+            System.out.println("Error initializing oracle library: " + e.getMessage());
         }
     }
 
