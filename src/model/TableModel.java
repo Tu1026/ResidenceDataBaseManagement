@@ -1,21 +1,20 @@
 package model;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public class TableModel {
-    private final List<String> columnNames;
+public final class TableModel {
+    private final Set<String> columnNames;
 
 
-    public TableModel(List<String> columnNames){
-        this.columnNames = columnNames;
+    public TableModel(String [] columnNames){
+        this.columnNames = new LinkedHashSet<>(Arrays.asList(columnNames));
     }
 
-    public List<String> getColumnNames() {
-        return Collections.unmodifiableList(columnNames);
+    public final Set<String> getColumnNames() {
+        return (Collections.unmodifiableSet(columnNames));
     }
 
-    public int getNumColumns(){
+    public final int getNumColumns(){
         return columnNames.size();
     }
 }

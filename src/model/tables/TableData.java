@@ -7,12 +7,12 @@ import java.util.Map;
 
 public abstract class TableData {
 
-    private TableModel model;
+    private final TableModel model;
     private Map<String, String> data;
 
 
     public TableData(String [] columnNames){
-        model = new TableModel(Arrays.asList(columnNames));
+        model = new TableModel(columnNames);
     }
 
     protected final void setData(Map<String, String> data){
