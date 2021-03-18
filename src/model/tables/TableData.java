@@ -1,8 +1,6 @@
 package model.tables;
 
 import model.TableModel;
-
-import java.util.Arrays;
 import java.util.Map;
 
 public abstract class TableData {
