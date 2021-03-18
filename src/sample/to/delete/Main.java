@@ -1,4 +1,4 @@
-package sample;
+package sample.to.delete;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
