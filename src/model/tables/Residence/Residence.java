@@ -1,8 +1,8 @@
 package model.tables.Residence;
 
-import model.TableData;
 import model.tables.BuildingManager;
 import model.tables.ResidentialManagingOffice;
+import model.tables.TableData;
 
 import java.util.HashMap;
 import java.util.Map;

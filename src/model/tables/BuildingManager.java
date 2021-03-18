@@ -1,7 +1,5 @@
 package model.tables;
 
-import model.TableData;
-
 import java.util.HashMap;
 import java.util.Map;
 
