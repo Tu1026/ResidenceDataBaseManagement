@@ -20,8 +20,13 @@ public class Main extends Application {
            System.exit(1);
         }
 
-        new Controller().login(username, password);
+        Controller controller = new Controller();
+        controller.login(username, password);
         // should print "<username> logged in to oracle"
+        controller.initializeSQLDDL();
+        // should print dropped tables and 13 tables created
+        controller.logout();
+
         System.exit(0);
     }
 
