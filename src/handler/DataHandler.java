@@ -27,28 +27,16 @@ public class DataHandler {
 
     public void initializeDDL() {
         dropAllTablesIfExist();
-        Statement stmt = null;
-        try {
 
-            List<String> ddlStatements = parseDDL();
-            for (String ddlStatement : ddlStatements) {
-                stmt = connection.createStatement();
+        List<String> ddlStatements = parseDDL();
+        for (String ddlStatement : ddlStatements) {
+            try (Statement stmt = connection.createStatement()) {
                 stmt.execute(ddlStatement);
-            }
-
-            System.out.println(ddlStatements.size() + " tables created. Check oracle sidebar to make sure they are present");
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
         }
+        System.out.println(ddlStatements.size() + " tables created. Check oracle sidebar to make sure they are present");
     }
 
     private List<String> parseDDL() {
@@ -56,53 +44,51 @@ public class DataHandler {
         String delim = ";";
 
         try (Scanner scanner = new Scanner(new File(DDL_FILE))) {
+            StringBuilder sqlStatementString = new StringBuilder();
             while (scanner.hasNextLine()) {
-                StringBuilder stmt = new StringBuilder();
-                while (scanner.hasNextLine()) {
-                    String nextLine = scanner.nextLine().trim();
-                    if (!nextLine.equals("") && !(nextLine.contains("--"))) {
-                        stmt.append(nextLine.replaceAll("\\s+", " "));
-
-                    }
-                    if (stmt.toString().contains(delim)) {
-                        statements.add(stmt.toString().replaceAll(";", ""));
-                        break;
-                    }
+                String nextLine = scanner.nextLine().trim();
+                if (lineHasDataNotAComment(nextLine)) {
+                    sqlStatementString.append(nextLine.replaceAll("\\s+", " ")); // replace all whitespace chars by single space
+                }
+                if (sqlStatementString.toString().contains(delim)) {
+                    statements.add(sqlStatementString.toString().replaceAll(delim, ""));
+                    sqlStatementString = new StringBuilder();
                 }
             }
-
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return statements;
     }
 
+    private boolean lineHasDataNotAComment(String line) {
+        return !line.equals("") && !(line.contains("--"));
+    }
+
 
     private void dropAllTablesIfExist() {
-
-        Set<String> currentTables = new HashSet<>();
+        Set<String> tableNames = TableNames.TABLE_NAMES;
 
         try (Statement stmt = connection.createStatement()) {
-            try (ResultSet resultSet = stmt.executeQuery("SELECT table_name FROM user_tables")){
+            try (ResultSet resultSet = stmt.executeQuery("SELECT table_name FROM user_tables")) { // selects all tables
                 while (resultSet.next()) {
-                    currentTables.add(resultSet.getString(1).toUpperCase());
+                    String tableName = resultSet.getString(1).toUpperCase();
+                    if (tableNames.contains(tableName)) {
+                        forceDropSpecifiedTable(tableName);
+                    }
                 }
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
 
-        Set<String> tableNames = TableNames.getTableNames();
-        for (String tableName: currentTables) {
-            try (Statement stmt = connection.createStatement()) {
-                if (tableNames.contains(tableName)) {
-                    stmt.execute("DROP TABLE " + tableName + " CASCADE CONSTRAINTS ");
-                    System.out.println(tableName + " table dropped");
-                }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+    private void forceDropSpecifiedTable(String tableName) {
+        try (Statement stmt = connection.createStatement()) {
+                stmt.execute("DROP TABLE " + tableName + " CASCADE CONSTRAINTS "); // Drop tables, ignore any constraints for deletion
+                System.out.println(tableName + " table dropped");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 }
