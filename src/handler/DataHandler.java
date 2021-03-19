@@ -51,7 +51,7 @@ public final class DataHandler {
 
         try (Statement stmt = connection.createStatement()) {
             try (ResultSet resultSet = stmt.executeQuery("SELECT table_name FROM user_tables")) { // selects all tables
-                while (resultSet.next()) { //
+                while (resultSet.next()) {
                     String tableName = resultSet.getString(1).toUpperCase();
                     if (tableNames.contains(tableName)) {
                         forceDropSpecifiedTable(tableName);
