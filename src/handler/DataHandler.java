@@ -22,7 +22,7 @@ public final class DataHandler {
 
     public void setConnection(Connection connection) {
         this.connection = connection;
-        initializeDDL();
+        initializeDDL(); // TODO: have this be called by the controller if the option is set by the user
     }
 
     public void initializeDDL() {
