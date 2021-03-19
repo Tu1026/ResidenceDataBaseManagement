@@ -7,6 +7,12 @@ import java.util.Scanner;
 
 public class SQLParser {
 
+    /**
+     * Parses specified file as SQL DDL file
+     * Ignores comments, removes spaces, newline characters and tabs
+     * @param file file containing the location of the desired SQL DDL
+     * @return ArrayList of Strings containing the parsed statements. Every entry is a statement
+     */
     public ArrayList<String> parseSQLDDL(File file) {
         ArrayList<String> statements = new ArrayList<>();
         String delim = ";";
