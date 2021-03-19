@@ -26,5 +26,6 @@ public class Controller {
         if (cs.isConnected()) {
             dataHandler.setConnection(cs.getConnection());
         }
+        connectionHandler.close();
     }
 }
