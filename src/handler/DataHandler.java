@@ -26,7 +26,9 @@ public class DataHandler {
     }
 
     public void initializeDDL() {
-        dropAllTablesIfExist();
+        dropAllTablesIfExist(); // TODO: comment this out if you want to keep all data in tables
+        // TODO: Leave this line if you want to clear all tabledata when the application starts
+        // In the future, this can be set as an option in the application
 
         List<String> ddlStatements = parseDDL();
         for (String ddlStatement : ddlStatements) {
