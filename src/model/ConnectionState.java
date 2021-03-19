@@ -2,7 +2,7 @@ package model;
 
 import java.sql.Connection;
 
-public class ConnectionState {
+public final class ConnectionState {
     private Connection connection;
     private Boolean connected;
 

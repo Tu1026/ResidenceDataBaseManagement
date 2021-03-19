@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-public class DataHandler {
+public final class DataHandler {
 
     private static final String DDL_FILE = "out/production/CPSC304Project/model/DDL.sql";
     private Connection connection;
@@ -42,29 +42,7 @@ public class DataHandler {
     }
 
     private List<String> parseDDL() {
-        ArrayList<String> statements = new ArrayList<>();
-        String delim = ";";
-
-        try (Scanner scanner = new Scanner(new File(DDL_FILE))) {
-            StringBuilder sqlStatementString = new StringBuilder();
-            while (scanner.hasNextLine()) {
-                String nextLine = scanner.nextLine().trim();
-                if (lineHasDataNotAComment(nextLine)) {
-                    sqlStatementString.append(nextLine.replaceAll("\\s+", " ")); // replace all whitespace chars by single space
-                }
-                if (sqlStatementString.toString().contains(delim)) {
-                    statements.add(sqlStatementString.toString().replaceAll(delim, ""));
-                    sqlStatementString = new StringBuilder();
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return statements;
-    }
-
-    private boolean lineHasDataNotAComment(String line) {
-        return !line.equals("") && !(line.contains("--"));
+        return new SQLParser().parseSQLDDL(new File(DDL_FILE));
     }
 
 
