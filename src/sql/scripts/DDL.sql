@@ -137,7 +137,7 @@ CREATE TABLE SeniorAdvisor(
 			FOREIGN KEY(supervisingHouseName, supervisingResStAddress, supervisingResZipCode) REFERENCES House(name, resStAddress, resZipCode) ON DELETE SET NULL
 );
 
--- Assertion to make sure 1..n with RA
+-- Assertion to make sure 1..n with RA //
 
 CREATE TABLE ResidenceAdvisor(
 			rAEmployeeId 			int NOT NULL UNIQUE, 
