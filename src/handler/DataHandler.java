@@ -12,7 +12,7 @@ import java.util.*;
 
 public final class DataHandler {
 
-    private static final String DDL_FILE = "out/production/CPSC304Project/model/DDL.sql";
+    private static final String DDL_FILE = "out/production/CPSC304Project/sql/scripts/DDL.sql";
     private Connection connection;
 
     public DataHandler() {
