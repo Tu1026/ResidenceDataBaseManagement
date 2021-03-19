@@ -16,7 +16,6 @@ public final class ConnectionHandler {
     public ConnectionHandler() {
         try {
             // Load the Oracle JDBC driver
-            // Note that the path could change for new drivers
             DriverManager.registerDriver(new OracleDriver());
         } catch (SQLException e) {
             System.out.println("Error initializing oracle library: " + e.getMessage());
