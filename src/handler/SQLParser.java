@@ -1,11 +1,14 @@
 package handler;
 
+import interfaces.SQLParserDelegate;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class SQLParser {
+public class SQLParser implements SQLParserDelegate {
 
     /**
      * Parses specified file as SQL DDL file
@@ -13,7 +16,7 @@ public class SQLParser {
      * @param file file containing the location of the desired SQL DDL
      * @return ArrayList of Strings containing the parsed statements. Every entry is a statement
      */
-    public ArrayList<String> parseSQLDDL(File file) {
+    public List<String> parseDDL(File file) {
         ArrayList<String> statements = new ArrayList<>();
         String delim = ";";
 
@@ -37,5 +40,11 @@ public class SQLParser {
 
     private boolean lineHasDataNotAComment(String line) {
         return !line.equals("") && !(line.contains("--"));
+    }
+
+
+    @Override
+    public List<String> parseDMLInsert(File file) {
+        throw new RuntimeException("Not implemented");
     }
 }

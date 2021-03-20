@@ -1,12 +1,12 @@
 package handler;
 
 import interfaces.DataHandlerDelegate;
+import interfaces.SQLParserDelegate;
 import model.TableModel;
 import model.TableNames;
 import model.tables.TableData;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,8 +17,11 @@ public final class DataHandler implements DataHandlerDelegate {
 
     private static final String DDL_FILE = "out/production/CPSC304Project/sql/scripts/DDL.sql";
     private Connection connection;
+    private SQLParserDelegate sqlParser;
 
-    public DataHandler() {}
+    public DataHandler() {
+        sqlParser = new SQLParser();
+    }
 
 
     public void setConnection(Connection connection) {
@@ -58,7 +61,7 @@ public final class DataHandler implements DataHandlerDelegate {
     }
 
     private List<String> parseDDL() {
-        return new SQLParser().parseSQLDDL(new File(DDL_FILE));
+        return sqlParser.parseDDL(new File(DDL_FILE));
     }
 
 
