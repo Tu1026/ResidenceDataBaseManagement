@@ -2,11 +2,14 @@ package controller;
 
 import handler.ConnectionHandler;
 import handler.DataHandler;
+import interfaces.ConnectionHandlerDelegate;
+import interfaces.ConnectionStateDelegate;
+import interfaces.DataHandlerDelegate;
 import model.ConnectionState;
 
 public class Controller {
-    ConnectionHandler connectionHandler;
-    DataHandler dataHandler;
+    ConnectionHandlerDelegate connectionHandler;
+    DataHandlerDelegate dataHandler;
 
     public Controller() {
         connectionHandler = new ConnectionHandler();
@@ -19,7 +22,7 @@ public class Controller {
      * @param pwd password string
      */
     public void login(String username, String pwd){
-        ConnectionState cs = connectionHandler.login(username, pwd);
+        ConnectionStateDelegate cs = connectionHandler.login(username, pwd);
         if (cs.isConnected()) {
             dataHandler = new DataHandler();
             dataHandler.setConnection(cs.getConnection());

@@ -1,6 +1,9 @@
 package handler;
 
+import interfaces.DataHandlerDelegate;
+import model.TableModel;
 import model.TableNames;
+import model.tables.TableData;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,14 +13,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-public final class DataHandler {
+public final class DataHandler implements DataHandlerDelegate {
 
     private static final String DDL_FILE = "out/production/CPSC304Project/sql/scripts/DDL.sql";
     private Connection connection;
 
-    public DataHandler() {
-
-    }
+    public DataHandler() {}
 
 
     public void setConnection(Connection connection) {
@@ -38,6 +39,22 @@ public final class DataHandler {
             }
         }
         System.out.println(ddlStatements.size() + " tables created. Check oracle sidebar to make sure they are present");
+    }
+
+    @Override
+    public void insertTableData(TableModel data) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
+    public void updateTableData(TableData data) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
+    public TableData getTableData(Set<String> dataToLookup) {
+        throw new RuntimeException("Not implemented yet");
+        //return null;
     }
 
     private List<String> parseDDL() {
