@@ -54,15 +54,15 @@ public final class Residence extends TableData {
         return resName;
     }
 
-    public String getrMOStAddress() {
+    public String getRMOStAddress() {
         return rMOStAddress;
     }
 
-    public String getrMOZipCode() {
+    public String getRMOZipCode() {
         return rMOZipCode;
     }
 
-    public String getbMEmployeeID() {
+    public String getBMEmployeeID() {
         return bMEmployeeID;
     }
 }

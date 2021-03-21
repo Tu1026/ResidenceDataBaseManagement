@@ -39,7 +39,7 @@ public final class BuildingManager extends TableData {
         super.setData(data);
     }
 
-    public String getbMEMployeeID() {
+    public String getBMEMployeeID() {
         return bMEMployeeID;
     }
 
@@ -55,11 +55,11 @@ public final class BuildingManager extends TableData {
         return phoneNumber;
     }
 
-    public String getrMOStAddress() {
+    public String getRMOStAddress() {
         return rMOStAddress;
     }
 
-    public String getrMOZipCode() {
+    public String getRMOZipCode() {
         return rMOZipCode;
     }
 }

@@ -7,7 +7,12 @@ import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
 
+<<<<<<< HEAD
 public class Main extends Application {
+=======
+    private final String username = "ora_jmhirsch";
+    private final String pwd = "a64927676";
+>>>>>>> develop
 
     private static String username = null;
     private static String password = null;

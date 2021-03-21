@@ -45,11 +45,11 @@ public final class ResidentAddress extends TableData {
         return email;
     }
 
-    public String getuNumber() {
+    public String getUNumber() {
         return uNumber;
     }
 
-    public String getfNumber() {
+    public String getFNumber() {
         return fNumber;
     }
 

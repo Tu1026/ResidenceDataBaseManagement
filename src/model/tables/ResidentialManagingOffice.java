@@ -41,11 +41,11 @@ public final class ResidentialManagingOffice extends TableData {
         super.setData(data);
     }
 
-    public String getrMOStAddress() {
+    public String getRMOStAddress() {
         return rMOStAddress;
     }
 
-    public String getrMOZipCode() {
+    public String getRMOZipCode() {
         return rMOZipCode;
     }
 
@@ -57,11 +57,11 @@ public final class ResidentialManagingOffice extends TableData {
         return budget;
     }
 
-    public String getcStAddress() {
+    public String getCStAddress() {
         return cStAddress;
     }
 
-    public String getcZipCode() {
+    public String getCZipCode() {
         return cZipCode;
     }
 }

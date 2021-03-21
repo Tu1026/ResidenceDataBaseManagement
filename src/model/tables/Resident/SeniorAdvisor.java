@@ -46,7 +46,7 @@ public final class SeniorAdvisor extends TableData {
         super.setData(data);
     }
 
-    public String getsAEmployeeID() {
+    public String getSAEmployeeID() {
         return sAEmployeeID;
     }
 

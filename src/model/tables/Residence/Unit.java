@@ -47,7 +47,7 @@ public class Unit extends TableData {
         super.setData(data);
     }
 
-    public String getuNumber() {
+    public String getUNumber() {
         return uNumber;
     }
 
@@ -63,7 +63,7 @@ public class Unit extends TableData {
         return vancancy;
     }
 
-    public String getfNumber() {
+    public String getFNumber() {
         return fNumber;
     }
 

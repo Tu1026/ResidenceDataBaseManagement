@@ -35,7 +35,7 @@ public class ResidenceCapacity extends TableData {
         return resName;
     }
 
-    public String getbMEMployeeID() {
+    public String getBMEMployeeID() {
         return bMEMployeeID;
     }
 

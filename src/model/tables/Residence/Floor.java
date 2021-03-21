@@ -40,7 +40,7 @@ public class Floor extends TableData {
         super.setData(data);
     }
 
-    public String getfNumber() {
+    public String getFNumber() {
         return fNumber;
     }
 

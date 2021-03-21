@@ -31,11 +31,11 @@ public final class Campus extends TableData {
         super.setData(data);
     }
 
-    public String getcStAddress() {
+    public String getCStAddress() {
         return cStAddress;
     }
 
-    public String getcZipCode() {
+    public String getCZipCode() {
         return cZipCode;
     }
 
