@@ -3,27 +3,39 @@ package ui;
 import controller.Controller;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import jdk.nashorn.internal.scripts.JO;
+
+import javax.swing.*;
 
 public class Main extends Application {
 
 
-    private final String username = "ora_jmhirsch";
-    private final String pwd = "a64927676";
-
+    private static String username = null;
+    private static String password = null;
     @Override
     public void start(Stage primaryStage) throws Exception {
-        if (username.trim().equals("") || pwd.trim().equals("")) {
+
+        if (username == null || password == null) {
             // only for testing purposes
-            System.err.println("ERROR: set your username and password in the fields in ui.Main");
+            System.err.println("ERROR: set your username and password when prompted");
            System.exit(1);
         }
 
-        new Controller().login(username, pwd);
+        Controller controller = new Controller();
+        controller.login(username, password);
         // should print "<username> logged in to oracle"
+        controller.initializeSQLDDL();
+        // should print dropped tables and 13 tables created
+        controller.logout();
+
         System.exit(0);
     }
 
     public static void main(String[] args)  {
+
+        username = JOptionPane.showInputDialog("Enter oracle username");
+        password = JOptionPane.showInputDialog("Enter oracle password");
+
         launch(args);
     }
 }

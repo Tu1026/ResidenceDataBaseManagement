@@ -1,5 +1,7 @@
 package handler;
 
+import interfaces.ConnectionHandlerDelegate;
+import interfaces.ConnectionStateDelegate;
 import model.ConnectionState;
 import oracle.jdbc.driver.OracleDriver;
 
@@ -7,30 +9,22 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public final class ConnectionHandler {
+public final class ConnectionHandler implements ConnectionHandlerDelegate {
     private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
     private Connection connection;
-    private static boolean isLoggedIn = false;
+    private boolean isLoggedIn = false;
 
 
     public ConnectionHandler() {
         try {
             // Load the Oracle JDBC driver
-            // Note that the path could change for new drivers
             DriverManager.registerDriver(new OracleDriver());
         } catch (SQLException e) {
             System.out.println("Error initializing oracle library: " + e.getMessage());
         }
     }
 
-
-    /**
-     *
-     * @param username username string
-     * @param pwd password string
-     * @return ConnectionState with the connectionObject & the current state (logged in, Logged out)
-     */
-    public ConnectionState login(String username, String pwd) {
+    public ConnectionStateDelegate login(String username, String pwd) {
         if (!isLoggedIn) {
             try {
                 connection = DriverManager.getConnection(ORACLE_URL, username, pwd);
@@ -50,7 +44,7 @@ public final class ConnectionHandler {
      * Closes connection if connection is not null
      * User does not need to be logged in to call this
      */
-    public ConnectionState close() {
+    public ConnectionStateDelegate close() {
         try {
             if (connection != null) {
                 connection.close();

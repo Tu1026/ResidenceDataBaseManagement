@@ -1,8 +1,10 @@
 package model;
 
+import interfaces.ConnectionStateDelegate;
+
 import java.sql.Connection;
 
-public class ConnectionState {
+public final class ConnectionState implements ConnectionStateDelegate {
     private Connection connection;
     private Boolean connected;
 
@@ -15,7 +17,7 @@ public class ConnectionState {
         return connection;
     }
 
-    public Boolean isConnected() {
+    public boolean isConnected() {
         return connected;
     }
 }
