@@ -24,9 +24,7 @@ public class LoginFrame extends Application {
     void logIntoDB(ActionEvent event) throws IOException {
         String sUserName = userName.getText().toLowerCase().trim();
         String sPassword = password.getText().toLowerCase().trim();
-
         new Controller().login(sUserName, sPassword);
-
         System.exit(0);
 
     }
