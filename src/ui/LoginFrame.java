@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Control;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
@@ -24,7 +25,9 @@ public class LoginFrame extends Application {
     void logIntoDB(ActionEvent event) throws IOException {
         String sUserName = userName.getText().toLowerCase().trim();
         String sPassword = password.getText().toLowerCase().trim();
-        new Controller().login(sUserName, sPassword);
+        Controller controller = new Controller();
+        controller.login(sUserName, sPassword);
+        controller.initializeSQLDDL();
         System.exit(0);
 
     }
@@ -39,7 +42,4 @@ public class LoginFrame extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 }
