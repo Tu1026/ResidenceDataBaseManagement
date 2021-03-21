@@ -7,8 +7,8 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 
-    private final String username = "ora_linshuan";
-    private final String pwd = "a41053539";
+    private final String username = "<ora_cwl>";
+    private final String pwd = "a<snum>";
 
     @Override
     public void start(Stage primaryStage) throws Exception {

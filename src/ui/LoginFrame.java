@@ -1,19 +1,19 @@
 package ui;
 
+import controller.Controller;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
+
 public class LoginFrame extends Application {
-    Button button;
 
     @FXML
     private TextField userName;
@@ -21,16 +21,20 @@ public class LoginFrame extends Application {
     @FXML
     private PasswordField password;
     @FXML
-    void logIntoDB(ActionEvent event) {
-        String name = userName.getText();
-        System.out.println("hello world");
-    }
+    void logIntoDB(ActionEvent event) throws IOException {
+        String sUserName = userName.getText().toLowerCase().trim();
+        String sPassword = password.getText().toLowerCase().trim();
 
+        new Controller().login(sUserName, sPassword);
+
+        System.exit(0);
+
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("LoginFrame.fxml"));
-        primaryStage.setTitle("Entre your ora_cwl, and a<student number> to login");
+        primaryStage.setTitle("Log into the database here");
 
         Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
