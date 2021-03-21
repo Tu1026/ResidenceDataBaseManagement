@@ -8,7 +8,15 @@ import java.util.Set;
 
 public interface DataHandlerDelegate {
 
+    /**
+     * Sets the connection object to be used to communicate with oracle db
+     * @param connection object to get/send data
+     */
     void setConnection(Connection connection);
+
+    /**
+     * Runs SQL DDL create statements, drops tables.
+     */
     void initializeDDL();
 
 
