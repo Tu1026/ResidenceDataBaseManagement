@@ -28,6 +28,7 @@ public class LoginFrame extends Application {
         Controller controller = new Controller();
         controller.login(sUserName, sPassword);
         controller.initializeSQLDDL();
+        controller.logout();
         System.exit(0);
 
     }

@@ -85,6 +85,27 @@ public final class DataHandler implements DataHandlerDelegate {
 //            System.out.println(tableName);
         }
         System.out.println(mdlStatements.size() + " insert statements run. Double click on tables in sidebar to verify data");
+
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT * FROM RESIDENTIALMANAGINGOFFICE JOIN CAMPUS r USING(CZIPCODE, CSTADDRESS)");
+
+
+            int cols = results.getMetaData().getColumnCount();
+            for (int i = 1; i <= cols; i++ ){
+                System.out.format("%-40s", results.getMetaData().getColumnLabel(i));
+            }
+            System.out.println();
+            while (results.next()){
+                for (int i = 1; i <= cols; i++) {
+                    System.out.format("%-40s", results.getString(i));
+                }
+                System.out.println();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
 //    private void addSpecifiedData(String tableName, String[] columns, String [] data) {
