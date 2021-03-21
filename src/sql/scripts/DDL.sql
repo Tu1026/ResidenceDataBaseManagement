@@ -59,8 +59,7 @@ CREATE TABLE ResidenceBudget(
 			budget					int,
 			PRIMARY KEY(resStAddress, resZipCode, budget),
             FOREIGN KEY(resStAddress, resZipCode) REFERENCES Residence(resStAddress, resZipCode) ON DELETE CASCADE
-            
-);
+            );
 
 
 --- END RESIDENCE TABLES
@@ -153,4 +152,9 @@ CREATE TABLE ResidenceAdvisor(
 			FOREIGN KEY(studentNumber) REFERENCES ResidentInfo(studentNumber) ON DELETE CASCADE,
 			FOREIGN KEY(sRAStudentNumber) REFERENCES SeniorAdvisor(studentNumber),
             FOREIGN KEY(supervisingFloorNum, supervisingHouseName, supervisingResStAddress, supervisingResZipCode) REFERENCES Floor(fNumber, Housename, resStAddress, resZipCode) ON DELETE SET NULL
-);								
+);
+
+
+----- END DDL SCRIPT
+
+INSERT INTO Campus VALUES ('test address', 'b', 'c', 5000);

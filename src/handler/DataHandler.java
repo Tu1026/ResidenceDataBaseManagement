@@ -33,15 +33,9 @@ public final class DataHandler implements DataHandlerDelegate {
         // TODO: Leave this line if you want to clear all tabledata when the application starts
         // In the future, this can be set as an option in the application
 
-        List<String> ddlStatements = parseDDL();
-        for (String ddlStatement : ddlStatements) {
-            try (Statement stmt = connection.createStatement()) {
-                stmt.execute(ddlStatement);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
-        System.out.println(ddlStatements.size() + " tables created. Check oracle sidebar to make sure they are present");
+        parseDDL();
+        parseMDL();
+
     }
 
     @Override
@@ -60,10 +54,65 @@ public final class DataHandler implements DataHandlerDelegate {
         //return null;
     }
 
-    private List<String> parseDDL() {
-        return sqlParser.parseDDL(new File(DDL_FILE));
+    private void parseDDL() {
+        List<String> ddlStatements =  sqlParser.parseDDL(new File(DDL_FILE));
+
+        for (String ddlStatement : ddlStatements) {
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute(ddlStatement);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        System.out.println(ddlStatements.size() + " tables created. Check oracle sidebar to make sure they are present");
+
     }
 
+    private void parseMDL() {
+        List<String> mdlStatements = sqlParser.parseDMLInsertStatement(new File(DDL_FILE));
+
+        for (String mdlStatement: mdlStatements) {
+            try {
+                Statement stmt = connection.createStatement();
+                stmt.executeUpdate(mdlStatement);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+//            String tableName = getTableNameFromMDL(mdlStatement);
+//            String[] columns  = getColumNamesFromMDL(mdlStatement);
+//            String[] data = getDataFromMDL(mdlStatement);
+//            addSpecifiedData(tableName, columns, data);
+//            System.out.println(tableName);
+        }
+        System.out.println(mdlStatements.size() + " insert statements run. Double click on tables in sidebar to verify data");
+    }
+
+//    private void addSpecifiedData(String tableName, String[] columns, String [] data) {
+//        if (tableName.equalsIgnoreCase("Campus")) {
+//            addDataIntoCampus(columns, data);
+//        }
+//    }
+//
+//    private void addDataIntoCampus(String [] columns, String [] data) {
+//        System.out.println(columns);
+//    }
+//
+//    private String getTableNameFromMDL(String mdlStatement) {
+//        int idxFirstLeftParen = mdlStatement.indexOf('(');
+//        return mdlStatement.substring(0, idxFirstLeftParen).replace("INSERT INTO",  "").trim();
+//    }
+//
+//    private String [] getColumNamesFromMDL(String mdlStatement) {
+//        int idxFirstLeftParen = mdlStatement.indexOf('(');
+//        int idxFirstRightParen = mdlStatement.indexOf(')');
+//        return mdlStatement.substring(idxFirstLeftParen + 1, idxFirstRightParen).trim().split(", ");
+//    }
+//
+//    private String [] getDataFromMDL(String mdlStatement) {
+//        int idxLastLeftParen = mdlStatement.lastIndexOf('(');
+//        int idxLastRightParen = mdlStatement.lastIndexOf(')');
+//        return mdlStatement.substring(idxLastLeftParen + 1, idxLastRightParen).replaceAll("\"", "").trim().split(", ");
+//    }
 
     private void dropAllTablesIfExist() {
         Set<String> tableNames = TableNames.TABLE_NAMES;

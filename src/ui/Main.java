@@ -25,7 +25,7 @@ public class Main extends Application {
         controller.login(username, password);
         // should print "<username> logged in to oracle"
         controller.initializeSQLDDL();
-        // should print dropped tables and 13 tables created
+        // should print dropped tables and '13 tables created'
         controller.logout();
 
         System.exit(0);
