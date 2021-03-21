@@ -7,35 +7,12 @@ import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
 
-public class Main extends Application {
+public class Main  {
 
+    public static void main(String[] args) {
 
-    private static String username = null;
-    private static String password = null;
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-
-        if (username == null || password == null) {
-            // only for testing purposes
-            System.err.println("ERROR: set your username and password when prompted");
-           System.exit(1);
-        }
-
-        Controller controller = new Controller();
-        controller.login(username, password);
-        // should print "<username> logged in to oracle"
-        controller.initializeSQLDDL();
-        // should print dropped tables and 13 tables created
-        controller.logout();
-
-        System.exit(0);
+        LoginFrame login = new LoginFrame();
+        MenuItems menu = new MenuItems();
     }
 
-    public static void main(String[] args)  {
-
-        username = JOptionPane.showInputDialog("Enter oracle username");
-        password = JOptionPane.showInputDialog("Enter oracle password");
-
-        launch(args);
-    }
 }
