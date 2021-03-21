@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 public final class ConnectionHandler implements ConnectionHandlerDelegate {
     private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
+//    private static final String ORACLE_URL = "jdbc:oracle:thin:@dbhost.students.cs.ubc.ca:1522:stu";
     private Connection connection;
     private boolean isLoggedIn = false;
 
