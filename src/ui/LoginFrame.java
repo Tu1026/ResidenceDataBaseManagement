@@ -4,8 +4,10 @@ import controller.Controller;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
@@ -21,6 +23,8 @@ public class LoginFrame extends Application {
 
     @FXML
     private PasswordField password;
+
+
     @FXML
     void logIntoDB(ActionEvent event) throws IOException {
         String sUserName = userName.getText().toLowerCase().trim();
@@ -28,9 +32,17 @@ public class LoginFrame extends Application {
         Controller controller = new Controller();
         controller.login(sUserName, sPassword);
         controller.initializeSQLDDL();
-        System.exit(0);
+
+        Parent MenuItems = FXMLLoader.load(getClass().getResource("MenuItems.fxml"));
+        Scene MenuScene = new Scene(MenuItems);
+        Stage MenuStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        MenuStage.setScene(MenuScene);
+        MenuStage.show();
+
 
     }
+
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
