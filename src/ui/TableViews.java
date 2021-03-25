@@ -1,5 +1,6 @@
 package ui;
 
+import controller.Controller;
 import handler.DataHandler;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,17 +22,14 @@ import java.sql.ResultSet;
 
 public class TableViews extends Application {
 
-    @FXML
     private TableView tables;
 
 //    Following the tutorial here to help generate dynamic columns https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
-    public void buildData() {
+    public void buildData(ResultSet rs) {
             ObservableList<ObservableList> data;
             data = FXCollections.observableArrayList();
             DataHandler handler = new DataHandler();
-//            data = dataHandler.executeQuery("SELECT * from Authors");
             try {
-                ResultSet rs = handler.executeQuery("SELECT * from Authors");
 
                 /**
                  * ********************************
@@ -77,34 +75,43 @@ public class TableViews extends Application {
             }
         }
 
-        @Override
-        public void start(Stage stage) throws Exception {
-            //TableView
-            tableview = new TableView();
-            buildData();
 
-            //Main Scene
-            Scene scene = new Scene(tableview);
-
-            stage.setScene(scene);
-            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent event) {
-                    Platform.exit();
-                    System.exit(0);
-                }
-            });
-            stage.show();
-        }
-    }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("TableViews.fxml"));
-        primaryStage.setTitle("Residence Database");
+        Controller controller = new Controller();
+        controller.login("ora_linshuan", "a41053539");
+        controller.initializeSQLDDL();
+        ResultSet rs;
+        try {
+            rs = controller.executeSQL("SELECT * FROM Authors");
+        } catch (Exception e) {
+            e.printStackTrace();
+            rs = null;
+        }
+        tables = new TableView();
+        buildData(rs);
 
-        Scene scene = new Scene(root, 1024, 768);
+        primaryStage.setWidth(285);
+//        stage.setMaxWidth(285);
+//        stage.setMinWidth(285);
+        primaryStage.setTitle("Java Fx 2.0 DataBase Connection");
+        primaryStage.setResizable(false);
+        //Main Scene
+        Scene scene = new Scene(tables);
+
         primaryStage.setScene(scene);
         primaryStage.show();
+
+
+
+
+
+//        Parent root = FXMLLoader.load(getClass().getResource("TableViews.fxml"));
+//        primaryStage.setTitle("Residence Database");
+//
+//        Scene scene = new Scene(root, 1024, 768);
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
     }
 }

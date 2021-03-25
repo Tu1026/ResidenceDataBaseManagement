@@ -7,6 +7,9 @@ import interfaces.ConnectionStateDelegate;
 import interfaces.DataHandlerDelegate;
 import model.ConnectionState;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Controller {
     ConnectionHandlerDelegate connectionHandler;
     DataHandlerDelegate dataHandler;
@@ -35,6 +38,11 @@ public class Controller {
         if (dataHandler != null) {
             dataHandler.initializeDDL();;
         }
+    }
+
+    //Again added for SQL testing can be removed later
+    public ResultSet executeSQL(String sql) throws SQLException {
+        return dataHandler.getTableData(sql);
     }
 
     public void logout(){
