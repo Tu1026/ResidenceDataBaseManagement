@@ -66,7 +66,11 @@ public class SQLParser implements SQLParserDelegate {
                 sqlStatementString.append(condenseWhitespace(nextLine)); // replace all whitespace chars by single space
             }
             if (sqlStatementString.toString().contains(SEMICOLON_DELIM)) {
-                statements.add(removeSemicolons(sqlStatementString.toString()));
+                String statement = sqlStatementString.toString();
+                if (!breakOnCondition) {
+                    statement = statement.replace("VALUES",  " VALUES");
+                }
+                statements.add(removeSemicolons(statement));
                 sqlStatementString.setLength(0); // clear string
             }
         }

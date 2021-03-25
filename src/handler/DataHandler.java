@@ -6,7 +6,7 @@ import model.TableModel;
 import model.TableNames;
 import model.tables.TableData;
 
-import java.io.File;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -71,18 +71,39 @@ public final class DataHandler implements DataHandlerDelegate {
     private void parseMDL() {
         List<String> mdlStatements = sqlParser.parseDMLInsertStatement(new File(DDL_FILE));
 
-        for (String mdlStatement: mdlStatements) {
-            try {
-                Statement stmt = connection.createStatement();
-                stmt.executeUpdate(mdlStatement);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+        List<String> stringsToWrite = new ArrayList<>();
+        try {
+            File fout = new File("error.txt");
+            FileOutputStream fos = new FileOutputStream(fout);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+            PrintWriter pw = new PrintWriter(new FileWriter("out.txt"));
+            for (String mdlStatement : mdlStatements) {
+                try {
+                    Statement stmt = connection.createStatement();
+                    stmt.executeUpdate(mdlStatement);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace(pw);
+                    for (StackTraceElement iter: throwables.getStackTrace()){
+                        stringsToWrite.add(iter.toString());
+                    }
+
+                }
 //            String tableName = getTableNameFromMDL(mdlStatement);
 //            String[] columns  = getColumNamesFromMDL(mdlStatement);
 //            String[] data = getDataFromMDL(mdlStatement);
 //            addSpecifiedData(tableName, columns, data);
 //            System.out.println(tableName);
+
+
+            }
+            for (String str: stringsToWrite) {
+                bw.write(str);
+                bw.newLine();
+            }
+
+            bw.close();
+        } catch (IOException e) {
+            System.out.println("Bleurh");
         }
         System.out.println(mdlStatements.size() + " insert statements run. Double click on tables in sidebar to verify data");
 
