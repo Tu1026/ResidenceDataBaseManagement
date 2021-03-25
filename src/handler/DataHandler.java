@@ -73,15 +73,13 @@ public final class DataHandler implements DataHandlerDelegate {
 
         List<String> stringsToWrite = new ArrayList<>();
         try {
-            File fout = new File("error.txt");
-            FileOutputStream fos = new FileOutputStream(fout);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-            PrintWriter pw = new PrintWriter(new FileWriter("out.txt"));
+            PrintWriter pw = new PrintWriter(new FileWriter("error.txt"));
             for (String mdlStatement : mdlStatements) {
                 try {
                     Statement stmt = connection.createStatement();
                     stmt.executeUpdate(mdlStatement);
                 } catch (SQLException throwables) {
+                    throwables.printStackTrace();
                     throwables.printStackTrace(pw);
                     for (StackTraceElement iter: throwables.getStackTrace()){
                         stringsToWrite.add(iter.toString());
@@ -96,12 +94,6 @@ public final class DataHandler implements DataHandlerDelegate {
 
 
             }
-            for (String str: stringsToWrite) {
-                bw.write(str);
-                bw.newLine();
-            }
-
-            bw.close();
         } catch (IOException e) {
             System.out.println("Bleurh");
         }

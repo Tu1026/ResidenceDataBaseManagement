@@ -157,24 +157,6 @@ CREATE TABLE ResidenceAdvisor(
 
 ----- END DDL SCRIPT
 
---INSERT INTO Campus VALUES ('test address', 'b', 'c', 5000);
---insert into CAMPUS values ('test2', 'e', 'f', 50000);
-
--- SELECT * FROM CAMPUS;
-
---insert into RESIDENTIALMANAGINGOFFICE values ('addr', 'v5x', 'first', 20000000,
-  --                                            (SELECT CSTADDRESS FROM CAMPUS WHERE CAMPUS."CSTADDRESS" = 'test address'),
-    --                                          (SELECT CAMPUS.CZIPCODE FROM CAMPUS WHERE CAMPUS."CSTADDRESS" = 'test address'));
-
--- SELECT * FROM RESIDENTIALMANAGINGOFFICE;
-
---insert into RESIDENTIALMANAGINGOFFICE values ('addresss', 'v6p', 'second', 20000000,
-      --                                        (SELECT CSTADDRESS FROM CAMPUS WHERE CAMPUS."CSTADDRESS" = 'test2'),
-        --                                      (SELECT CAMPUS.CZIPCODE FROM CAMPUS WHERE CAMPUS."CSTADDRESS" = 'test2'));
-
---insert into RESIDENTIALMANAGINGOFFICE values ('addddd', 'v1p', 'thirs', 3000,
-          --                                    (SELECT CSTADDRESS FROM CAMPUS WHERE CAMPUS."CSTADDRESS" = 'test2'),
-            --                                  (SELECT CAMPUS.CZIPCODE FROM CAMPUS WHERE CAMPUS."CSTADDRESS" = 'test2'));
 
 
 
