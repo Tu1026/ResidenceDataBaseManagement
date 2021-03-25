@@ -2,11 +2,13 @@ package handler;
 
 import interfaces.DataHandlerDelegate;
 import interfaces.SQLParserDelegate;
+import javafx.collections.ObservableList;
 import model.TableModel;
 import model.TableNames;
 import model.tables.TableData;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -89,5 +91,13 @@ public final class DataHandler implements DataHandlerDelegate {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    //I am adding this method to test out the UI's reponse in terms of executing queries
+    // Resultset nicely fetches data from sql as well as retaining metadata
+    public ResultSet executeQuery(String sql) throws SQLException{
+        ResultSet result;
+        result = connection.createStatement().executeQuery(sql);
+        return result;
     }
 }
