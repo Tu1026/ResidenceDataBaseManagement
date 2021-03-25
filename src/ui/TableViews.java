@@ -11,6 +11,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
@@ -19,16 +21,18 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.util.concurrent.TimeUnit;
 
 public class TableViews extends Application {
 
-    private TableView tables;
+    TableView tables = new TableView();
 
-//    Following the tutorial here to help generate dynamic columns https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
+
+
+    //    Following the tutorial here to help generate dynamic columns https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
     public void buildData(ResultSet rs) {
             ObservableList<ObservableList> data;
             data = FXCollections.observableArrayList();
-            DataHandler handler = new DataHandler();
             try {
 
                 /**
@@ -76,12 +80,18 @@ public class TableViews extends Application {
         }
 
 
+    @FXML
+    private GridPane p1;
+
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws IOException, InterruptedException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("TableViews.fxml"));
+        loader.setController(this);
+        Parent root = loader.load();
         Controller controller = new Controller();
-        controller.login("ora_linshuan", "a41053539");
         controller.initializeSQLDDL();
+
         ResultSet rs;
         try {
             rs = controller.executeSQL("SELECT * FROM Authors");
@@ -89,29 +99,19 @@ public class TableViews extends Application {
             e.printStackTrace();
             rs = null;
         }
-        tables = new TableView();
         buildData(rs);
+        tables.prefWidthProperty().bind(p1.widthProperty());
+        tables.prefHeightProperty().bind(p1.heightProperty());
+        tables.setStyle("-fx-border-color: black");
 
-        primaryStage.setWidth(285);
-//        stage.setMaxWidth(285);
-//        stage.setMinWidth(285);
-        primaryStage.setTitle("Java Fx 2.0 DataBase Connection");
-        primaryStage.setResizable(false);
-        //Main Scene
-        Scene scene = new Scene(tables);
-
+        primaryStage.setTitle("Residence Database");
+        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+        p1.getChildren().add(tables);
+//        primaryStage.minWidthProperty().bind(scene.heightProperty().multiply(1.5));
+//        primaryStage.minHeightProperty().bind(scene.widthProperty().divide(1.5));
         primaryStage.show();
 
 
-
-
-
-//        Parent root = FXMLLoader.load(getClass().getResource("TableViews.fxml"));
-//        primaryStage.setTitle("Residence Database");
-//
-//        Scene scene = new Scene(root, 1024, 768);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
     }
 }
