@@ -71,7 +71,6 @@ public final class DataHandler implements DataHandlerDelegate {
     private void parseMDL() {
         List<String> mdlStatements = sqlParser.parseDMLInsertStatement(new File(DDL_FILE));
 
-        List<String> stringsToWrite = new ArrayList<>();
         try {
             PrintWriter pw = new PrintWriter(new FileWriter("error.txt"));
             for (String mdlStatement : mdlStatements) {
@@ -81,10 +80,6 @@ public final class DataHandler implements DataHandlerDelegate {
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                     throwables.printStackTrace(pw);
-                    for (StackTraceElement iter: throwables.getStackTrace()){
-                        stringsToWrite.add(iter.toString());
-                    }
-
                 }
 //            String tableName = getTableNameFromMDL(mdlStatement);
 //            String[] columns  = getColumNamesFromMDL(mdlStatement);
