@@ -4,10 +4,13 @@ import handler.ConnectionHandler;
 import handler.DataHandler;
 import interfaces.ConnectionHandlerDelegate;
 import interfaces.ConnectionStateDelegate;
+import interfaces.ControllerDelegate;
 import interfaces.DataHandlerDelegate;
-import model.ConnectionState;
+import javafx.application.Platform;
+import model.table.Table;
 
-public class Controller {
+
+public class Controller implements ControllerDelegate {
     ConnectionHandlerDelegate connectionHandler;
     DataHandlerDelegate dataHandler;
 
@@ -21,7 +24,7 @@ public class Controller {
      * @param username username string
      * @param pwd password string
      */
-    public void login(String username, String pwd){
+    public ConnectionStateDelegate login(String username, String pwd){
         ConnectionStateDelegate cs = connectionHandler.login(username, pwd);
         if (cs.isConnected()) {
             dataHandler = new DataHandler();
@@ -29,6 +32,19 @@ public class Controller {
         } else{
             System.err.println("Error initializing dataHandler: Not connected to oracle services");
         }
+        return cs;
+    }
+
+    @Override
+    public void performQuery(String query) {
+        new Thread(() -> {
+            dataHandler.performQuery(query, this::resultCallback);
+        });
+    }
+
+    @Override
+    public void initializeSQL() {
+
     }
 
     public void initializeSQLDDL(){
@@ -37,7 +53,13 @@ public class Controller {
         }
     }
 
-    public void logout(){
-        connectionHandler.close();
+    public ConnectionStateDelegate logout(){
+        return connectionHandler.close();
+    }
+
+    public void resultCallback(Table result){
+        Platform.runLater(() -> {
+
+        });
     }
 }

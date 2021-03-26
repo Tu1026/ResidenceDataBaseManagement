@@ -11,6 +11,8 @@ import model.table.TableRow;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public final class DataHandler implements DataHandlerDelegate {
 
@@ -52,6 +54,38 @@ public final class DataHandler implements DataHandlerDelegate {
     //    throw new RuntimeException("Not implemented yet");
         //return null;
    // }
+
+
+    @Override
+    public void performQuery(String query, Consumer<Table> callback) {
+        Table table = null;
+        try (Statement stmt = connection.createStatement()){
+            ResultSet results = stmt.executeQuery(query);
+
+            int cols = results.getMetaData().getColumnCount();
+            String [] columnNames = new String [cols];
+
+            table = new Table(columnNames);
+            for (int i = 1; i <= cols; i++ ){
+                columnNames[i-1] = results.getMetaData().getColumnLabel(i);
+            }
+
+            table = new Table(columnNames);
+
+            while (results.next()){
+                List<Column>  column = table.getColumnsList();
+                for (int i = 1; i <= cols; i++) {
+                    table.insert(column.get(i-1), results.getString(i));
+                }
+                table.nextRow();
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            callback.accept(table);
+        }
+    }
 
     private void parseDDL() {
         List<String> ddlStatements =  sqlParser.parseDDL(new File(DDL_FILE));

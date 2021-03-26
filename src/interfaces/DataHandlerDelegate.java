@@ -1,9 +1,12 @@
 package interfaces;
 
+import model.table.Table;
 import model.table.TableModel;
 
 import java.sql.Connection;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public interface DataHandlerDelegate {
 
@@ -18,6 +21,8 @@ public interface DataHandlerDelegate {
      */
     void initializeDDL();
 
+
+    void performQuery(String query, Consumer<Table> callback);
 
     /**
      * Insert the specified model into the database
