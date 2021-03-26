@@ -54,7 +54,6 @@ public class TableViews extends Application implements TableViewUI {
         controller.performQuery("SELECT table_name FROM user_tables");
 
 
-
         tables.prefWidthProperty().bind(p1.widthProperty());
         tables.prefHeightProperty().bind(p1.heightProperty());
         tables.setStyle("-fx-border-color: #000000");
@@ -130,7 +129,7 @@ public class TableViews extends Application implements TableViewUI {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("TableViews.fxml"));
         loader.setController(this);
         Parent root = loader.load();
-        Controller controller = new Controller();
+        ControllerDelegate controller = new Controller();
         controller.login("ora_linshuan", "a41053539");
         controller.initializeSQLDDL();
 
