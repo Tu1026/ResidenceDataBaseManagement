@@ -6,7 +6,7 @@ import interfaces.*;
 import javafx.application.Platform;
 import model.table.Table;
 
-public class Controller implements interfaces.ControllerDelegate {
+public class Controller implements ControllerDelegate {
 
     ConnectionHandlerDelegate connectionHandler;
     DataHandlerDelegate dataHandler;
@@ -55,6 +55,13 @@ public class Controller implements interfaces.ControllerDelegate {
     @Override
     public void setUI(TableViewUI ui) {
         this.ui = ui;
+    }
+
+    @Override
+    public void loadTable(String tableName) {
+        new Thread(() -> {
+            dataHandler.getTableData(tableName, this::resultCallback);
+        }).start();
     }
 
     private void resultCallback(Table resultTable){

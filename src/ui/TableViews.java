@@ -51,7 +51,9 @@ public class TableViews extends Application implements TableViewUI {
             root = null;
         }
 
+
         controller.performQuery("SELECT * FROM RESIDENTIALMANAGINGOFFICE JOIN CAMPUS r USING(CZIPCODE, CSTADDRESS)");
+        //controller.loadTable("CAMPUS");
 
 
         tables.prefWidthProperty().bind(p1.widthProperty());
