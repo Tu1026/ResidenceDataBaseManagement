@@ -6,7 +6,7 @@ public interface ControllerDelegate {
 
  void performQuery(String query);
 
- void initializeSQL();
+ void initializeSQLDDL();
 
  ConnectionStateDelegate logout();
 

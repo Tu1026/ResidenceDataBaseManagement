@@ -42,11 +42,6 @@ public class Controller implements ControllerDelegate {
         });
     }
 
-    @Override
-    public void initializeSQL() {
-
-    }
-
     public void initializeSQLDDL(){
         if (dataHandler != null) {
             dataHandler.initializeDDL();;
