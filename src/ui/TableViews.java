@@ -51,8 +51,7 @@ public class TableViews extends Application implements TableViewUI {
             root = null;
         }
 
-        controller.performQuery("SELECT table_name FROM user_tables");
-
+        controller.performQuery("SELECT * FROM RESIDENTIALMANAGINGOFFICE JOIN CAMPUS r USING(CZIPCODE, CSTADDRESS)");
 
 
         tables.prefWidthProperty().bind(p1.widthProperty());
@@ -130,7 +129,7 @@ public class TableViews extends Application implements TableViewUI {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("TableViews.fxml"));
         loader.setController(this);
         Parent root = loader.load();
-        Controller controller = new Controller();
+        ControllerDelegate controller = new Controller();
         controller.login("ora_linshuan", "a41053539");
         controller.initializeSQLDDL();
 

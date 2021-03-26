@@ -39,8 +39,7 @@ public class Controller implements interfaces.ControllerDelegate {
         System.out.println("Query initializing...");
         new Thread(() -> {
             dataHandler.performQuery(query, this::resultCallback);
-            System.out.println("Called !");
-        }).run();
+        }).start();
     }
 
     public void initializeSQLDDL(){
@@ -58,11 +57,10 @@ public class Controller implements interfaces.ControllerDelegate {
         this.ui = ui;
     }
 
-    public void resultCallback(Table resultTable){
-        System.out.println("Call back called");
+    private void resultCallback(Table resultTable){
         Platform.runLater(() -> {
+            System.out.println("Displaying query results in table");
             ui.updateVisibleTable(resultTable);
-            System.out.println("Run later called");
         });
     }
 }
