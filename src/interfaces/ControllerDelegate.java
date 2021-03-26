@@ -12,4 +12,6 @@ public interface ControllerDelegate {
 
  void setUI(TableViewUI ui);
 
+ void loadTable(String tableName);
+
 }

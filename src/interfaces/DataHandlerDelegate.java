@@ -45,6 +45,11 @@ public interface DataHandlerDelegate {
 
     //ResultSet getTableData(String sql); // is this what we want? Not quite sure yet
 
-    //TableRow getTableData(Set<String> dataToLookup); // is this what we want? Not quite sure yet
+    /**
+     * Queries a specific table, returns the data in a callback
+     * @param tableToLookup string of table to lookup
+     * @param callback function to call once query is complete
+     */
+     void getTableData(String tableToLookup, Consumer<Table> callback);
 
 }

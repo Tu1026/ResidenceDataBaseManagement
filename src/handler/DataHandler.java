@@ -27,6 +27,11 @@ public final class DataHandler implements DataHandlerDelegate {
 
     public void setConnection(Connection connection) {
         this.connection = connection;
+        try {
+            connection.setAutoCommit(false);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public void initializeDDL() {
@@ -43,29 +48,55 @@ public final class DataHandler implements DataHandlerDelegate {
     }
 
     @Override
+    public void getTableData(String tableToLookup, Consumer<Table> callback) {
+
+        Table table = null;
+
+        if (OracleTableNames.TABLE_NAMES.contains(tableToLookup.toUpperCase())) {
+
+            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + tableToLookup.toUpperCase())) {
+                table = query(ps);
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            } finally {
+                callback.accept(table);
+            }
+        }else {
+            System.err.println("Invalid table name: " + tableToLookup);
+        }
+    }
+
+    private Table query(PreparedStatement ps) throws SQLException {
+        ResultSet results = ps.executeQuery();
+        connection.commit();
+
+        int cols = results.getMetaData().getColumnCount();
+        String [] columnNames = new String [cols];
+
+        for (int i = 1; i <= cols; i++ ){
+            columnNames[i-1] = results.getMetaData().getColumnLabel(i);
+        }
+
+        Table table = new Table(columnNames);
+
+        while (results.next()){
+            List<Column>  column = table.getColumnsList();
+            for (int i = 1; i <= cols; i++) {
+                table.insert(column.get(i-1), results.getString(i));
+            }
+            table.nextRow();
+        }
+
+        return table;
+    }
+
+    @Override
     public void performQuery(String query, Consumer<Table> callback) {
         Table table = null;
-        try (Statement stmt = connection.createStatement()){
+        try (PreparedStatement ps = connection.prepareStatement(query)){
             System.out.println("Running " + query + " ...");
-            ResultSet results = stmt.executeQuery(query);
-
-            int cols = results.getMetaData().getColumnCount();
-            String [] columnNames = new String [cols];
-
-            table = new Table(columnNames);
-            for (int i = 1; i <= cols; i++ ){
-                columnNames[i-1] = results.getMetaData().getColumnLabel(i);
-            }
-
-            table = new Table(columnNames);
-
-            while (results.next()){
-                List<Column>  column = table.getColumnsList();
-                for (int i = 1; i <= cols; i++) {
-                    table.insert(column.get(i-1), results.getString(i));
-                }
-                table.nextRow();
-            }
+            table = this.query(ps);
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
