@@ -4,9 +4,9 @@ import model.table.Table;
 import model.table.TableModel;
 
 import java.sql.Connection;
-import java.util.Set;
+import java.sql.ResultSet;
 import java.util.function.Consumer;
-import java.util.function.Function;
+
 
 public interface DataHandlerDelegate {
 
@@ -36,10 +36,15 @@ public interface DataHandlerDelegate {
      */
     //void updateTableData(TableRow data); // need some kind of parameter to specify what we want to update I am guessing
 
+    //I temporarly modded it to return Resultset, a set can be used by javafx
     /**
      * //TODO : what exactly do we want to do? (same for all the above)
-     * @param dataToLookup list of string to lookup?
+//     * @param dataToLookup list of string to lookup?
      * @return TableData returned
      */
+
+    //ResultSet getTableData(String sql); // is this what we want? Not quite sure yet
+
     //TableRow getTableData(Set<String> dataToLookup); // is this what we want? Not quite sure yet
+
 }

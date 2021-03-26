@@ -9,8 +9,8 @@ import interfaces.DataHandlerDelegate;
 import javafx.application.Platform;
 import model.table.Table;
 
-
 public class Controller implements ControllerDelegate {
+
     ConnectionHandlerDelegate connectionHandler;
     DataHandlerDelegate dataHandler;
 
@@ -25,6 +25,7 @@ public class Controller implements ControllerDelegate {
      * @param pwd password string
      */
     public ConnectionStateDelegate login(String username, String pwd){
+
         ConnectionStateDelegate cs = connectionHandler.login(username, pwd);
         if (cs.isConnected()) {
             dataHandler = new DataHandler();

@@ -33,28 +33,14 @@ public final class DataHandler implements DataHandlerDelegate {
         dropAllTablesIfExist(); // TODO: comment this out if you want to keep all data in tables
         // TODO: Leave this line if you want to clear all tabledata when the application starts
         // In the future, this can be set as an option in the application
-
         parseDDL();
         parseMDL();
-
     }
 
     @Override
     public void insertTableData(TableModel data) {
         throw new RuntimeException("Not implemented yet");
     }
-
-   // @Override
-   // public void updateTableData(TableRow data) {
-       // throw new RuntimeException("Not implemented yet");
-    //}
-
-   // @Override
-    //public TableRow getTableData(Set<String> dataToLookup) {
-    //    throw new RuntimeException("Not implemented yet");
-        //return null;
-   // }
-
 
     @Override
     public void performQuery(String query, Consumer<Table> callback) {
@@ -119,10 +105,8 @@ public final class DataHandler implements DataHandlerDelegate {
             System.out.println("Bleurh");
         }
         System.out.println(mdlStatements.size() + " insert statements run. Double click on tables in sidebar to verify data");
-
-
-//
     }
+
 
     private void dropAllTablesIfExist() {
         Set<String> tableNames = OracleTableNames.TABLE_NAMES;
@@ -149,6 +133,7 @@ public final class DataHandler implements DataHandlerDelegate {
             throwables.printStackTrace();
         }
     }
+
 }
 
 
