@@ -80,13 +80,6 @@ public final class DataHandler implements DataHandlerDelegate {
                     throwables.printStackTrace();
                     throwables.printStackTrace(pw);
                 }
-//            String tableName = getTableNameFromMDL(mdlStatement);
-//            String[] columns  = getColumNamesFromMDL(mdlStatement);
-//            String[] data = getDataFromMDL(mdlStatement);
-//            addSpecifiedData(tableName, columns, data);
-//            System.out.println(tableName);
-
-
             }
         } catch (IOException e) {
             System.out.println("Bleurh");
@@ -94,78 +87,7 @@ public final class DataHandler implements DataHandlerDelegate {
         System.out.println(mdlStatements.size() + " insert statements run. Double click on tables in sidebar to verify data");
 
 
-        // What you want to do, from the POV of the UI, only using information from RESULT SET (without the formatting)
-        System.out.println("============================== ResultsList Method ==============================");
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT * FROM RESIDENTIALMANAGINGOFFICE JOIN CAMPUS r USING(CZIPCODE, CSTADDRESS)");
-
-
-            int cols = results.getMetaData().getColumnCount();
-            for (int i = 1; i <= cols; i++ ){
-                System.out.format("%-40s", results.getMetaData().getColumnLabel(i));
-            }
-            System.out.println();
-            while (results.next()){
-                for (int i = 1; i <= cols; i++) {
-                    System.out.format("%-40s", results.getString(i));
-                }
-                System.out.println();
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-
-        // My method:
-        // Parsing: On the end of DataHandler
-
-        Table table = null;
-
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT * FROM RESIDENTIALMANAGINGOFFICE JOIN CAMPUS r USING(CZIPCODE, CSTADDRESS)");
-
-            int cols = results.getMetaData().getColumnCount();
-            String [] columnNames = new String [cols];
-            for (int i = 1; i <= cols; i++ ){
-                columnNames[i-1] = results.getMetaData().getColumnLabel(i);
-            }
-
-            table = new Table(columnNames);
-
-            while (results.next()){
-                List<Column>  column = table.getColumnsList();
-                for (int i = 1; i <= cols; i++) {
-                    table.insert(column.get(i-1), results.getString(i));
-                }
-                table.nextRow();
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        // Displaying, on the end of the UI:
-
-        System.out.println("============================== My Method ==============================");
-
-        // Pass in TableList to UI
-        if (table != null) {
-            Set<Column> columnNames = table.getColumns();
-
-            for (Column column: columnNames) {
-                System.out.format("%-40s", column.name); // in UI, add to table columns instead, probably don't need to loop
-            }
-
-            System.out.println(); // for display purposes only
-            for (TableRow tablerow : table) { ;
-                for (Column colName: columnNames) {
-                    System.out.format("%-40s", tablerow.get(colName)); // in UI, add to row instead
-                }
-                System.out.println(); // for display purposes only
-            }
-        }
+//
     }
 
     private void dropAllTablesIfExist() {
@@ -194,3 +116,77 @@ public final class DataHandler implements DataHandlerDelegate {
         }
     }
 }
+
+
+// What you want to do, from the POV of the UI, only using information from RESULT SET (without the formatting)
+//        System.out.println("============================== ResultsList Method ==============================");
+//        try {
+//            Statement stmt = connection.createStatement();
+//            ResultSet results = stmt.executeQuery("SELECT * FROM RESIDENTIALMANAGINGOFFICE JOIN CAMPUS r USING(CZIPCODE, CSTADDRESS)");
+//
+//
+//            int cols = results.getMetaData().getColumnCount();
+//            for (int i = 1; i <= cols; i++ ){
+//                System.out.format("%-40s", results.getMetaData().getColumnLabel(i));
+//            }
+//            System.out.println();
+//            while (results.next()){
+//                for (int i = 1; i <= cols; i++) {
+//                    System.out.format("%-40s", results.getString(i));
+//                }
+//                System.out.println();
+//            }
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
+//
+//
+//        // My method:
+//        // Parsing: On the end of DataHandler
+//
+//        Table table = null;
+//
+//        try {
+//            Statement stmt = connection.createStatement();
+//            ResultSet results = stmt.executeQuery("SELECT * FROM RESIDENTIALMANAGINGOFFICE JOIN CAMPUS r USING(CZIPCODE, CSTADDRESS)");
+//
+//            int cols = results.getMetaData().getColumnCount();
+//            String [] columnNames = new String [cols];
+//            for (int i = 1; i <= cols; i++ ){
+//                columnNames[i-1] = results.getMetaData().getColumnLabel(i);
+//            }
+//
+//            table = new Table(columnNames);
+//
+//            while (results.next()){
+//                List<Column>  column = table.getColumnsList();
+//                for (int i = 1; i <= cols; i++) {
+//                    table.insert(column.get(i-1), results.getString(i));
+//                }
+//                table.nextRow();
+//            }
+//
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
+//
+//        // Displaying, on the end of the UI:
+//
+//        System.out.println("============================== My Method ==============================");
+//
+//        // Pass in TableList to UI
+//        if (table != null) {
+//            Set<Column> columnNames = table.getColumns();
+//
+//            for (Column column: columnNames) {
+//                System.out.format("%-40s", column.name); // in UI, add to table columns instead, probably don't need to loop
+//            }
+//
+//            System.out.println(); // for display purposes only
+//            for (TableRow tablerow : table) { ;
+//                for (Column colName: columnNames) {
+//                    System.out.format("%-40s", tablerow.get(colName)); // in UI, add to row instead
+//                }
+//                System.out.println(); // for display purposes only
+//            }
+//        }
