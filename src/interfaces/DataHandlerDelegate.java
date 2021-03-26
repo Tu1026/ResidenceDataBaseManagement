@@ -1,10 +1,12 @@
 package interfaces;
 
+import model.table.Table;
 import model.table.TableModel;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.function.Consumer;
+
 
 public interface DataHandlerDelegate {
 
@@ -19,6 +21,8 @@ public interface DataHandlerDelegate {
      */
     void initializeDDL();
 
+
+    void performQuery(String query, Consumer<Table> callback);
 
     /**
      * Insert the specified model into the database
@@ -39,7 +43,7 @@ public interface DataHandlerDelegate {
      * @return TableData returned
      */
 
-    ResultSet getTableData(String sql) throws SQLException; // is this what we want? Not quite sure yet
+    //ResultSet getTableData(String sql); // is this what we want? Not quite sure yet
 
     //TableRow getTableData(Set<String> dataToLookup); // is this what we want? Not quite sure yet
 
