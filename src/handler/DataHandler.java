@@ -27,11 +27,6 @@ public final class DataHandler implements DataHandlerDelegate {
 
     public void setConnection(Connection connection) {
         this.connection = connection;
-        try {
-            connection.setAutoCommit(false);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
     public void initializeDDL() {
@@ -69,7 +64,7 @@ public final class DataHandler implements DataHandlerDelegate {
 
     private Table query(PreparedStatement ps) throws SQLException {
         ResultSet results = ps.executeQuery();
-        connection.commit();
+        //connection.commit();
 
         int cols = results.getMetaData().getColumnCount();
         String [] columnNames = new String [cols];
