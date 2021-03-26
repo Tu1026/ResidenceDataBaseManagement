@@ -7,6 +7,9 @@ import interfaces.ConnectionStateDelegate;
 import interfaces.DataHandlerDelegate;
 import model.ConnectionState;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Controller {
     ConnectionHandlerDelegate connectionHandler;
     DataHandlerDelegate dataHandler;
@@ -21,7 +24,7 @@ public class Controller {
      * @param username username string
      * @param pwd password string
      */
-    public void login(String username, String pwd){
+    public boolean login(String username, String pwd){
         ConnectionStateDelegate cs = connectionHandler.login(username, pwd);
         if (cs.isConnected()) {
             dataHandler = new DataHandler();
@@ -29,6 +32,7 @@ public class Controller {
         } else{
             System.err.println("Error initializing dataHandler: Not connected to oracle services");
         }
+        return cs.isConnected();
     }
 
     public void initializeSQLDDL(){
@@ -36,6 +40,12 @@ public class Controller {
             dataHandler.initializeDDL();;
         }
     }
+
+    //Again added for SQL testing can be removed later
+    public ResultSet executeSQL(String sql) throws SQLException {
+        return dataHandler.getTableData(sql);
+    }
+
 
     public void logout(){
         connectionHandler.close();

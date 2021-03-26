@@ -47,11 +47,11 @@ public final class DataHandler implements DataHandlerDelegate {
        // throw new RuntimeException("Not implemented yet");
     //}
 
-   // @Override
-    //public TableRow getTableData(Set<String> dataToLookup) {
-    //    throw new RuntimeException("Not implemented yet");
-        //return null;
-   // }
+//    @Override
+//    public TableRow getTableData(Set<String> dataToLookup) {
+//        throw new RuntimeException("Not implemented yet");
+//        return null;
+//    }
 
     private void parseDDL() {
         List<String> ddlStatements =  sqlParser.parseDDL(new File(DDL_FILE));
@@ -85,10 +85,22 @@ public final class DataHandler implements DataHandlerDelegate {
             System.out.println("Bleurh");
         }
         System.out.println(mdlStatements.size() + " insert statements run. Double click on tables in sidebar to verify data");
-
-
-//
     }
+
+    //I changed this to accomodate for UI testing
+    public ResultSet getTableData(String sql) throws SQLException{
+        ResultSet rs;
+        try (Statement stmt = connection.createStatement()) {
+            rs = connection.createStatement().executeQuery(sql);
+            }
+        catch (SQLException e) {
+            rs = null;
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+
 
     private void dropAllTablesIfExist() {
         Set<String> tableNames = OracleTableNames.TABLE_NAMES;
@@ -115,6 +127,7 @@ public final class DataHandler implements DataHandlerDelegate {
             throwables.printStackTrace();
         }
     }
+
 }
 
 
