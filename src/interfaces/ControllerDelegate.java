@@ -10,4 +10,6 @@ public interface ControllerDelegate {
 
  ConnectionStateDelegate logout();
 
+ void setUI(TableViewUI ui);
+
 }

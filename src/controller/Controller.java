@@ -2,17 +2,15 @@ package controller;
 
 import handler.ConnectionHandler;
 import handler.DataHandler;
-import interfaces.ConnectionHandlerDelegate;
-import interfaces.ConnectionStateDelegate;
-import interfaces.ControllerDelegate;
-import interfaces.DataHandlerDelegate;
+import interfaces.*;
 import javafx.application.Platform;
 import model.table.Table;
 
-public class Controller implements ControllerDelegate {
+public class Controller implements interfaces.ControllerDelegate {
 
     ConnectionHandlerDelegate connectionHandler;
     DataHandlerDelegate dataHandler;
+    TableViewUI ui;
 
     public Controller() {
         connectionHandler = new ConnectionHandler();
@@ -38,9 +36,11 @@ public class Controller implements ControllerDelegate {
 
     @Override
     public void performQuery(String query) {
+        System.out.println("Query initializing...");
         new Thread(() -> {
             dataHandler.performQuery(query, this::resultCallback);
-        });
+            System.out.println("Called !");
+        }).run();
     }
 
     public void initializeSQLDDL(){
@@ -53,9 +53,16 @@ public class Controller implements ControllerDelegate {
         return connectionHandler.close();
     }
 
-    public void resultCallback(Table result){
-        Platform.runLater(() -> {
+    @Override
+    public void setUI(TableViewUI ui) {
+        this.ui = ui;
+    }
 
+    public void resultCallback(Table resultTable){
+        System.out.println("Call back called");
+        Platform.runLater(() -> {
+            ui.updateVisibleTable(resultTable);
+            System.out.println("Run later called");
         });
     }
 }
