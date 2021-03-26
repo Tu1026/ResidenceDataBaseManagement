@@ -19,6 +19,6 @@ public interface SQLParserDelegate {
      * @param file file containing the location of the desired SQL DDL
      * @return List of Strings containing the parsed statements. Every entry is a statement
      */
-    List<String> parseDMLInsert(File file);
+    List<String> parseDMLInsertStatement(File file);
 
 }

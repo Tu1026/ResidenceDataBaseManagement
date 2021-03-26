@@ -1,7 +1,6 @@
 package interfaces;
 
-import model.TableModel;
-import model.tables.TableData;
+import model.table.TableModel;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -31,13 +30,17 @@ public interface DataHandlerDelegate {
      * // to define
      * @param data // to define
      */
-    void updateTableData(TableData data); // need some kind of parameter to specify what we want to update I am guessing
+    //void updateTableData(TableRow data); // need some kind of parameter to specify what we want to update I am guessing
 
     //I temporarly modded it to return Resultset, a set can be used by javafx
     /**
      * //TODO : what exactly do we want to do? (same for all the above)
-     * @param dataToLookup list of string to lookup?
+//     * @param dataToLookup list of string to lookup?
      * @return TableData returned
      */
+
     ResultSet getTableData(String sql) throws SQLException; // is this what we want? Not quite sure yet
+
+    //TableRow getTableData(Set<String> dataToLookup); // is this what we want? Not quite sure yet
+
 }
