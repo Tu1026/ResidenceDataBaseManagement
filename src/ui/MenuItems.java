@@ -7,85 +7,81 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.tables.Campus;
 
 import java.io.IOException;
+import java.util.Set;
 
 import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Node;
 
 public class MenuItems extends Application {
 
-        @FXML
-        private Button CampusB;
 
-        @FXML
-        private Button ResManB;
+        private Button CampusB = new Button("Campus");
 
-        @FXML
-        private Button ResInfoB;
+        private Button ResManB = new Button("Residential Managing Office");
 
-        @FXML
-        private Button ResAddressB;
+        private Button BuildManB = new Button("Building Manager");
 
-        @FXML
-        private Button RAB;
+        private Button SRAB = new Button ("Senior Advisor");
 
-        @FXML
-        private Button SRAB;
+        private Button RAB = new Button("Residence Advisor");
 
-        @FXML
-        private Button FloorB;
+        private Button ResAddressB = new Button("Residential Address");
 
-        @FXML
-        private Button HouseB;
+        private Button ResBudgetB = new Button("Residence Budget");
 
-        @FXML
-        private Button ResB;
+        private Button ResCapB = new Button("Residence Capacity");
 
-        @FXML
-        private Button ResBudgetB;
+        private Button ResB = new Button("Residence");
 
-        @FXML
-        private Button ResCapB;
+        private Button FloorB = new Button("Floor");
 
-        @FXML
-        private Button UnitB;
+        private Button HouseB = new Button("House");
 
-        @FXML
-        private Button BuildManB;
+        private Button UnitB = new Button("Unit");
 
-        @FXML
-        private Button testButton;
+        private Button ResInfoB = new Button("Resident Info");
+
+        public static Scene menuScene;
 
 
         @Override
         public void start(Stage primaryStage) throws IOException {
-            Parent root = FXMLLoader.load(getClass().getResource("MenuItems.fxml"));
+
+//            Parent root = FXMLLoader.load(getClass().getResource("MenuItems.fxml"));
+            GridPane grids = new GridPane();
+            grids.add(FloorB, 0,0);
+            grids.add(UnitB, 0, 1);
+            grids.addRow(5);
+
+
             primaryStage.setTitle("Menu");
-            Scene scene = new Scene(root, 1024, 768);
-            primaryStage.setScene(scene);
+            Scene menuScene = new Scene(grids, 1024, 768);
+            primaryStage.setScene(menuScene);
             primaryStage.show();
 
         }
 
-        @FXML
-        private void goIntoTables (ActionEvent event) throws Exception {
-            Stage stage;
-            Parent root;
-
-            if(event.getSource()== CampusB){
-                stage = (Stage) CampusB.getScene().getWindow();
-                root = FXMLLoader.load(getClass().getResource("FXML2.fxml"));
-            }
-            else{
-                stage = (Stage) CampusB.getScene().getWindow();
-                root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-            }
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        }
+//        @FXML
+//        private void goIntoTables (ActionEvent event) throws Exception {
+//            Stage stage;
+//            Parent root;
+//
+//            if(event.getSource()== CampusB){
+//                stage = (Stage) CampusB.getScene().getWindow();
+//                root = FXMLLoader.load(getClass().getResource("FXML2.fxml"));
+//            }
+//            else{
+//                stage = (Stage) CampusB.getScene().getWindow();
+//                root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+//            }
+//            Scene scene = new Scene(root);
+//            stage.setScene(scene);
+//            stage.show();
+//        }
 
     public static void main(String[] args) {
         launch(args);
