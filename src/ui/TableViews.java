@@ -8,14 +8,17 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
 
@@ -26,47 +29,61 @@ import java.sql.ResultSet;
 public class TableViews extends Application {
 
     TableView tables = new TableView();
-    public Controller c = null;
-
-    public void createCon(Controller controller) {
-        c = controller;
-    }
 
     public Scene tableScene;
 
 
-    public TableViews(String mode){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("TableViews.fxml"));
-        loader.setController(this);
-        Parent root;
-        try {
-            root = loader.load();
+    public TableViews(String mode, Controller c){
+        GridPane outerPane = new GridPane();
+        GridPane innerPane = new GridPane();
+        
+        outerPane.add(innerPane, 0, 0);
+        outerPane.getColumnConstraints().add(new ColumnConstraints(946));
+        outerPane.getRowConstraints().add(new RowConstraints(342));
+        outerPane.getRowConstraints().add(new RowConstraints(456));
 
-        } catch (Exception e){
-            root=null;
-        }
-        Controller controller = new Controller();
+        ComboBox selectTables = new ComboBox();
+        selectTables.setPrefSize(250,36);
+        selectTables.getItems().add("Campus");
+        selectTables.getItems().add("Residential Managing Office");
+        selectTables.getItems().add("Building Manager");
+        selectTables.getItems().add("Senior Advisor");
+        selectTables.getItems().add("Residence Advisor");
+        selectTables.getItems().add("Residential Address");
+        selectTables.getItems().add("Residence Budget");
+        selectTables.getItems().add("Residence Capacity");
+        selectTables.getItems().add("Floor");
+        selectTables.getItems().add("House");
+        selectTables.getItems().add("Unit");
+        selectTables.getItems().add("Resident Info");
 
-        controller.initializeSQLDDL();
+        outerPane.add(selectTables,1,0);
+        outerPane.setHalignment(selectTables, HPos.CENTER);
+        outerPane.setValignment(selectTables, VPos.CENTER);
+
+        Button goToTable = new Button("Go to Table");
+        goToTable.setPrefSize(113,36);
+        outerPane.add(goToTable, 1,1);
+        outerPane.setHalignment(goToTable, HPos.CENTER);
+        outerPane.setValignment(goToTable, VPos.CENTER);
+
+
+
+
 
         ResultSet rs;
         try {
-            rs = controller.executeSQL("SELECT table_name FROM user_tables");
+            rs = c.executeSQL("SELECT table_name FROM user_tables");
         } catch (Exception e) {
             e.printStackTrace();
             rs = null;
         }
         buildData(rs);
-        tables.prefWidthProperty().bind(p1.widthProperty());
-        tables.prefHeightProperty().bind(p1.heightProperty());
+        tables.prefWidthProperty().bind(innerPane.widthProperty());
+        tables.prefHeightProperty().bind(innerPane.heightProperty());
+        innerPane.add(tables, 0,0);
         tables.setStyle("-fx-border-color: #000000");
-        p1.getChildren().add(tables);
-        tableScene = new Scene(root);
-//        return tableScene
-//        primaryStage.setTitle("Residence Database");
-//        Scene scene = new Scene(root);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
+        tableScene = new Scene(outerPane, 1124,798);
     }
 
     public Scene getScene(){
@@ -123,18 +140,14 @@ public class TableViews extends Application {
         }
     }
 
-
-
-
-    @FXML
-    private GridPane p1;
-
-
     @Override
     public void start(Stage primaryStage) throws IOException, InterruptedException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("TableViews.fxml"));
-        loader.setController(this);
-        Parent root = loader.load();
+        GridPane outerPane = new GridPane();
+        GridPane innerPane = new GridPane();
+        outerPane.add(innerPane, 0, 0);
+        outerPane.getColumnConstraints().add(new ColumnConstraints(946));
+        outerPane.getRowConstraints().add(new RowConstraints(276));
+
         Controller controller = new Controller();
         controller.login("ora_linshuan", "a41053539");
         controller.initializeSQLDDL();
@@ -147,15 +160,11 @@ public class TableViews extends Application {
             rs = null;
         }
         buildData(rs);
-        tables.prefWidthProperty().bind(p1.widthProperty());
-        tables.prefHeightProperty().bind(p1.heightProperty());
+        tables.prefWidthProperty().bind(innerPane.widthProperty());
+        tables.prefHeightProperty().bind(innerPane.heightProperty());
+        innerPane.add(tables, 0,0);
         tables.setStyle("-fx-border-color: #000000");
-
-        primaryStage.setTitle("Residence Database");
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
-        p1.getChildren().add(tables);
-        primaryStage.show();
+        tableScene = new Scene(outerPane, 1124,798);
 
 
     }

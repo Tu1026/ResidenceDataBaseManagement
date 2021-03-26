@@ -96,18 +96,9 @@ public class LoginFrame extends Application {
             Boolean connected = con.login(sUserName, sPassword);
             if (connected){
                 con.initializeSQLDDL();
-                TableViews newTable = new TableViews("Authors");
+                TableViews newTable = new TableViews("Authors", con);
                 primaryStage.setScene(newTable.getScene());
-//                Parent MenuItems;
-//                try {
-//                    MenuItems = FXMLLoader.load(getClass().getResource("MenuItems.fxml"));
-//                } catch (Exception e1){
-//                    MenuItems = null;
-//                }
-//                Scene MenuScene = new Scene(MenuItems);
-//                Stage MenuStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-//                MenuStage.setScene(MenuScene);
-//                MenuStage.show();
+
             }else {
                 Alert a = new Alert(Alert.AlertType.WARNING);
                 a.setTitle("Incorrect Credentials");

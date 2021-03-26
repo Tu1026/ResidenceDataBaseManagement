@@ -27,7 +27,7 @@
          </rowConstraints>
       </GridPane>
       <Button mnemonicParsing="false" prefHeight="36.0" prefWidth="113.0" text="Go to table" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-      <MenuButton mnemonicParsing="false" text="MenuButton" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <MenuButton mnemonicParsing="false" text="MenuButton" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">
         <items>
           <MenuItem mnemonicParsing="false" text="Action 1" />
           <MenuItem mnemonicParsing="false" text="Action 2" />
