@@ -70,6 +70,7 @@ public class LoginFrame extends Application {
                 controller.initializeSQLDDL();
                 TableViews newTable = new TableViews(controller);
                 primaryStage.setScene(newTable.getScene());
+                primaryStage.setTitle("Manage Your Residence Database here!");
 
             }else {
                 Alert a = new Alert(Alert.AlertType.WARNING);

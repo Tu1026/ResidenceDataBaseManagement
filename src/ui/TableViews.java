@@ -1,6 +1,7 @@
 package ui;
 
 import controller.Controller;
+import interfaces.ConnectionStateDelegate;
 import interfaces.ControllerDelegate;
 import interfaces.TableViewUI;
 import javafx.application.Application;
@@ -76,6 +77,53 @@ public class TableViews extends Application implements TableViewUI {
         tables.prefWidthProperty().bind(innerPane.widthProperty());
         tables.prefHeightProperty().bind(innerPane.heightProperty());
         innerPane.add(tables, 0,0);
+
+        goToTable.setOnAction(e -> {
+            String tableState = selectTables.getValue().toString();
+            System.out.println(tableState);
+//            controller.loadTable(tableState.replaceAll(" ", ""));
+            switch (tableState) {
+                case "Campus":
+                    controller.loadTable("Campus");
+                    break;
+                case "Residential Managing Office":
+                    controller.loadTable("ResidentialManagingOffice");
+                    break;
+                case "Building Manager":
+                    controller.loadTable("BuildingManager");
+                    break;
+                case "Senior Advisor":
+                    controller.loadTable("SeniorAdvisor");
+                    break;
+                case "Residence Advisor":
+                    controller.loadTable("ResidenceAdvisor");
+                    break;
+                case "Residential Address":
+                    controller.loadTable("ResidentAddress");
+                    break;
+                case "Residence Budget":
+                    controller.loadTable("ResidenceBudget");
+                    break;
+                case "Residence Capacity":
+                    controller.loadTable("ResidenceCapacity");
+                    break;
+                case "Residence":
+                    controller.loadTable("Residence");
+                    break;
+                case "Floor":
+                    controller.loadTable("Floor");
+                    break;
+                case "House":
+                    controller.loadTable("House");
+                    break;
+                case "Unit":
+                    controller.loadTable("Unit");
+                    break;
+                case "Resident Info":
+                    controller.loadTable("ResidentInfo");
+                    break;
+            }
+        });
 
         tables.setStyle("-fx-border-color: #000000");
         tableScene = new Scene(outerPane, 1124,798);
