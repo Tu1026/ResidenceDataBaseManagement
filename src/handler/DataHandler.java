@@ -31,26 +31,24 @@ public final class DataHandler implements DataHandlerDelegate {
     public void initializeDDL() {
         dropAllTablesIfExist(); // TODO: comment this out if you want to keep all data in tables
         // TODO: Leave this line if you want to clear all tabledata when the application starts
-        // In the future, this can be set as an option in the application
+        // In the future, this can be set as a button in the application
         parseDDL();
         parseMDL();
     }
 
     @Override
     public void insertTableData(TableModel data) {
-        throw new RuntimeException("Not implemented yet");
+        throw new RuntimeException("Insert TableData not implemented yet");
     }
 
     @Override
     public void getTableData(String tableToLookup, Consumer<Table> callback) {
-
-
         String query = "SELECT * FROM " + tableToLookup.toUpperCase();
 
         if (OracleTableNames.TABLE_NAMES.contains(tableToLookup.toUpperCase())) {
             Table table = null;
             try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
-                table = query(ps);
+                table = executeQueryAndParse(ps);
 
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -62,10 +60,9 @@ public final class DataHandler implements DataHandlerDelegate {
         }
     }
 
-    private Table query(PrintablePreparedStatement ps) throws SQLException {
-        System.out.println("Running...");
+    private Table executeQueryAndParse(PrintablePreparedStatement ps) throws SQLException {
+        System.out.println("Running query ...");
         ResultSet results = ps.executeQuery();
-        //connection.commit();
         int cols = results.getMetaData().getColumnCount();
         String [] columnNames = new String [cols];
 
@@ -90,9 +87,7 @@ public final class DataHandler implements DataHandlerDelegate {
     public void performQuery(String query, Consumer<Table> callback) {
         Table table = null;
         try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)){
-            table = this.query(ps);
-
-
+            table = this.executeQueryAndParse(ps);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
