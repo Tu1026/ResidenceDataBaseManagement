@@ -23,30 +23,11 @@ public class LoginFrame extends Application {
 
     public static Controller con;
 
-//
-//    @FXML
-//    void logIntoDB(ActionEvent event) throws IOException {
-//        String sUserName = userName.getText().toLowerCase().trim();
-//        String sPassword = password.getText().toLowerCase().trim();
-//        Controller con = new Controller();
-//        con.login(sUserName, sPassword);
-//        con.initializeSQLDDL();
-//
-//        Parent MenuItems = FXMLLoader.load(getClass().getResource("MenuItems.fxml"));
-//        Scene MenuScene = new Scene(MenuItems);
-//        Stage MenuStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//        MenuStage.setScene(MenuScene);
-//        MenuStage.show();
-//
-//    }
 
 
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("LoginFrame.fxml"));
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
+    public void start(Stage primaryStage) {
         Pane layout = new Pane();
         Label userName = new Label("UserName");
         userName.setLayoutX(32);

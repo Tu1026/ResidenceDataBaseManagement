@@ -67,10 +67,6 @@ public class TableViews extends Application {
         outerPane.setHalignment(goToTable, HPos.CENTER);
         outerPane.setValignment(goToTable, VPos.CENTER);
 
-
-
-
-
         ResultSet rs;
         try {
             rs = c.executeSQL("SELECT table_name FROM user_tables");
