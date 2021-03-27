@@ -47,7 +47,7 @@ public class Controller implements ControllerDelegate {
                 System.err.println("Updating table to data from Campus in 4 seconds...");
                 Thread.sleep(4000);
                 System.out.println("Starting Campus Query");
-                dataHandler.getTableData("Campus", this::resultCallback);
+                loadTable("Campus");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
