@@ -40,6 +40,18 @@ public class Controller implements ControllerDelegate {
         new Thread(() -> {
             dataHandler.performQuery(query, this::resultCallback);
         }).start();
+
+        // This will be deleted in the future
+        new Thread(() -> {
+            try {
+                System.err.println("Updating table to data from Campus in 4 seconds...");
+                Thread.sleep(4000);
+                System.out.println("Starting Campus Query");
+                loadTable("Campus");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void initializeSQLDDL(){

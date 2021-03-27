@@ -2,17 +2,16 @@ package handler;
 
 import interfaces.DataHandlerDelegate;
 import interfaces.SQLParserDelegate;
+import sql.PrintablePreparedStatement;
 import model.table.Column;
 import model.table.Table;
 import model.table.TableModel;
 import model.OracleTableNames;
-import model.table.TableRow;
 
 import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public final class DataHandler implements DataHandlerDelegate {
 
@@ -32,25 +31,24 @@ public final class DataHandler implements DataHandlerDelegate {
     public void initializeDDL() {
         dropAllTablesIfExist(); // TODO: comment this out if you want to keep all data in tables
         // TODO: Leave this line if you want to clear all tabledata when the application starts
-        // In the future, this can be set as an option in the application
+        // In the future, this can be set as a button in the application
         parseDDL();
         parseMDL();
     }
 
     @Override
     public void insertTableData(TableModel data) {
-        throw new RuntimeException("Not implemented yet");
+        throw new RuntimeException("Insert TableData not implemented yet");
     }
 
     @Override
     public void getTableData(String tableToLookup, Consumer<Table> callback) {
-
-        Table table = null;
+        String query = "SELECT * FROM " + tableToLookup.toUpperCase();
 
         if (OracleTableNames.TABLE_NAMES.contains(tableToLookup.toUpperCase())) {
-
-            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + tableToLookup.toUpperCase())) {
-                table = query(ps);
+            Table table = null;
+            try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
+                table = executeQueryAndParse(ps);
 
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -62,10 +60,9 @@ public final class DataHandler implements DataHandlerDelegate {
         }
     }
 
-    private Table query(PreparedStatement ps) throws SQLException {
+    private Table executeQueryAndParse(PrintablePreparedStatement ps) throws SQLException {
+        System.out.println("Running query ...");
         ResultSet results = ps.executeQuery();
-        //connection.commit();
-
         int cols = results.getMetaData().getColumnCount();
         String [] columnNames = new String [cols];
 
@@ -89,10 +86,8 @@ public final class DataHandler implements DataHandlerDelegate {
     @Override
     public void performQuery(String query, Consumer<Table> callback) {
         Table table = null;
-        try (PreparedStatement ps = connection.prepareStatement(query)){
-            System.out.println("Running " + query + " ...");
-            table = this.query(ps);
-
+        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)){
+            table = this.executeQueryAndParse(ps);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {

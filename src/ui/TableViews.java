@@ -23,24 +23,21 @@ import model.table.TableRow;
 
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.util.List;
 
 
 public class TableViews extends Application implements TableViewUI {
 
-    TableView tables = new TableView();
+    TableView<ObservableList<String>> tables = new TableView<>();
     public Controller c = null;
-
-    public void createCon(Controller controller) {
-        c = controller;
-    }
+    ObservableList<ObservableList<String>> data;
 
     public Scene tableScene;
 
 
     public TableViews(ControllerDelegate controller) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("TableViews.fxml"));
+        data = FXCollections.observableArrayList();
         loader.setController(this);
         controller.setUI(this);
         Parent root;
@@ -51,10 +48,7 @@ public class TableViews extends Application implements TableViewUI {
             root = null;
         }
 
-
         controller.performQuery("SELECT * FROM RESIDENTIALMANAGINGOFFICE JOIN CAMPUS r USING(CZIPCODE, CSTADDRESS)");
-        //controller.loadTable("CAMPUS");
-
 
         tables.prefWidthProperty().bind(p1.widthProperty());
         tables.prefHeightProperty().bind(p1.heightProperty());
@@ -74,11 +68,13 @@ public class TableViews extends Application implements TableViewUI {
 
     //    Following the tutorial here to help generate dynamic columns https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
     public void buildData(Table table) {
-        ObservableList<ObservableList> data;
         data = FXCollections.observableArrayList();
+        tables.getItems().clear();
+        tables.getColumns().clear();
+
         try {
 
-            /**
+            /*q
              * ********************************
              * TABLE COLUMN ADDED DYNAMICALLY *
              *********************************
@@ -87,18 +83,14 @@ public class TableViews extends Application implements TableViewUI {
             if (table != null) {
                 List<Column> columnNames = table.getColumnsList();
                 for (int i = 0; i < columnNames.size(); i++ ){
-                    final int j = i;
-                    TableColumn col = new TableColumn(columnNames.get(i).name);
-                    col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
-                        public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
-                            return new SimpleStringProperty(param.getValue().get(j).toString());
-                        }
-                    });
-                    tables.getColumns().addAll(col);
+                    final  int j = i;
+                    TableColumn<ObservableList<String>, String> col = new TableColumn<>(columnNames.get(i).name);
+                    col.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(j).toString()));
+                    tables.getColumns().add(col);
                     System.out.println("Column [" + i + "] ");
                 }
 
-                /**
+                /*
                  * ******************************
                  * Data added to ObservableList *
                  *******************************
@@ -115,6 +107,7 @@ public class TableViews extends Application implements TableViewUI {
             }
             //FINALLY ADDED TO TableView
             tables.setItems(data);
+            tables.refresh();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error on Building Data");
