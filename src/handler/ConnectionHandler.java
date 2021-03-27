@@ -26,19 +26,22 @@ public final class ConnectionHandler implements ConnectionHandlerDelegate {
     }
 
     public ConnectionStateDelegate login(String username, String pwd) {
+        String message = "";
         if (!isLoggedIn) {
             try {
                 connection = DriverManager.getConnection(ORACLE_URL, username, pwd);
                 System.out.println(username + " logged in to oracle");
                 isLoggedIn = true;
             } catch (SQLException e){
+                message = e.getMessage();
                 System.err.println("Error logging in: " + e.getMessage());
             }
         } else{
             System.out.println("Error logging in: already logged in. \nClose the connection first and try again");
+            message = "Already loggin, make sure the connection is closed and try again";
         }
 
-        return new ConnectionState(connection, isLoggedIn);
+        return new ConnectionState(connection, isLoggedIn, message);
     }
 
     /**

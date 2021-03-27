@@ -2,7 +2,7 @@ package model.table;
 
 import java.util.Objects;
 
-public class Column {
+public final class Column {
 
     public final String name;
 
@@ -16,7 +16,7 @@ public class Column {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Column column = (Column) o;
-        return name.equals(column.name);
+        return Objects.equals(name, column.name);
     }
 
     @Override

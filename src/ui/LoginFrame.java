@@ -1,29 +1,19 @@
 package ui;
 
 import controller.Controller;
+import interfaces.ConnectionStateDelegate;
+import interfaces.ControllerDelegate;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
-import javafx.fxml.FXML;
-
-import java.io.IOException;
 
 public class LoginFrame extends Application {
 
 
-    public static Controller con;
-
-
+    public ControllerDelegate controller;
 
 
     @Override
@@ -73,21 +63,20 @@ public class LoginFrame extends Application {
         login.setOnAction(e -> {
             String sUserName = userNameText.getText().toLowerCase().trim();
             String sPassword = passwordText.getText().toLowerCase().trim();
-            Controller con = new Controller();
-            Boolean connected = con.login(sUserName, sPassword);
-            if (connected){
-                con.initializeSQLDDL();
-                TableViews newTable = new TableViews("Authors", con);
+
+            controller = new Controller();
+            ConnectionStateDelegate connectionState = controller.login(sUserName, sPassword);
+            if (connectionState.isConnected()){
+                controller.initializeSQLDDL();
+                TableViews newTable = new TableViews(controller);
                 primaryStage.setScene(newTable.getScene());
 
             }else {
                 Alert a = new Alert(Alert.AlertType.WARNING);
-                a.setTitle("Incorrect Credentials");
-                a.setContentText("Incorrect Username or Password");
+                a.setTitle("Error Connecting to Oracle");
+                a.setContentText(connectionState.getMessage());
                 a.showAndWait();
             }
-
-
         });
 
         layout.getChildren().addAll(password, userName, login, userBox, passwordBox);
@@ -95,11 +84,24 @@ public class LoginFrame extends Application {
         Scene scene = new Scene(layout, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
+        primaryStage.setResizable(false);
     }
 
 
-
-
+    /**
+     * Runs when application stops
+     * Attemps to log out of oracle before closing app
+     * Avoids problems with multiple users connected
+     * @throws Exception
+     */
+    @Override
+    public void stop() throws Exception {
+        System.out.println("logged out and stopping...");
+        if (! controller.logout().isConnected()) {
+            System.out.println("Logged out");
+        }else{
+            System.out.println("error logging out, force stopping.");
+        }
+        super.stop();
+    }
 }

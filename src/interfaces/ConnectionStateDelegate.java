@@ -14,4 +14,10 @@ public interface ConnectionStateDelegate {
      * @return oracle Connection Object
      */
     Connection getConnection();
+
+    /**
+     * String containning connection messages
+     * @return String with any messages / errors
+     */
+    String getMessage();
 }

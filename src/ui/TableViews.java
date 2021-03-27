@@ -1,7 +1,8 @@
 package ui;
 
 import controller.Controller;
-import handler.DataHandler;
+import interfaces.ControllerDelegate;
+import interfaces.TableViewUI;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -20,20 +21,24 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.util.Callback;
+import model.table.Column;
+import model.table.Table;
+import model.table.TableRow;
 
 
 import java.io.IOException;
-import java.sql.ResultSet;
+import java.util.List;
 
 
-public class TableViews extends Application {
+public class TableViews extends Application implements TableViewUI {
 
-    TableView tables = new TableView();
-
+    TableView<ObservableList<String>> tables = new TableView<>();
+    ObservableList<ObservableList<String>> data;
     public Scene tableScene;
 
 
-    public TableViews(String mode, Controller c){
+    public TableViews(ControllerDelegate controller){
+        controller.setUI(this);
         GridPane outerPane = new GridPane();
         GridPane innerPane = new GridPane();
         
@@ -56,6 +61,7 @@ public class TableViews extends Application {
         selectTables.getItems().add("House");
         selectTables.getItems().add("Unit");
         selectTables.getItems().add("Resident Info");
+        selectTables.getSelectionModel().selectFirst();
 
         outerPane.add(selectTables,1,0);
         outerPane.setHalignment(selectTables, HPos.CENTER);
@@ -66,70 +72,61 @@ public class TableViews extends Application {
         outerPane.add(goToTable, 1,1);
         outerPane.setHalignment(goToTable, HPos.CENTER);
         outerPane.setValignment(goToTable, VPos.CENTER);
-
-        ResultSet rs;
-        try {
-            rs = c.executeSQL("SELECT table_name FROM user_tables");
-        } catch (Exception e) {
-            e.printStackTrace();
-            rs = null;
-        }
-        buildData(rs);
+        controller.performQuery("SELECT * FROM Campus");
         tables.prefWidthProperty().bind(innerPane.widthProperty());
         tables.prefHeightProperty().bind(innerPane.heightProperty());
         innerPane.add(tables, 0,0);
+
         tables.setStyle("-fx-border-color: #000000");
         tableScene = new Scene(outerPane, 1124,798);
     }
 
-    public Scene getScene(){
+    public Scene getScene() {
         return tableScene;
     }
 
     //    Following the tutorial here to help generate dynamic columns https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
-    public void buildData(ResultSet rs) {
-        ObservableList<ObservableList> data;
+    public void buildData(Table table) {
         data = FXCollections.observableArrayList();
+        tables.getItems().clear();
+        tables.getColumns().clear();
+
         try {
 
-            /**
+            /*q
              * ********************************
              * TABLE COLUMN ADDED DYNAMICALLY *
              *********************************
              */
-            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-                //We are using non property style for making dynamic table
-                final int j = i;
-                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
-                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
-                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
-                        return new SimpleStringProperty(param.getValue().get(j).toString());
-                    }
-                });
 
-                tables.getColumns().addAll(col);
-                System.out.println("Column [" + i + "] ");
-            }
-
-            /**
-             * ******************************
-             * Data added to ObservableList *
-             *******************************
-             */
-            while (rs.next()) {
-                //Iterate Row
-                ObservableList<String> row = FXCollections.observableArrayList();
-                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                    //Iterate Column
-                    row.add(rs.getString(i));
+            if (table != null) {
+                List<Column> columnNames = table.getColumnsList();
+                for (int i = 0; i < columnNames.size(); i++ ){
+                    final  int j = i;
+                    TableColumn<ObservableList<String>, String> col = new TableColumn<>(columnNames.get(i).name);
+                    col.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(j).toString()));
+                    tables.getColumns().add(col);
+                    System.out.println("Column [" + i + "] ");
                 }
-                System.out.println("Row [1] added " + row);
-                data.add(row);
 
+                /*
+                 * ******************************
+                 * Data added to ObservableList *
+                 *******************************
+                 */
+
+                for (TableRow tablerow : table) {
+                    ObservableList<String> row = FXCollections.observableArrayList();
+                    for (Column column : columnNames) {
+                        row.add(tablerow.get(column));
+                    }
+                    data.add(row);
+
+                }
             }
-
             //FINALLY ADDED TO TableView
             tables.setItems(data);
+            tables.refresh();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error on Building Data");
@@ -148,14 +145,6 @@ public class TableViews extends Application {
         controller.login("ora_linshuan", "a41053539");
         controller.initializeSQLDDL();
 
-        ResultSet rs;
-        try {
-            rs = controller.executeSQL("SELECT table_name FROM user_tables");
-        } catch (Exception e) {
-            e.printStackTrace();
-            rs = null;
-        }
-        buildData(rs);
         tables.prefWidthProperty().bind(innerPane.widthProperty());
         tables.prefHeightProperty().bind(innerPane.heightProperty());
         innerPane.add(tables, 0,0);
@@ -163,5 +152,10 @@ public class TableViews extends Application {
         tableScene = new Scene(outerPane, 1124,798);
 
 
+    }
+
+    @Override
+    public void updateVisibleTable(Table table) {
+        buildData(table);
     }
 }
