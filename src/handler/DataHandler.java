@@ -2,17 +2,16 @@ package handler;
 
 import interfaces.DataHandlerDelegate;
 import interfaces.SQLParserDelegate;
+import sql.PrintablePreparedStatement;
 import model.table.Column;
 import model.table.Table;
 import model.table.TableModel;
 import model.OracleTableNames;
-import model.table.TableRow;
 
 import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public final class DataHandler implements DataHandlerDelegate {
 
@@ -45,11 +44,12 @@ public final class DataHandler implements DataHandlerDelegate {
     @Override
     public void getTableData(String tableToLookup, Consumer<Table> callback) {
 
-        Table table = null;
+
+        String query = "SELECT * FROM " + tableToLookup.toUpperCase();
 
         if (OracleTableNames.TABLE_NAMES.contains(tableToLookup.toUpperCase())) {
-
-            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + tableToLookup.toUpperCase())) {
+            Table table = null;
+            try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
                 table = query(ps);
 
             } catch (SQLException throwables) {
@@ -62,10 +62,10 @@ public final class DataHandler implements DataHandlerDelegate {
         }
     }
 
-    private Table query(PreparedStatement ps) throws SQLException {
+    private Table query(PrintablePreparedStatement ps) throws SQLException {
+        System.out.println("Running...");
         ResultSet results = ps.executeQuery();
         //connection.commit();
-
         int cols = results.getMetaData().getColumnCount();
         String [] columnNames = new String [cols];
 
@@ -89,9 +89,9 @@ public final class DataHandler implements DataHandlerDelegate {
     @Override
     public void performQuery(String query, Consumer<Table> callback) {
         Table table = null;
-        try (PreparedStatement ps = connection.prepareStatement(query)){
-            System.out.println("Running " + query + " ...");
+        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)){
             table = this.query(ps);
+
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();

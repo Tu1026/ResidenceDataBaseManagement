@@ -13,9 +13,10 @@ import javafx.stage.Stage;
 public class LoginFrame extends Application {
 
 
-    public static Controller con;
+    public ControllerDelegate controller;
 
-//
+
+    //
 //    @FXML
 //    void logIntoDB(ActionEvent event) throws IOException {
 //        String sUserName = userName.getText().toLowerCase().trim();
@@ -31,8 +32,6 @@ public class LoginFrame extends Application {
 //        MenuStage.show();
 //
 //    }
-
-
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -84,7 +83,7 @@ public class LoginFrame extends Application {
         login.setOnAction(e -> {
             String sUserName = userNameText.getText().toLowerCase().trim();
             String sPassword = passwordText.getText().toLowerCase().trim();
-            ControllerDelegate controller = new Controller();
+            controller = new Controller();
             ConnectionStateDelegate connectionState = controller.login(sUserName, sPassword);
             if (connectionState.isConnected()){
                 controller.initializeSQLDDL();
@@ -102,12 +101,10 @@ public class LoginFrame extends Application {
 //                MenuStage.show();
             }else {
                 Alert a = new Alert(Alert.AlertType.WARNING);
-                a.setTitle("Incorrect Credentials");
-                a.setContentText("Incorrect Username or Password");
+                a.setTitle("Error Connecting to Oracle");
+                a.setContentText(connectionState.getMessage());
                 a.showAndWait();
             }
-
-
         });
 
         layout.getChildren().addAll(password, userName, login, userBox, passwordBox);
@@ -115,11 +112,24 @@ public class LoginFrame extends Application {
         Scene scene = new Scene(layout, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
+        primaryStage.setResizable(false);
     }
 
 
-
-
+    /**
+     * Runs when application stops
+     * Attemps to log out of oracle before closing app
+     * Avoids problems with multiple users connected
+     * @throws Exception
+     */
+    @Override
+    public void stop() throws Exception {
+        System.out.println("logged out and stopping...");
+        if (! controller.logout().isConnected()) {
+            System.out.println("Logged out");
+        }else{
+            System.out.println("error logging out, force stopping.");
+        }
+        super.stop();
+    }
 }
