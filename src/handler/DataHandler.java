@@ -42,23 +42,33 @@ public final class DataHandler implements DataHandlerDelegate {
     }
 
     @Override
-    public void getTableData(String tableToLookup, Consumer<Table> callback) {
-        String query = "SELECT * FROM " + tableToLookup.toUpperCase();
+    public void getTableData(String prettyTable, Consumer<Table> callback) {
+        String [] tablesToLookup = new String[0];
+        
+        if (OracleTableNames.GET_ORACLE_NAME.containsKey(prettyTable)) {
+            tablesToLookup = new String[]{OracleTableNames.GET_ORACLE_NAME.get(prettyTable)};
+        }
+        else if (OracleTableNames.GET_COMPOUND_TABLES.containsKey(prettyTable)) {
+            tablesToLookup = OracleTableNames.GET_COMPOUND_TABLES.get(prettyTable);
+        }
+        StringBuilder query = new StringBuilder("SELECT * FROM ");
+        query.append(tablesToLookup[0]);
+         if (tablesToLookup.length > 1) {
+            for (int i = 1; i < tablesToLookup.length; i++) {
+                query.append(" NATURAL JOIN ").append(tablesToLookup[i]);
+            }
+        }
 
-        if (OracleTableNames.TABLE_NAMES.contains(tableToLookup.toUpperCase())) {
             Table table = null;
-            try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
+            try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query.toString()), query.toString())) {
                 table = executeQueryAndParse(ps);
-                table.setName(tableToLookup);
+                table.setName(prettyTable);
 
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             } finally {
                 callback.accept(table);
             }
-        }else {
-            System.err.println("Invalid table name: " + tableToLookup);
-        }
     }
 
     public void filterTable(String tableToLookup, String filter, String column, Consumer<Table> callback){
@@ -154,7 +164,7 @@ public final class DataHandler implements DataHandlerDelegate {
 
 
     private void dropAllTablesIfExist() {
-        Set<String> tableNames = OracleTableNames.TABLE_NAMES;
+        List<String> tableNames = OracleTableNames.TABLE_NAMES;
 
         try (Statement stmt = connection.createStatement()) {
             try (ResultSet resultSet = stmt.executeQuery("SELECT table_name FROM user_tables")) { // selects all tables

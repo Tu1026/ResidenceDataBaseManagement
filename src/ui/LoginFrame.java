@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.OracleColumnNames;
+import model.OracleTableNames;
 
 public class LoginFrame extends Application {
 
@@ -18,6 +20,8 @@ public class LoginFrame extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        OracleTableNames.buildMaps();
+        OracleColumnNames.buildMaps();
         Pane layout = new Pane();
         Label userName = new Label("UserName");
         userName.setLayoutX(32);
@@ -97,7 +101,7 @@ public class LoginFrame extends Application {
      */
     @Override
     public void stop() throws Exception {
-        System.out.println("logged out and stopping...");
+        System.out.println("logging out and stopping...");
         if (! controller.logout().isConnected()) {
             System.out.println("Logged out");
         }else{

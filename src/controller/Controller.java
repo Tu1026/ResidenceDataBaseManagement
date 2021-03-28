@@ -4,7 +4,11 @@ import handler.ConnectionHandler;
 import handler.DataHandler;
 import interfaces.*;
 import javafx.application.Platform;
+import model.OracleTableNames;
 import model.table.Table;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Controller implements ControllerDelegate {
 
@@ -59,9 +63,9 @@ public class Controller implements ControllerDelegate {
     }
 
     @Override
-    public void loadTable(String tableName) {
+    public void loadTable(String prettyTable) {
         new Thread(() -> {
-            dataHandler.getTableData(tableName, this::resultCallback);
+            dataHandler.getTableData(prettyTable.trim(), this::resultCallback);
         }).start();
 
 //        //This will be deleted in the future

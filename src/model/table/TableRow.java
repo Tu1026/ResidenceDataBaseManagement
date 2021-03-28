@@ -21,6 +21,6 @@ public class TableRow {
         if (attributeData == null) {
             attributeData = "No Data";
         }
-        data.put(column, attributeData);
+        data.put(column, attributeData.trim());
     }
 }

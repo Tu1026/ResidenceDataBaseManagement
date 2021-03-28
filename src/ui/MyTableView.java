@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import model.OracleColumnNames;
 import model.table.Column;
 import model.table.Table;
 import model.table.TableRow;
@@ -53,7 +54,8 @@ public class MyTableView {
                 List<Column> columnNames = table.getColumnsList();
                 for (int i = 0; i < columnNames.size(); i++ ){
                     final  int j = i;
-                    TableColumn<ObservableList<String>, String> col = new TableColumn<>(columnNames.get(i).name);
+                    String columnName = OracleColumnNames.GET_PRETTY_COLUMN_NAMES.get(columnNames.get(i).name);
+                    TableColumn<ObservableList<String>, String> col = new TableColumn<>(columnName);
                     col.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(j).toString()));
                     tableView.getColumns().add(col);
                     System.out.println("Column [" + i + "] ");
