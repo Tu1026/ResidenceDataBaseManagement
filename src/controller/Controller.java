@@ -90,10 +90,10 @@ public class Controller implements ControllerDelegate {
         });
     }
 
-    public void filter(String filter, String column){
+    public void filter(String filter, String columnName){
         if (currentTable != null){
             new Thread(() -> {
-                dataHandler.filterTable(currentTable, filter, column, this::resultCallback);
+                dataHandler.filterTable(currentTable, filter, columnName, this::resultCallback);
             }).start();
         }
 
