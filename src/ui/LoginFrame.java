@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import model.OracleColumnNames;
 import model.OracleTableNames;
 
 public class LoginFrame extends Application {
@@ -20,8 +19,6 @@ public class LoginFrame extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        OracleTableNames.buildMaps();
-        OracleColumnNames.buildMaps();
         Pane layout = new Pane();
         Label userName = new Label("UserName");
         userName.setLayoutX(32);

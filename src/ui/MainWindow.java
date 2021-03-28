@@ -50,11 +50,18 @@ public class MainWindow implements TableViewUI {
 
         ComboBox<String> selectTables = new ComboBox<>();
         selectTables.setPrefSize(250,36);
-
-        for (String tableName: OracleTableNames.PRETTY_NAMES) {
-            selectTables.getItems().add(tableName);
-        }
-
+        selectTables.getItems().add("Campus");
+        selectTables.getItems().add("Residential Managing Office");
+        selectTables.getItems().add("Building Manager");
+        selectTables.getItems().add("Senior Advisor");
+        selectTables.getItems().add("Residence Advisor");
+        selectTables.getItems().add("Residence Budget");
+        selectTables.getItems().add("Residence Capacity");
+        selectTables.getItems().add("Floor");
+        selectTables.getItems().add("House");
+        selectTables.getItems().add("Unit");
+        selectTables.getItems().add("Resident Address");
+        selectTables.getItems().add("Resident Info");
         selectTables.getSelectionModel().selectFirst();
 
         innerPaneTableMenu.add(selectTables,0,0);
@@ -85,9 +92,9 @@ public class MainWindow implements TableViewUI {
 
 
         goToTable.setOnAction(e -> {
-            String tableState = selectTables.getValue();
+            String tableState = selectTables.getValue().toString();
             System.out.println(tableState);
-            controller.loadTable(tableState);
+            controller.loadTable(tableState.replaceAll(" ", ""));
         });
 
         controller.loadTable("Campus");
