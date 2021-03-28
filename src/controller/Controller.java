@@ -66,7 +66,7 @@ public class Controller implements ControllerDelegate {
     @Override
     public void loadTable(String tableName) {
         new Thread(() -> {
-            dataHandler.getTableData(tableName.trim().toUpperCase(), this::resultCallback);
+            dataHandler.getTableData(tableName.trim(), this::resultCallback);
         }).start();
 
         //This will be deleted in the future

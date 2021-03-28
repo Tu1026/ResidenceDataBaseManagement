@@ -16,6 +16,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import model.OracleColumnNames;
 import model.OracleTableNames;
 import model.table.Column;
 import model.table.Table;
@@ -32,7 +33,7 @@ public class MainWindow implements TableViewUI {
     public Scene tableScene;
     private List<Column> columns = new ArrayList<>();
     private MyTableView tableView;
-    private  ComboBox<String> filterColumnNames;
+    FilterPane filterPane;
     // declare your filter combobox class
 
     public MainWindow(ControllerDelegate controller){
@@ -71,9 +72,6 @@ public class MainWindow implements TableViewUI {
         filterRows.setPercentHeight(50);
         innerPaneTableMenu.getRowConstraints().addAll(filterRows, filterRows);
 
-//        outerPane.add(selectTables,1,0);
-//        outerPane.setHalignment(selectTables, HPos.CENTER);
-//        outerPane.setValignment(selectTables, VPos.CENTER);
 
         Button goToTable = new Button("Go to Table");
         goToTable.setPrefSize(113,36);
@@ -85,8 +83,6 @@ public class MainWindow implements TableViewUI {
         tableView = new MyTableView();
         tableView.setSizeProperties(innerPane.widthProperty(), innerPane.heightProperty());
 
-//        tables.prefWidthProperty().bind(innerPane.widthProperty());
-//        tables.prefHeightProperty().bind(innerPane.heightProperty());
 
         //Adding tableColumbs to the 0,0 of the inner gridpane
         innerPane.add(tableView.getComponent(), 0,0);
@@ -97,27 +93,7 @@ public class MainWindow implements TableViewUI {
             System.out.println(tableState);
             controller.loadTable(tableState.replaceAll(" ", ""));
         });
-
-//
-//        GridPane filterPane = new GridPane();
-//        filterColumnNames = new ComboBox<>();
-//
-//        TextField filter = new TextField();
-//        filter.setPromptText("Enter what your filtering value here");
-//
-//        filterPane.add(filterColumnNames, 0, 0);
-//        filterPane.add(filter, 0, 1);
-//        innerPaneTableMenu.add(filterPane, 0, 1);
-//
-//        filter.prefWidthProperty().bind(filterPane.widthProperty());
-//        filter.setMinHeight(filterPane.getPrefHeight() / 5);
-//        filterColumnNames.prefWidthProperty().bind(filterPane.widthProperty());
-//        filterColumnNames.setMinHeight(filterPane.getPrefHeight() / 5);
-//
-//        filterPane.getRowConstraints().addAll(filterRows, filterRows);
-
-
-        FilterPane filterPane = new FilterPane();
+        filterPane = new FilterPane(controller);
         innerPaneTableMenu.add(filterPane.returnPane(),0,1);
         //Initialize campus as the default table
         controller.loadTable("Campus");
@@ -129,20 +105,14 @@ public class MainWindow implements TableViewUI {
     }
 
 
-    public void updateColums(List<Column> colums){
-        this.columns = colums;
-//        filterColumnNames.getSelectionModel().clearSelection();
-//        filterColumnNames.getItems().clear();
-//        for (Column column : columns) {
-//            filterColumnNames.getItems().add(column.name);
-//        }
-//        filterColumnNames.getSelectionModel().selectFirst();
-
-    }
 
     @Override
     public void updateVisibleTable(Table table) {
-//        updateColums(table.getColumnsList());
+        List<String> columnNames = new ArrayList<>();
+        for (Column column :table.getColumnsList()){
+            columnNames.add(OracleColumnNames.GET_PRETTY_COLUMN_NAMES.get(column.name));
+        }
+        filterPane.updateFilterList(columnNames);
         tableView.buildData(table);
     }
 }
