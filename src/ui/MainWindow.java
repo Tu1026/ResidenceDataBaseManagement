@@ -1,5 +1,6 @@
 package ui;
 
+import com.sun.rowset.internal.Row;
 import controller.Controller;
 import interfaces.ControllerDelegate;
 import interfaces.TableViewUI;
@@ -10,10 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -22,6 +20,7 @@ import model.OracleTableNames;
 import model.table.Column;
 import model.table.Table;
 import model.table.TableRow;
+import sun.awt.image.GifImageDecoder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class MainWindow implements TableViewUI {
     public Scene tableScene;
     private List<Column> columns = new ArrayList<>();
     private MyTableView tableView;
-
+    private  ComboBox<String> filterColumnNames;
     // declare your filter combobox class
 
     public MainWindow(ControllerDelegate controller){
@@ -69,7 +68,6 @@ public class MainWindow implements TableViewUI {
         GridPane.setValignment(selectTables, VPos.TOP);
         outerPane.add(innerPaneTableMenu, 1, 0);
 
-
 //        outerPane.add(selectTables,1,0);
 //        outerPane.setHalignment(selectTables, HPos.CENTER);
 //        outerPane.setValignment(selectTables, VPos.CENTER);
@@ -80,7 +78,6 @@ public class MainWindow implements TableViewUI {
         GridPane.setHalignment(goToTable, HPos.CENTER);
         GridPane.setValignment(goToTable, VPos.CENTER);
 
-        Button deleteRow = new Button("Delete Row");
 
         tableView = new MyTableView();
         tableView.setSizeProperties(innerPane.widthProperty(), innerPane.heightProperty());
@@ -88,17 +85,46 @@ public class MainWindow implements TableViewUI {
 //        tables.prefWidthProperty().bind(innerPane.widthProperty());
 //        tables.prefHeightProperty().bind(innerPane.heightProperty());
 
+        //Adding tableColumbs to the 0,0 of the inner gridpane
         innerPane.add(tableView.getComponent(), 0,0);
 
-
+        //On click event for the goTotable button
         goToTable.setOnAction(e -> {
             String tableState = selectTables.getValue().toString();
             System.out.println(tableState);
             controller.loadTable(tableState.replaceAll(" ", ""));
         });
 
-        controller.loadTable("Campus");
 
+        GridPane filterPane = new GridPane();
+        filterColumnNames = new ComboBox<>();
+
+        TextField filter = new TextField();
+        filter.setPromptText("Enter what your filtering value here");
+
+        filterPane.add(filterColumnNames, 0, 0);
+        filterPane.add(filter, 0, 1);
+        innerPaneTableMenu.add(filterPane, 0, 1);
+
+        filter.prefWidthProperty().bind(filterPane.widthProperty());
+        filter.setMinHeight(filterPane.getPrefHeight() / 5);
+        filterColumnNames.prefWidthProperty().bind(filterPane.widthProperty());
+        filterColumnNames.setMinHeight(filterPane.getPrefHeight() / 5);
+
+
+        RowConstraints filterRows = new RowConstraints();
+        filterRows.setPercentHeight(50);
+        innerPaneTableMenu.getRowConstraints().addAll(filterRows, filterRows);
+        filterPane.getRowConstraints().addAll(filterRows, filterRows);
+
+
+        innerPaneTableMenu.setGridLinesVisible(true);
+        filterPane.setGridLinesVisible(true);
+        innerPane.setGridLinesVisible(true);
+        outerPane.setGridLinesVisible(true);
+
+        //Initialize campus as the default table
+        controller.loadTable("Campus");
         tableScene = new Scene(outerPane, 1124,798);
     }
 
@@ -108,7 +134,14 @@ public class MainWindow implements TableViewUI {
 
 
     public void updateColums(List<Column> colums){
-        // update the list of columns to filter from in your filter combobox
+        this.columns = colums;
+        filterColumnNames.getSelectionModel().clearSelection();
+        filterColumnNames.getItems().clear();
+        for (Column column : columns) {
+            filterColumnNames.getItems().add(column.name);
+        }
+        filterColumnNames.getSelectionModel().selectFirst();
+
     }
 
     @Override

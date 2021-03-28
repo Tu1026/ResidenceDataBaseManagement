@@ -20,7 +20,6 @@ public class MyTableView {
 
     public MyTableView() {
 
-
         tableView.setStyle("-fx-border-color: #000000");
     }
 
