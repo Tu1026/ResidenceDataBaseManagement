@@ -41,7 +41,7 @@ public class MyTableView {
         data = FXCollections.observableArrayList();
         tableView.getItems().clear();
         tableView.getColumns().clear();
-
+//
         try {
 
             /*q
