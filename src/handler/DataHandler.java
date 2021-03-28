@@ -35,7 +35,7 @@ public final class DataHandler implements DataHandlerDelegate {
 
     @Override
     public void getTableData(String tableToLookup, Consumer<Table> callback) {
-        String query = "SELECT * FROM " + tableToLookup.toUpperCase();
+        String query = "SELECT * FROM " + tableToLookup;
 
         if (OracleTableNames.TABLE_NAMES.contains(tableToLookup.toUpperCase())) {
             Table table = null;
@@ -70,12 +70,13 @@ public final class DataHandler implements DataHandlerDelegate {
     @Override
     public void filterTable(String tableToLookup, String filter, String column, Consumer<Table> callback){
         filter += "%";
-        String query = "SELECT * FROM " + tableToLookup.toUpperCase() + " WHERE " + column + " LIKE ?";
+        String query = "SELECT * FROM " + tableToLookup + " WHERE  ?  LIKE ?";
 
         if (OracleTableNames.TABLE_NAMES.contains(tableToLookup.toUpperCase())) {
             Table table = null;
             try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
-                ps.setObject(1, filter);
+                ps.setObject(1, column);
+                ps.setObject(2, filter);
 
                 table = buildTable(tableToLookup, ps);
 
@@ -108,6 +109,7 @@ public final class DataHandler implements DataHandlerDelegate {
         return PKs;
     }
 
+    // TODO: Delete this in the future
     private Table executeQueryAndParse(PrintablePreparedStatement ps) throws SQLException {
         System.out.println("Running query ...");
         ResultSet results = ps.executeQuery();

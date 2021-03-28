@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class PrintablePreparedStatement implements Wrapper, AutoCloseable, Statement {
+public class PrintablePreparedStatement implements PreparedStatement {
 
 
     private final List<String> stringList;

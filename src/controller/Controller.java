@@ -35,6 +35,7 @@ public class Controller implements ControllerDelegate {
         return cs;
     }
 
+    // TODO: delete this, queries should be prepared.
     @Override
     public void performQuery(String query) {
         System.out.println("Query initializing...");
