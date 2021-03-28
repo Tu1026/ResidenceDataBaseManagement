@@ -66,20 +66,20 @@ public class Controller implements ControllerDelegate {
     @Override
     public void loadTable(String tableName) {
         new Thread(() -> {
-            dataHandler.getTableData(tableName.trim(), this::resultCallback);
+            dataHandler.getTableData(tableName.trim().toUpperCase(), this::resultCallback);
         }).start();
 
         //This will be deleted in the future
-        new Thread(() -> {
-            try {
-                System.err.println("Filtering in 4 seconds...");
-                Thread.sleep(4000);
-                System.out.println("Filtering campus by pop");
-                filter("5", "POPULATION");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
+//        new Thread(() -> {
+//            try {
+//                System.err.println("Filtering in 4 seconds...");
+//                Thread.sleep(4000);
+//                System.out.println("Filtering campus by pop");
+//                filter("5", "POPULATION");
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
     }
 
     private void resultCallback(Table resultTable){

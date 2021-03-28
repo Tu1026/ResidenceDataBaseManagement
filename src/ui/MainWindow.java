@@ -67,6 +67,9 @@ public class MainWindow implements TableViewUI {
         GridPane.setHalignment(selectTables, HPos.CENTER);
         GridPane.setValignment(selectTables, VPos.TOP);
         outerPane.add(innerPaneTableMenu, 1, 0);
+        RowConstraints filterRows = new RowConstraints();
+        filterRows.setPercentHeight(50);
+        innerPaneTableMenu.getRowConstraints().addAll(filterRows, filterRows);
 
 //        outerPane.add(selectTables,1,0);
 //        outerPane.setHalignment(selectTables, HPos.CENTER);
@@ -95,34 +98,27 @@ public class MainWindow implements TableViewUI {
             controller.loadTable(tableState.replaceAll(" ", ""));
         });
 
-
-        GridPane filterPane = new GridPane();
-        filterColumnNames = new ComboBox<>();
-
-        TextField filter = new TextField();
-        filter.setPromptText("Enter what your filtering value here");
-
-        filterPane.add(filterColumnNames, 0, 0);
-        filterPane.add(filter, 0, 1);
-        innerPaneTableMenu.add(filterPane, 0, 1);
-
-        filter.prefWidthProperty().bind(filterPane.widthProperty());
-        filter.setMinHeight(filterPane.getPrefHeight() / 5);
-        filterColumnNames.prefWidthProperty().bind(filterPane.widthProperty());
-        filterColumnNames.setMinHeight(filterPane.getPrefHeight() / 5);
-
-
-        RowConstraints filterRows = new RowConstraints();
-        filterRows.setPercentHeight(50);
-        innerPaneTableMenu.getRowConstraints().addAll(filterRows, filterRows);
-        filterPane.getRowConstraints().addAll(filterRows, filterRows);
+//
+//        GridPane filterPane = new GridPane();
+//        filterColumnNames = new ComboBox<>();
+//
+//        TextField filter = new TextField();
+//        filter.setPromptText("Enter what your filtering value here");
+//
+//        filterPane.add(filterColumnNames, 0, 0);
+//        filterPane.add(filter, 0, 1);
+//        innerPaneTableMenu.add(filterPane, 0, 1);
+//
+//        filter.prefWidthProperty().bind(filterPane.widthProperty());
+//        filter.setMinHeight(filterPane.getPrefHeight() / 5);
+//        filterColumnNames.prefWidthProperty().bind(filterPane.widthProperty());
+//        filterColumnNames.setMinHeight(filterPane.getPrefHeight() / 5);
+//
+//        filterPane.getRowConstraints().addAll(filterRows, filterRows);
 
 
-        innerPaneTableMenu.setGridLinesVisible(true);
-        filterPane.setGridLinesVisible(true);
-        innerPane.setGridLinesVisible(true);
-        outerPane.setGridLinesVisible(true);
-
+        FilterPane filterPane = new FilterPane();
+        innerPaneTableMenu.add(filterPane.returnPane(),0,1);
         //Initialize campus as the default table
         controller.loadTable("Campus");
         tableScene = new Scene(outerPane, 1124,798);
@@ -135,18 +131,18 @@ public class MainWindow implements TableViewUI {
 
     public void updateColums(List<Column> colums){
         this.columns = colums;
-        filterColumnNames.getSelectionModel().clearSelection();
-        filterColumnNames.getItems().clear();
-        for (Column column : columns) {
-            filterColumnNames.getItems().add(column.name);
-        }
-        filterColumnNames.getSelectionModel().selectFirst();
+//        filterColumnNames.getSelectionModel().clearSelection();
+//        filterColumnNames.getItems().clear();
+//        for (Column column : columns) {
+//            filterColumnNames.getItems().add(column.name);
+//        }
+//        filterColumnNames.getSelectionModel().selectFirst();
 
     }
 
     @Override
     public void updateVisibleTable(Table table) {
-        updateColums(table.getColumnsList());
+//        updateColums(table.getColumnsList());
         tableView.buildData(table);
     }
 }
