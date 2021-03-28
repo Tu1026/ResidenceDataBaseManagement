@@ -52,4 +52,6 @@ public interface DataHandlerDelegate {
      */
      void getTableData(String tableToLookup, Consumer<Table> callback);
 
+    void filterTable(String tableToLookup, String filter, String column, Consumer<Table> callback);
+
 }

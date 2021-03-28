@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.OracleColumnNames;
+import model.OracleTableNames;
 
 public class LoginFrame extends Application {
 
@@ -16,28 +18,10 @@ public class LoginFrame extends Application {
     public ControllerDelegate controller;
 
 
-    //
-//    @FXML
-//    void logIntoDB(ActionEvent event) throws IOException {
-//        String sUserName = userName.getText().toLowerCase().trim();
-//        String sPassword = password.getText().toLowerCase().trim();
-//        Controller con = new Controller();
-//        con.login(sUserName, sPassword);
-//        con.initializeSQLDDL();
-//
-//        Parent MenuItems = FXMLLoader.load(getClass().getResource("MenuItems.fxml"));
-//        Scene MenuScene = new Scene(MenuItems);
-//        Stage MenuStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//        MenuStage.setScene(MenuScene);
-//        MenuStage.show();
-//
-//    }
-
     @Override
-    public void start(Stage primaryStage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("LoginFrame.fxml"));
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
+    public void start(Stage primaryStage) {
+        OracleTableNames.buildMaps();
+        OracleColumnNames.buildMaps();
         Pane layout = new Pane();
         Label userName = new Label("UserName");
         userName.setLayoutX(32);
@@ -83,22 +67,15 @@ public class LoginFrame extends Application {
         login.setOnAction(e -> {
             String sUserName = userNameText.getText().toLowerCase().trim();
             String sPassword = passwordText.getText().toLowerCase().trim();
+
             controller = new Controller();
             ConnectionStateDelegate connectionState = controller.login(sUserName, sPassword);
             if (connectionState.isConnected()){
                 controller.initializeSQLDDL();
-                TableViews newTable = new TableViews(controller);
+                MainWindow newTable = new MainWindow(controller);
                 primaryStage.setScene(newTable.getScene());
-//                Parent MenuItems;
-//                try {
-//                    MenuItems = FXMLLoader.load(getClass().getResource("MenuItems.fxml"));
-//                } catch (Exception e1){
-//                    MenuItems = null;
-//                }
-//                Scene MenuScene = new Scene(MenuItems);
-//                Stage MenuStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-//                MenuStage.setScene(MenuScene);
-//                MenuStage.show();
+                primaryStage.setTitle("Manage Your Residence Database here!");
+
             }else {
                 Alert a = new Alert(Alert.AlertType.WARNING);
                 a.setTitle("Error Connecting to Oracle");
@@ -112,7 +89,7 @@ public class LoginFrame extends Application {
         Scene scene = new Scene(layout, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
-        primaryStage.setResizable(false);
+        //primaryStage.setResizable(false);
     }
 
 
@@ -124,7 +101,7 @@ public class LoginFrame extends Application {
      */
     @Override
     public void stop() throws Exception {
-        System.out.println("logged out and stopping...");
+        System.out.println("logging out and stopping...");
         if (! controller.logout().isConnected()) {
             System.out.println("Logged out");
         }else{

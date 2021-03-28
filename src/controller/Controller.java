@@ -4,13 +4,18 @@ import handler.ConnectionHandler;
 import handler.DataHandler;
 import interfaces.*;
 import javafx.application.Platform;
+import model.OracleTableNames;
 import model.table.Table;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Controller implements ControllerDelegate {
 
-    ConnectionHandlerDelegate connectionHandler;
-    DataHandlerDelegate dataHandler;
-    TableViewUI ui;
+    private ConnectionHandlerDelegate connectionHandler;
+    private DataHandlerDelegate dataHandler;
+    private TableViewUI ui;
+    private String currentTable = null;
 
     public Controller() {
         connectionHandler = new ConnectionHandler();
@@ -34,23 +39,12 @@ public class Controller implements ControllerDelegate {
         return cs;
     }
 
+    // TODO: delete this, queries should be prepared.
     @Override
     public void performQuery(String query) {
         System.out.println("Query initializing...");
         new Thread(() -> {
             dataHandler.performQuery(query, this::resultCallback);
-        }).start();
-
-        // This will be deleted in the future
-        new Thread(() -> {
-            try {
-                System.err.println("Updating table to data from Campus in 4 seconds...");
-                Thread.sleep(4000);
-                System.out.println("Starting Campus Query");
-                loadTable("Campus");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }).start();
     }
 
@@ -70,16 +64,47 @@ public class Controller implements ControllerDelegate {
     }
 
     @Override
-    public void loadTable(String tableName) {
+    public void loadTable(String prettyTable) {
         new Thread(() -> {
-            dataHandler.getTableData(tableName, this::resultCallback);
+            dataHandler.getTableData(prettyTable.trim(), this::resultCallback);
+        }).start();
+
+        //This will be deleted in the future
+        new Thread(() -> {
+            try {
+                System.err.println("Filtering in 4 seconds...");
+                Thread.sleep(4000);
+                System.out.println("Filtering campus by pop");
+                filter("5", "POPULATION");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }).start();
     }
 
     private void resultCallback(Table resultTable){
+        if (! resultTable.getName().equalsIgnoreCase("no name")) {
+            currentTable = resultTable.getName();
+        }else{
+            currentTable = null;
+        }
+
         Platform.runLater(() -> {
             System.out.println("Displaying query results in table");
             ui.updateVisibleTable(resultTable);
         });
+
+        for (String str: resultTable.getPKs()) {
+            System.out.println(str);
+        }
+    }
+
+    public void filter(String filter, String columnName){
+        if (currentTable != null){
+            new Thread(() -> {
+                dataHandler.filterTable(currentTable, filter, columnName, this::resultCallback);
+            }).start();
+        }
+
     }
 }
