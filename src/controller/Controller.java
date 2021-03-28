@@ -39,6 +39,7 @@ public class Controller implements ControllerDelegate {
         return cs;
     }
 
+    // TODO: delete this, queries should be prepared.
     @Override
     public void performQuery(String query) {
         System.out.println("Query initializing...");
@@ -68,17 +69,17 @@ public class Controller implements ControllerDelegate {
             dataHandler.getTableData(prettyTable.trim(), this::resultCallback);
         }).start();
 
-//        //This will be deleted in the future
-//        new Thread(() -> {
-//            try {
-//                System.err.println("Filtering in 4 seconds...");
-//                Thread.sleep(4000);
-//                System.out.println("Filtering campus by pop");
-//                filter("5", "POPULATION");
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
+        //This will be deleted in the future
+        new Thread(() -> {
+            try {
+                System.err.println("Filtering in 4 seconds...");
+                Thread.sleep(4000);
+                System.out.println("Filtering campus by pop");
+                filter("5", "POPULATION");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     private void resultCallback(Table resultTable){
@@ -92,6 +93,10 @@ public class Controller implements ControllerDelegate {
             System.out.println("Displaying query results in table");
             ui.updateVisibleTable(resultTable);
         });
+
+        for (String str: resultTable.getPKs()) {
+            System.out.println(str);
+        }
     }
 
     public void filter(String filter, String columnName){

@@ -8,6 +8,7 @@ public class Table implements Iterable<TableRow> {
     private final List<TableRow> rows;
     private TableRow currentRow = null;
     private String name;
+    private List<String> PKs = new ArrayList<>();
 
 
 
@@ -29,11 +30,19 @@ public class Table implements Iterable<TableRow> {
         currentRow.insert(column, data);
     }
 
+    public void setPKs(List<String> PKs) {
+        this.PKs = PKs;
+    }
+
     public void nextRow(){
         if (currentRow != null) {
             rows.add(currentRow);
             currentRow = new TableRow();
         }
+    }
+
+    public List<String> getPKs() {
+        return PKs;
     }
 
     public String getName() {
