@@ -68,7 +68,7 @@ public class LoginFrame extends Application {
             ConnectionStateDelegate connectionState = controller.login(sUserName, sPassword);
             if (connectionState.isConnected()){
                 controller.initializeSQLDDL();
-                TableViews newTable = new TableViews(controller);
+                MainWindow newTable = new MainWindow(controller);
                 primaryStage.setScene(newTable.getScene());
                 primaryStage.setTitle("Manage Your Residence Database here!");
 
@@ -85,7 +85,7 @@ public class LoginFrame extends Application {
         Scene scene = new Scene(layout, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
-        primaryStage.setResizable(false);
+        //primaryStage.setResizable(false);
     }
 
 
