@@ -18,6 +18,9 @@ public class TableRow {
     }
 
     public void insert(Column column, String attributeData){
+        if (attributeData == null) {
+            attributeData = "No Data";
+        }
         data.put(column, attributeData);
     }
 }

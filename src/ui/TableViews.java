@@ -1,31 +1,26 @@
 package ui;
 
 import controller.Controller;
-import interfaces.ConnectionStateDelegate;
 import interfaces.ControllerDelegate;
 import interfaces.TableViewUI;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
-import javafx.fxml.FXML;
-import javafx.util.Callback;
 import model.table.Column;
 import model.table.Table;
 import model.table.TableRow;
-
 
 import java.io.IOException;
 import java.util.List;
@@ -35,6 +30,7 @@ public class TableViews extends Application implements TableViewUI {
 
     TableView<ObservableList<String>> tables = new TableView<>();
     ObservableList<ObservableList<String>> data;
+
     public Scene tableScene;
 
 
@@ -42,6 +38,8 @@ public class TableViews extends Application implements TableViewUI {
         controller.setUI(this);
         GridPane outerPane = new GridPane();
         GridPane innerPane = new GridPane();
+        GridPane innerPaneTableMenu = new GridPane();
+
         
         outerPane.add(innerPane, 0, 0);
         outerPane.getColumnConstraints().add(new ColumnConstraints(946));
@@ -64,67 +62,37 @@ public class TableViews extends Application implements TableViewUI {
         selectTables.getItems().add("Resident Info");
         selectTables.getSelectionModel().selectFirst();
 
-        outerPane.add(selectTables,1,0);
-        outerPane.setHalignment(selectTables, HPos.CENTER);
-        outerPane.setValignment(selectTables, VPos.CENTER);
+        innerPaneTableMenu.add(selectTables,0,0);
+        innerPaneTableMenu.setHalignment(selectTables, HPos.CENTER);
+        innerPaneTableMenu.setValignment(selectTables, VPos.TOP);
+        outerPane.add(innerPaneTableMenu, 1, 0);
+
+
+//        outerPane.add(selectTables,1,0);
+//        outerPane.setHalignment(selectTables, HPos.CENTER);
+//        outerPane.setValignment(selectTables, VPos.CENTER);
 
         Button goToTable = new Button("Go to Table");
         goToTable.setPrefSize(113,36);
         outerPane.add(goToTable, 1,1);
         outerPane.setHalignment(goToTable, HPos.CENTER);
         outerPane.setValignment(goToTable, VPos.CENTER);
-        controller.performQuery("SELECT * FROM Campus");
+
+        Button deleteRow = new Button("Delete Row");
+
         tables.prefWidthProperty().bind(innerPane.widthProperty());
         tables.prefHeightProperty().bind(innerPane.heightProperty());
         innerPane.add(tables, 0,0);
 
+
         goToTable.setOnAction(e -> {
             String tableState = selectTables.getValue().toString();
             System.out.println(tableState);
-//            controller.loadTable(tableState.replaceAll(" ", ""));
-            switch (tableState) {
-                case "Campus":
-                    controller.loadTable("Campus");
-                    break;
-                case "Residential Managing Office":
-                    controller.loadTable("ResidentialManagingOffice");
-                    break;
-                case "Building Manager":
-                    controller.loadTable("BuildingManager");
-                    break;
-                case "Senior Advisor":
-                    controller.loadTable("SeniorAdvisor");
-                    break;
-                case "Residence Advisor":
-                    controller.loadTable("ResidenceAdvisor");
-                    break;
-                case "Residential Address":
-                    controller.loadTable("ResidentAddress");
-                    break;
-                case "Residence Budget":
-                    controller.loadTable("ResidenceBudget");
-                    break;
-                case "Residence Capacity":
-                    controller.loadTable("ResidenceCapacity");
-                    break;
-                case "Residence":
-                    controller.loadTable("Residence");
-                    break;
-                case "Floor":
-                    controller.loadTable("Floor");
-                    break;
-                case "House":
-                    controller.loadTable("House");
-                    break;
-                case "Unit":
-                    controller.loadTable("Unit");
-                    break;
-                case "Resident Info":
-                    controller.loadTable("ResidentInfo");
-                    break;
-            }
+            controller.loadTable(tableState.replaceAll(" ", ""));
         });
 
+
+        controller.performQuery("SELECT * FROM Campus");
         tables.setStyle("-fx-border-color: #000000");
         tableScene = new Scene(outerPane, 1124,798);
     }
@@ -198,7 +166,6 @@ public class TableViews extends Application implements TableViewUI {
         innerPane.add(tables, 0,0);
         tables.setStyle("-fx-border-color: #000000");
         tableScene = new Scene(outerPane, 1124,798);
-
 
     }
 
