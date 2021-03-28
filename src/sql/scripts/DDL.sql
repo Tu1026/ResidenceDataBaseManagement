@@ -59,8 +59,7 @@ CREATE TABLE ResidenceBudget(
                                 budget					int,
                                 PRIMARY KEY(resStAddress, resZipCode),
                                 FOREIGN KEY(resStAddress, resZipCode) REFERENCES Residence(resStAddress, resZipCode) ON DELETE CASCADE
-
-);
+                            );
 
 
 --- END RESIDENCE TABLES
