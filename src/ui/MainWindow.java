@@ -96,8 +96,7 @@ public class MainWindow implements TableViewUI {
             controller.loadTable(tableState.replaceAll(" ", ""));
         });
 
-
-        controller.performQuery("SELECT * FROM Campus");
+        controller.loadTable("Campus");
 
         tableScene = new Scene(outerPane, 1124,798);
     }

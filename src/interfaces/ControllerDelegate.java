@@ -33,4 +33,6 @@ public interface ControllerDelegate {
   */
  void loadTable(String tableName);
 
+ void filter(String filter, String column);
+
 }

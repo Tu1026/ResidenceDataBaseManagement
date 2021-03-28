@@ -8,9 +8,10 @@ import model.table.Table;
 
 public class Controller implements ControllerDelegate {
 
-    ConnectionHandlerDelegate connectionHandler;
-    DataHandlerDelegate dataHandler;
-    TableViewUI ui;
+    private ConnectionHandlerDelegate connectionHandler;
+    private DataHandlerDelegate dataHandler;
+    private TableViewUI ui;
+    private String currentTable = null;
 
     public Controller() {
         connectionHandler = new ConnectionHandler();
@@ -40,18 +41,6 @@ public class Controller implements ControllerDelegate {
         new Thread(() -> {
             dataHandler.performQuery(query, this::resultCallback);
         }).start();
-
-        // This will be deleted in the future
-//        new Thread(() -> {
-//            try {
-//                System.err.println("Updating table to data from Campus in 4 seconds...");
-//                Thread.sleep(4000);
-//                System.out.println("Starting Campus Query");
-//                loadTable("Campus");
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
     }
 
     public void initializeSQLDDL(){
@@ -74,12 +63,39 @@ public class Controller implements ControllerDelegate {
         new Thread(() -> {
             dataHandler.getTableData(tableName, this::resultCallback);
         }).start();
+
+//        //This will be deleted in the future
+//        new Thread(() -> {
+//            try {
+//                System.err.println("Filtering in 4 seconds...");
+//                Thread.sleep(4000);
+//                System.out.println("Filtering campus by pop");
+//                filter("5", "POPULATION");
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
     }
 
     private void resultCallback(Table resultTable){
+        if (! resultTable.getName().equalsIgnoreCase("no name")) {
+            currentTable = resultTable.getName();
+        }else{
+            currentTable = null;
+        }
+
         Platform.runLater(() -> {
             System.out.println("Displaying query results in table");
             ui.updateVisibleTable(resultTable);
         });
+    }
+
+    public void filter(String filter, String column){
+        if (currentTable != null){
+            new Thread(() -> {
+                dataHandler.filterTable(currentTable, filter, column, this::resultCallback);
+            }).start();
+        }
+
     }
 }

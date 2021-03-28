@@ -49,6 +49,29 @@ public final class DataHandler implements DataHandlerDelegate {
             Table table = null;
             try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
                 table = executeQueryAndParse(ps);
+                table.setName(tableToLookup);
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            } finally {
+                callback.accept(table);
+            }
+        }else {
+            System.err.println("Invalid table name: " + tableToLookup);
+        }
+    }
+
+    public void filterTable(String tableToLookup, String filter, String column, Consumer<Table> callback){
+        filter += "%";
+        String query = "SELECT * FROM " + tableToLookup.toUpperCase() + " WHERE " + column + " LIKE ?";
+
+        if (OracleTableNames.TABLE_NAMES.contains(tableToLookup.toUpperCase())) {
+            Table table = null;
+            try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
+                ps.setObject(1, filter);
+
+                table = executeQueryAndParse(ps);
+                table.setName(tableToLookup);
 
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
