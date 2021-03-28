@@ -23,14 +23,18 @@ import model.table.Table;
 import model.table.TableRow;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainWindow implements TableViewUI {
 
     public Scene tableScene;
+    private List<Column> columns = new ArrayList<>();
+    private MyTableView tableView;
 
-    MyTableView tableView;
+    // declare your filter combobox class
+
     public MainWindow(ControllerDelegate controller){
         controller.setUI(this);
         GridPane outerPane = new GridPane();
@@ -103,9 +107,13 @@ public class MainWindow implements TableViewUI {
     }
 
 
+    public void updateColums(List<Column> colums){
+        // update the list of columns to filter from in your filter combobox
+    }
 
     @Override
     public void updateVisibleTable(Table table) {
+        updateColums(table.getColumnsList());
         tableView.buildData(table);
     }
 }
