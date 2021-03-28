@@ -88,6 +88,10 @@ public class Controller implements ControllerDelegate {
             System.out.println("Displaying query results in table");
             ui.updateVisibleTable(resultTable);
         });
+
+        for (String str: resultTable.getPKs()) {
+            System.out.println(str);
+        }
     }
 
     public void filter(String filter, String columnName){
