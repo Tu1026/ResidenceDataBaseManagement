@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -40,9 +41,11 @@ public class MainWindow implements TableViewUI {
         controller.setUI(this);
         GridPane outerPane = new GridPane();
         GridPane innerPane = new GridPane();
+        innerPane.setPadding(new Insets( 0, 10, 0, 10));
+        outerPane.setPadding(new Insets(20, 20, 20, 10));
+
         GridPane innerPaneTableMenu = new GridPane();
 
-        
         outerPane.add(innerPane, 0, 0);
         outerPane.getColumnConstraints().add(new ColumnConstraints(946));
         outerPane.getRowConstraints().add(new RowConstraints(342));
@@ -94,7 +97,6 @@ public class MainWindow implements TableViewUI {
     public Scene getScene() {
         return tableScene;
     }
-
 
 
     @Override

@@ -61,7 +61,7 @@ public class MyTableView {
                     col.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(j).toString()));
                     col.setCellFactory(TextFieldTableCell.forTableColumn());
                     col.setOnEditCommit(e -> {
-                        ObservableList row = e.getRowValue();
+                        ObservableList<String> row = e.getRowValue();
                         row.set(j, e.getNewValue());
                     });
                     tableView.getColumns().add(col);
