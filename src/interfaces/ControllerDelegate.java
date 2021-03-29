@@ -42,6 +42,6 @@ public interface ControllerDelegate {
 
  void filter(String filter, String column);
 
- void getDataForStudentInsertion(String tableName, List<String> columnsToGet, Map<String, String> data, Consumer<Table> callback);
+ void getDataForStudentInsertion(String tableName, List<String> columnsToGet, List<String> columnsToMatch, List<String> dataToMatch, Consumer<Table> callback);
 
 }

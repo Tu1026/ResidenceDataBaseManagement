@@ -94,9 +94,9 @@ public class Controller implements ControllerDelegate {
     }
 
     @Override
-    public void getDataForStudentInsertion(String tableName, List<String> columnsToGet, Map<String, String> data, Consumer<Table> callback) {
+    public void getDataForStudentInsertion(String tableName, List<String> columnsToGet, List<String> columnsToMatch, List<String> dataToMatch, Consumer<Table> callback) {
         new Thread(() -> {
-                dataHandler.getSpecificTableData(tableName, columnsToGet, data, callback);
+                dataHandler.getSpecificTableData(tableName, columnsToGet, columnsToMatch, dataToMatch, callback);
         }).start();
     }
 }

@@ -77,7 +77,7 @@ public final class DataHandler implements DataHandlerDelegate {
     }
 
     @Override
-    public void getSpecificTableData(String tableName, List<String> columnsToGet, Map<String, String> data, Consumer<Table> callback) {
+    public void getSpecificTableData(String tableName, List<String> columnsToGet, List<String> columnsToMatch, List<String> dataToMatch, Consumer<Table> callback) {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
 
