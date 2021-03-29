@@ -63,6 +63,11 @@ public class MainWindow implements TableViewUI {
             selectTables.getItems().add(table);
         }
         selectTables.getSelectionModel().selectFirst();
+        selectTables.valueProperty().addListener((obs, oldItem, newItem) -> {
+            if (!oldItem.equals(newItem)) {
+                controller.loadTable(newItem);
+            }
+        });
 
         GridPane selectBoxAndInsertGrid = new GridPane();
 
