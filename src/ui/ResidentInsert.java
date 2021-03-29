@@ -40,13 +40,16 @@ public class ResidentInsert extends Application {
         OracleTableNames.buildMaps();
         OracleColumnNames.buildMaps();
         controller = new Controller();
-        controller.login("ora_jmhirsch","a64927676");
-        HashMap<String, String> testMap = new HashMap<>();
+        controller.login("ora_linshuan","a41053539");
         List<String> testList = new ArrayList<>();
+        List<String> testList2 = new ArrayList<>();
+        List<String> testList3 = new ArrayList<>();
         testList.add("House Name");
-        testMap.put("Address", "2205 Lower Mall");
-        testMap.put("Zipcode", "V6T 1Z4");
-        controller.getDataForStudentInsertion("HOUSE", testList, testMap, this::getHouseName);
+        testList2.add("Address");
+        testList2.add("Zipcode");
+        testList3.add("2205 West Mall");
+        testList3.add("V6T 1Z4");
+        controller.getDataForStudentInsertion("HOUSE", testList, testList2, testList3, this::getHouseName);
         GridPane masterGridPane = new GridPane();
 
         Pane zeroPane = new Pane();
