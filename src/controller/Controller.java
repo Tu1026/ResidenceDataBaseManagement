@@ -8,6 +8,7 @@ import model.table.Table;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class Controller implements ControllerDelegate {
 
@@ -93,7 +94,7 @@ public class Controller implements ControllerDelegate {
     }
 
     @Override
-    public void getDataForStudentInsertion(String tableName, List<String> columnsToGet, Map<String, String> data) {
+    public void getDataForStudentInsertion(String tableName, List<String> columnsToGet, Map<String, String> data, Consumer<Table> callback) {
 
     }
 }
