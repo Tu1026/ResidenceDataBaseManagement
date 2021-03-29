@@ -56,12 +56,15 @@ public final class DataHandler implements DataHandlerDelegate {
         String[] tablesToLookup = getTablesToLookup(prettyTable);
         String query = buildTableQuery(tablesToLookup);
         filter += "%";
+        String lowerCaseFilter = filter.toLowerCase();
+        String upperCaseFilter = filter.toUpperCase();
         column = OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(column);
-        query += " WHERE " + column + " LIKE ?";
+        query += " WHERE " + column + " LIKE ? OR " + column + " LIKE ?";
         Table table = null;
 
         try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
-            ps.setObject(1, filter);
+            ps.setObject(1, lowerCaseFilter);
+            ps.setObject(2, upperCaseFilter);
 
             table = buildTable(prettyTable, tablesToLookup, ps);
 

@@ -6,6 +6,9 @@ import interfaces.*;
 import javafx.application.Platform;
 import model.table.Table;
 
+import java.util.List;
+import java.util.Map;
+
 public class Controller implements ControllerDelegate {
 
     private ConnectionHandlerDelegate connectionHandler;
@@ -17,14 +20,12 @@ public class Controller implements ControllerDelegate {
         connectionHandler = new ConnectionHandler();
     }
 
-
     /**
      * Requests connection from ConnectionHandler, dispatches connection to DataHandler if successful
      * @param username username string
      * @param pwd password string
      */
     public ConnectionStateDelegate login(String username, String pwd){
-
         ConnectionStateDelegate cs = connectionHandler.login(username, pwd);
         if (cs.isConnected()) {
             dataHandler = new DataHandler();
@@ -89,7 +90,10 @@ public class Controller implements ControllerDelegate {
                 dataHandler.filterTable(currentTable, filter, columnName, this::resultCallback);
             }).start();
         }
-
     }
 
+    @Override
+    public void getDataForStudentInsertion(String tableName, List<String> columnsToGet, Map<String, String> data) {
+
+    }
 }
