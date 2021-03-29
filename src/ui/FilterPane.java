@@ -56,13 +56,6 @@ public class FilterPane {
             System.out.println("Filtering by value " + filter.getText());
             controller.filter(filter.getText(), filterColumnNames.getValue().trim());
         });
-//        filter.setOnKeyReleased(key -> {
-//            if (key.getCode() == KeyCode.ENTER) {
-//                System.out.println("Filtering by Column " + filterColumnNames.getValue());
-//                System.out.println("Filtering by value " + filter.getText());
-//                controller.filter(filter.getText(), filterColumnNames.getValue().trim());
-//            }
-//        });
 
     }
 

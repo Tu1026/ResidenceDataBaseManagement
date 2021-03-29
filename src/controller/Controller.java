@@ -89,7 +89,6 @@ public class Controller implements ControllerDelegate {
                 dataHandler.filterTable(currentTable, filter, columnName, this::resultCallback);
             }).start();
         }
-
     }
 
 }
