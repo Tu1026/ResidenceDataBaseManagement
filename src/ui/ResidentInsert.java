@@ -43,10 +43,10 @@ public class ResidentInsert extends Application {
         controller.login("ora_linshuan","a41053539");
         HashMap<String, String> testMap = new HashMap<>();
         List<String> testList = new ArrayList<>();
-        testList.add("Residence Name");
-        testList.add("Address");
-        testList.add("Zipcode");
-        controller.getDataForStudentInsertion("RESIDENCE", testList, testMap, this::getResAddres);
+        testList.add("House Name");
+        testMap.put("Address", "2205 Lower Mall");
+        testMap.put("Zipcode", "V6T 1Z4");
+        controller.getDataForStudentInsertion("HOUSE", testList, testMap, this::getHouseName);
         GridPane masterGridPane = new GridPane();
 
         Pane zeroPane = new Pane();
@@ -68,6 +68,12 @@ public class ResidentInsert extends Application {
     }
 
     private void getResAddres(Table table){
+        for (Column column: table.getColumnsList()){
+            System.out.println(column.name);
+        }
+    }
+
+    private void getHouseName(Table table){
         for (Column column: table.getColumnsList()){
             System.out.println(column.name);
         }
