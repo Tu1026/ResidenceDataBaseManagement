@@ -34,10 +34,11 @@ public class ResidentInsert extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-//        OracleTableNames.buildMaps();
-//        OracleColumnNames.buildMaps();
-//        controller = new Controller();
-//        controller.login("ora_linshuan","a41053539");
+        OracleTableNames.buildMaps();
+        OracleColumnNames.buildMaps();
+        controller = new Controller();
+        controller.login("ora_linshuan","a41053539");
+        controller.initializeSQLDDL();
         List<String> testList = new ArrayList<>();
         List<String> testList2 = new ArrayList<>();
         List<String> testList3 = new ArrayList<>();
@@ -48,7 +49,7 @@ public class ResidentInsert extends Application {
         testList2.add("Zipcode");
         testList3.add("2205 West Mall");
         testList3.add("V6T 1Z4");
-//        controller.getDataForStudentInsertion("HOUSE", testList, testList2, testList3, this::getHouseName);
+        controller.getDataForStudentInsertion("HOUSE", testList, testList2, testList3, this::getHouseName);
         GridPane masterGridPane = new GridPane();
 
         VBox emailBox = new VBox();
