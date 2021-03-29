@@ -11,6 +11,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.OracleColumnNames;
+import model.OracleTableNames;
 import model.table.Column;
 import model.table.Table;
 
@@ -35,6 +37,8 @@ public class ResidentInsert extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        OracleTableNames.buildMaps();
+        OracleColumnNames.buildMaps();
         controller = new Controller();
         controller.login("ora_linshuan","a41053539");
         HashMap<String, String> testMap = new HashMap<>();
