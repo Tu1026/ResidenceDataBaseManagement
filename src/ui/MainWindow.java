@@ -13,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -109,6 +110,13 @@ public class MainWindow implements TableViewUI {
 
         //Adding tableColumbs to the 0,0 of the inner gridpane
         innerPane.add(tableView.getComponent(), 0,0);
+        tableView.getComponent().setOnKeyReleased( key -> {
+            if (key.getCode() == KeyCode.DELETE || key.getCode() == KeyCode.BACK_SPACE){
+                System.out.println("Deleting...");
+                List<String> rowData = tableView.getComponent().getSelectionModel().getSelectedItem();
+                controller.deleteTable(rowData);
+            }
+        });
 
         //On click event for the goTotable button
         goToTable.setOnAction(e -> {

@@ -38,7 +38,7 @@ public final class ConnectionHandler implements ConnectionHandlerDelegate {
             }
         } else{
             System.out.println("Error logging in: already logged in. \nClose the connection first and try again");
-            message = "Already loggin, make sure the connection is closed and try again";
+            message = "Already logged-in, make sure the connection is closed and try again";
         }
 
         return new ConnectionState(connection, isLoggedIn, message);

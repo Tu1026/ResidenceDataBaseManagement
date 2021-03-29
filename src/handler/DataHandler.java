@@ -36,7 +36,35 @@ public final class DataHandler implements DataHandlerDelegate {
     }
 
     @Override
-    public void getTableData(String prettyTable, Consumer<Table> callback) {
+    public void updateTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError) {
+        String [] tablesToLookup = getTablesToLookup(prettyTableName);
+        if (tablesToLookup.length == 1){
+
+        }
+    }
+
+    @Override
+    public void deleteTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError) {
+        if (! prettyTableName.equalsIgnoreCase("Resident")) {
+            onError.accept("Cannot Delete table " + prettyTableName);
+            return;
+        }
+
+        String query = "DELETE FROM ResidentInfo WHERE StudentNumber LIKE ?";
+
+        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)){
+            ps.setObject(1, columnsToUpdate.get(1) + "%");
+            ps.executeUpdate();
+            onSuccess.accept(null);
+        } catch (SQLException throwables) {
+            onError.accept(throwables.getMessage());
+            throwables.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void getTableData(String prettyTable, Consumer<Table> onSuccess) {
         String[] tablesToLookup = getTablesToLookup(prettyTable);
         String query = buildTableQuery(tablesToLookup);
 
@@ -47,13 +75,13 @@ public final class DataHandler implements DataHandlerDelegate {
         } catch (SQLException | ExecutionException | InterruptedException throwables) {
             throwables.printStackTrace();
         } finally {
-            callback.accept(table);
+            onSuccess.accept(table);
         }
     }
 
 
     @Override
-    public void filterTable(String prettyTable, String filter, String column, Consumer<Table> callback) {
+    public void filterTable(String prettyTable, String filter, String column, Consumer<Table> onSuccess) {
         String[] tablesToLookup = getTablesToLookup(prettyTable);
         String query = buildTableQuery(tablesToLookup);
         filter += "%";
@@ -72,7 +100,7 @@ public final class DataHandler implements DataHandlerDelegate {
         } catch (SQLException | ExecutionException | InterruptedException throwables) {
             throwables.printStackTrace();
         } finally {
-            callback.accept(table);
+            onSuccess.accept(table);
         }
     }
 
@@ -117,24 +145,30 @@ public final class DataHandler implements DataHandlerDelegate {
         }
     }
 
-    private List<String> getPKForTable(String[] tableToLookup) {
-        List<String> PKs = new ArrayList<>();
+    private Map<String, List<String>> getPKForTable(String[] tableToLookup) {
+        Map<String, List<String>> PKs = new HashMap<>();
         for (String table : tableToLookup) {
-            String query = "SELECT column_name FROM user_cons_columns WHERE constraint_name = " +
-                    "(SELECT constraint_name FROM all_constraints ac  WHERE UPPER(ac.table_name) = UPPER(?) AND CONSTRAINT_TYPE = 'P' AND ac.OWNER = USER)";
-            try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
-                ps.setObject(1, table);
-                ResultSet resultSet = ps.executeQuery();
-
-                while (resultSet.next()) {
-                    for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++)
-                        PKs.add(resultSet.getString(i));
-                }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+            PKs.put(table, getPKForTable(table));
         }
         return PKs;
+    }
+
+    private List<String> getPKForTable(String oracleTableName) {
+        List<String> PK = new ArrayList<>();
+        String query = "SELECT column_name FROM user_cons_columns WHERE constraint_name = " +
+                "(SELECT constraint_name FROM all_constraints ac  WHERE UPPER(ac.table_name) = UPPER(?) AND CONSTRAINT_TYPE = 'P' AND ac.OWNER = USER)";
+        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
+            ps.setObject(1, oracleTableName);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++)
+                    PK.add(resultSet.getString(i));
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return PK;
     }
 
     private String buildTableQuery(String[] tablesToLookup) {
@@ -159,9 +193,9 @@ public final class DataHandler implements DataHandlerDelegate {
     }
 
     private Table buildTable(String prettyTable, String[] tablesToLookup, PrintablePreparedStatement ps) throws SQLException, ExecutionException, InterruptedException {
-        SwingWorker<List<String>, Void> worker = new SwingWorker<List<String>, Void>() {
+        SwingWorker<Map<String, List<String>>, Void> worker = new SwingWorker<Map<String, List<String>>, Void>() {
             @Override
-            protected List<String> doInBackground() {
+            protected Map<String, List<String>> doInBackground() {
                 return getPKForTable(tablesToLookup);
             }
         };

@@ -32,20 +32,11 @@ public interface DataHandlerDelegate {
      */
     void insertTableData(TableModel data);
 
-    /**
-     * // to define
-     * @param data // to define
-     */
-    //void updateTableData(TableRow data); // need some kind of parameter to specify what we want to update I am guessing
 
-    //I temporarly modded it to return Resultset, a set can be used by javafx
-    /**
-     * //TODO : what exactly do we want to do? (same for all the above)
-//     * @param dataToLookup list of string to lookup?
-     * @return TableData returned
-     */
+    void updateTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError);
 
-    //ResultSet getTableData(String sql); // is this what we want? Not quite sure yet
+    void deleteTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError);
+
 
     /**
      * Queries a specific table, returns the data in a callback

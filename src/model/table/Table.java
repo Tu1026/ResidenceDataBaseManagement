@@ -8,7 +8,7 @@ public class Table implements Iterable<TableRow> {
     private final List<TableRow> rows;
     private TableRow currentRow = null;
     private String name;
-    private List<String> PKs = new ArrayList<>();
+    private Map<String, List<String>> PKs = new HashMap<>();
 
 
 
@@ -30,7 +30,7 @@ public class Table implements Iterable<TableRow> {
         currentRow.insert(column, data);
     }
 
-    public void setPKs(List<String> PKs) {
+    public void setPKs(Map<String, List<String>> PKs) {
         this.PKs = PKs;
     }
 
@@ -41,7 +41,7 @@ public class Table implements Iterable<TableRow> {
         }
     }
 
-    public List<String> getPKs() {
+    public Map<String, List<String>> getPKs() {
         return PKs;
     }
 

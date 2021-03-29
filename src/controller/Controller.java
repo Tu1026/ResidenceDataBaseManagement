@@ -7,7 +7,6 @@ import javafx.application.Platform;
 import model.table.Table;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class Controller implements ControllerDelegate {
@@ -78,11 +77,14 @@ public class Controller implements ControllerDelegate {
         Platform.runLater(() -> {
             System.out.println("Displaying query results in table");
             ui.updateVisibleTable(resultTable);
+            System.out.println("PKs: ");
+            for (String key: resultTable.getPKs().keySet()) {
+                System.out.println("Table --: " + key);
+                for (String str: resultTable.getPKs().get(key)) {
+                    System.out.println("   " + str);
+                }
+            }
         });
-
-        for (String str: resultTable.getPKs()) {
-            System.out.println(str);
-        }
     }
 
     public void filter(String filter, String columnName){
@@ -100,13 +102,24 @@ public class Controller implements ControllerDelegate {
         }).start();
     }
 
-    //Todo:
+    @Override
     public void updateTable(List<String> rowData){
-
+        new Thread(() -> {
+         //dosomething
+        }).start();
     }
 
     //Todo:
+    @Override
     public void deleteTable(List<String> rowData){
+        new Thread(() -> {
+            dataHandler.deleteTableData(this.currentTable, rowData, (Table) -> loadTable(this.currentTable), this::displayError);
+        }).start();
+    }
 
+    private void displayError(String errorMsg) {
+        Platform.runLater(() -> {
+            ui.displayError(errorMsg);
+        });
     }
 }

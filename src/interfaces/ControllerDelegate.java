@@ -44,4 +44,9 @@ public interface ControllerDelegate {
 
  void getDataForStudentInsertion(String tableName, List<String> columnsToGet, List<String> columnsToMatch, List<String> dataToMatch, Consumer<Table> callback);
 
+
+ void updateTable(List<String> rowData);
+
+ void deleteTable(List<String> rowData);
+
 }
