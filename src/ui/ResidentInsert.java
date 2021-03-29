@@ -42,6 +42,8 @@ public class ResidentInsert extends Application {
         List<String> testList2 = new ArrayList<>();
         List<String> testList3 = new ArrayList<>();
         testList.add("House Name");
+        testList.add("Zipcode");
+        testList.add("Address");
         testList2.add("Address");
         testList2.add("Zipcode");
         testList3.add("2205 West Mall");
