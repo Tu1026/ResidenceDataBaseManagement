@@ -40,7 +40,7 @@ public class ResidentInsert extends Application {
         OracleTableNames.buildMaps();
         OracleColumnNames.buildMaps();
         controller = new Controller();
-        controller.login("ora_linshuan","a41053539");
+        controller.login("ora_jmhirsch","a64927676");
         HashMap<String, String> testMap = new HashMap<>();
         List<String> testList = new ArrayList<>();
         testList.add("Residence Name");

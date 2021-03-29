@@ -90,13 +90,26 @@ public final class DataHandler implements DataHandlerDelegate {
         query.append(tableName);
 
         if (data.size() > 0){
-            // TODO: do stuff here
+            query.append(" WHERE ");
+
+            for (String key: data.keySet()) {
+                query.append("?").append( " = ").append("?").append(" AND ");
+            }
+
         }
 
         String queryStr = query.toString();
+        queryStr = queryStr.replaceAll(" AND $", "");
 
         Table table = null;
         try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(queryStr), queryStr)){
+            int ctr = 0;
+            for (String key: data.keySet()) {
+                ctr++;
+                ps.setObject(ctr, OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(key));
+                ctr ++;
+                ps.setObject(ctr, data.get(key));
+            }
             table = buildTable(tableName, new String[]{tableName}, ps);
 
         }catch (SQLException | InterruptedException | ExecutionException e) {
