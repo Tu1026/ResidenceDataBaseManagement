@@ -9,4 +9,6 @@ public interface TableViewUI {
      * @param table table with queried data
      */
     void updateVisibleTable(Table table);
+
+    void displayError(String errorString);
 }
