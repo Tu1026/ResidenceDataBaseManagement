@@ -89,11 +89,11 @@ public final class DataHandler implements DataHandlerDelegate {
         query.append(" FROM ");
         query.append(tableName);
 
-        if (data.size() > 0){
+        if (columnsToMatch.size() > 0 && dataToMatch.size() > 0){
             query.append(" WHERE ");
 
-            for (String key: data.keySet()) {
-                query.append("?").append( " = ").append("?").append(" AND ");
+            for (String key: columnsToMatch) {
+                query.append(key).append( " = ").append("?").append(" AND ");
             }
 
         }
@@ -103,12 +103,8 @@ public final class DataHandler implements DataHandlerDelegate {
 
         Table table = null;
         try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(queryStr), queryStr)){
-            int ctr = 0;
-            for (String key: data.keySet()) {
-                ctr++;
-                ps.setObject(ctr, OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(key));
-                ctr ++;
-                ps.setObject(ctr, data.get(key));
+            for (int i = 0; i < columnsToMatch.size(); i++) {
+                ps.setObject(i+1, dataToMatch.get(i));
             }
             table = buildTable(tableName, new String[]{tableName}, ps);
 
