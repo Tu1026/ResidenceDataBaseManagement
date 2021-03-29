@@ -64,6 +64,13 @@ public class MainWindow implements TableViewUI {
         innerPaneTableMenu.getRowConstraints().addAll(filterRows, filterRows);
 
 
+        GridPane bottomRight = new GridPane();
+        RowConstraints bottomRightConstraint = new RowConstraints();
+        bottomRightConstraint.setPercentHeight(50);
+        bottomRight.getRowConstraints().addAll(bottomRightConstraint, bottomRightConstraint);
+
+
+
         Button goToTable = new Button("Go to Table");
         goToTable.setPrefSize(113,36);
         outerPane.add(goToTable, 1,1);
@@ -94,8 +101,6 @@ public class MainWindow implements TableViewUI {
         return tableScene;
     }
 
-
-
     @Override
     public void updateVisibleTable(Table table) {
         List<String> columnNames = new ArrayList<>();
@@ -105,4 +110,13 @@ public class MainWindow implements TableViewUI {
         filterPane.updateFilterList(columnNames);
         tableView.buildData(table);
     }
+
+    //Use this to display error
+    public void displayError(String errorString){
+        Alert a = new Alert(Alert.AlertType.WARNING);
+        a.setTitle("Error in Manipulating Database");
+        a.setContentText(errorString);
+        a.showAndWait();
+    }
+
 }

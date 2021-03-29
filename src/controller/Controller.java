@@ -5,6 +5,7 @@ import handler.DataHandler;
 import interfaces.*;
 import javafx.application.Platform;
 import model.OracleTableNames;
+import model.table.Column;
 import model.table.Table;
 
 import java.util.ArrayList;
@@ -107,4 +108,5 @@ public class Controller implements ControllerDelegate {
         }
 
     }
+
 }

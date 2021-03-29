@@ -19,7 +19,7 @@ import model.table.Column;
 import java.util.List;
 
 public class FilterPane {
-    private  ComboBox<String> filterColumnNames;
+    private ComboBox<String> filterColumnNames;
     private GridPane filterPane;
     private List<String> columnList;
     private ControllerDelegate controller;
