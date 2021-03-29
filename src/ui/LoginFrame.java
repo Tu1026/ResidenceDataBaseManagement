@@ -106,7 +106,6 @@ public class LoginFrame extends Application {
     }
 
     private void login(Stage primaryStage, TextField userNameText, PasswordField passwordText, Node loadingLabel) {
-
         loadingLabel.setVisible(true);
         new Thread(() -> {
             String sUserName = userNameText.getText().toLowerCase().trim();
@@ -132,8 +131,6 @@ public class LoginFrame extends Application {
                 });
             }
         }).start();
-
-        //Platform.runLater(()-> passwordText.getStyleClass().remove("smallLoading"));
     }
 
 
