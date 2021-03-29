@@ -55,7 +55,7 @@ public class FilterPane {
 //                String oracleColumnName = OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(filterColumnNames.getValue());
                 System.out.println("Filtering by Column " + filterColumnNames.getValue());
                 System.out.println("Filtering by value " + filter.getText());
-                controller.filter(filter.getText() ,filterColumnNames.getValue());
+                controller.filter(filter.getText(), filterColumnNames.getValue().trim());
             }
         });
 

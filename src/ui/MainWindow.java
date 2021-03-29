@@ -50,18 +50,9 @@ public class MainWindow implements TableViewUI {
 
         ComboBox<String> selectTables = new ComboBox<>();
         selectTables.setPrefSize(250,36);
-        selectTables.getItems().add("Campus");
-        selectTables.getItems().add("Residential Managing Office");
-        selectTables.getItems().add("Building Manager");
-        selectTables.getItems().add("Senior Advisor");
-        selectTables.getItems().add("Residence Advisor");
-        selectTables.getItems().add("Residence Budget");
-        selectTables.getItems().add("Residence Capacity");
-        selectTables.getItems().add("Floor");
-        selectTables.getItems().add("House");
-        selectTables.getItems().add("Unit");
-        selectTables.getItems().add("Resident Address");
-        selectTables.getItems().add("Resident Info");
+        for (String table: OracleTableNames.PRETTY_NAMES) {
+            selectTables.getItems().add(table);
+        }
         selectTables.getSelectionModel().selectFirst();
 
         innerPaneTableMenu.add(selectTables,0,0);
@@ -89,9 +80,9 @@ public class MainWindow implements TableViewUI {
 
         //On click event for the goTotable button
         goToTable.setOnAction(e -> {
-            String tableState = selectTables.getValue().toString();
+            String tableState = selectTables.getValue();
             System.out.println(tableState);
-            controller.loadTable(tableState.replaceAll(" ", ""));
+            controller.loadTable(tableState);
         });
         filterPane = new FilterPane(controller);
         innerPaneTableMenu.add(filterPane.returnPane(),0,1);

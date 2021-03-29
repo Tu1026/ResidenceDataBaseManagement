@@ -1,6 +1,7 @@
 package handler;
 
 import interfaces.DataHandlerDelegate;
+import model.OracleColumnNames;
 import sql.PrintablePreparedStatement;
 import model.table.Column;
 import model.table.Table;
@@ -55,8 +56,10 @@ public final class DataHandler implements DataHandlerDelegate {
         String[] tablesToLookup = getTablesToLookup(prettyTable);
         String query = buildTableQuery(tablesToLookup);
         filter += "%";
+        column = OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(column);
         query += " WHERE " + column + " LIKE ?";
         Table table = null;
+
         try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
             ps.setObject(1, filter);
 
