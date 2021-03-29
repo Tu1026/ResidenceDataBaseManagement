@@ -23,6 +23,7 @@ public class FilterPane {
     private GridPane filterPane;
     private List<String> columnList;
     private ControllerDelegate controller;
+    private String tableName;
 
     public FilterPane(ControllerDelegate controller){
         this.controller = controller;
@@ -51,25 +52,36 @@ public class FilterPane {
         filterPane.getRowConstraints().addAll(filterRows, filterRows);
 
         filter.setOnKeyReleased(key -> {
-            if (key.getCode() == KeyCode.ENTER) {
-                System.out.println("Filtering by Column " + filterColumnNames.getValue());
-                System.out.println("Filtering by value " + filter.getText());
-                controller.filter(filter.getText(), filterColumnNames.getValue().trim());
-            }
+            System.out.println("Filtering by Column " + filterColumnNames.getValue());
+            System.out.println("Filtering by value " + filter.getText());
+            controller.filter(filter.getText(), filterColumnNames.getValue().trim());
         });
+//        filter.setOnKeyReleased(key -> {
+//            if (key.getCode() == KeyCode.ENTER) {
+//                System.out.println("Filtering by Column " + filterColumnNames.getValue());
+//                System.out.println("Filtering by value " + filter.getText());
+//                controller.filter(filter.getText(), filterColumnNames.getValue().trim());
+//            }
+//        });
 
     }
+
     public GridPane returnPane(){
         return filterPane;
     }
 
-    public void updateFilterList(List<String> columns) {
-        columnList = columns;
-        filterColumnNames.getSelectionModel().clearSelection();
-        filterColumnNames.getItems().clear();
-        for (String column : columns) {
-            filterColumnNames.getItems().add(column);
+    public void updateFilterList(List<String> columns, String tableName) {
+        if (this.tableName != tableName || this.tableName == null){
+            columnList = columns;
+            filterColumnNames.getSelectionModel().clearSelection();
+            filterColumnNames.getItems().clear();
+            this.tableName = tableName;
+            for (String column : columns) {
+                filterColumnNames.getItems().add(column);
+            }
+            filterColumnNames.getSelectionModel().selectFirst();
+
         }
-        filterColumnNames.getSelectionModel().selectFirst();
+
     }
 }

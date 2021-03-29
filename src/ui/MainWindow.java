@@ -36,6 +36,7 @@ public class MainWindow implements TableViewUI {
     private List<Column> columns = new ArrayList<>();
     private MyTableView tableView;
     FilterPane filterPane;
+    private String currTable;
     // declare your filter combobox class
 
     public MainWindow(ControllerDelegate controller){
@@ -130,7 +131,7 @@ public class MainWindow implements TableViewUI {
         for (Column column :table.getColumnsList()){
             columnNames.add(OracleColumnNames.GET_PRETTY_COLUMN_NAMES.get(column.name));
         }
-        filterPane.updateFilterList(columnNames);
+        filterPane.updateFilterList(columnNames, table.getName());
         tableView.buildData(table);
     }
 
