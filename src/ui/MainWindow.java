@@ -16,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.OracleColumnNames;
 import model.OracleTableNames;
@@ -45,11 +46,15 @@ public class MainWindow implements TableViewUI {
         outerPane.setPadding(new Insets(20, 20, 20, 10));
 
         GridPane innerPaneTableMenu = new GridPane();
+        RowConstraints heightConstraints = new RowConstraints();
+        heightConstraints.setPercentHeight(50);
+        innerPaneTableMenu.getRowConstraints().addAll(heightConstraints, heightConstraints);
 
         outerPane.add(innerPane, 0, 0);
         outerPane.getColumnConstraints().add(new ColumnConstraints(946));
         outerPane.getRowConstraints().add(new RowConstraints(342));
         outerPane.getRowConstraints().add(new RowConstraints(456));
+
 
         ComboBox<String> selectTables = new ComboBox<>();
         selectTables.setPrefSize(250,36);
@@ -58,20 +63,32 @@ public class MainWindow implements TableViewUI {
         }
         selectTables.getSelectionModel().selectFirst();
 
-        innerPaneTableMenu.add(selectTables,0,0);
+        GridPane selectBoxAndInsertGrid = new GridPane();
+
+        VBox insertAndUpdateVbox = new VBox();
+        selectBoxAndInsertGrid.add(selectTables, 0,0);
+        selectBoxAndInsertGrid.getRowConstraints().addAll(heightConstraints, heightConstraints);
+
+        Button insertButton = new Button("Insert a Resident");
+        insertButton.prefWidthProperty().bind(insertAndUpdateVbox.prefWidthProperty());
+        insertAndUpdateVbox.getChildren().add(insertButton);
+        selectBoxAndInsertGrid.add(insertAndUpdateVbox, 0, 1);
+        insertButton.setOnAction(event -> {
+            Stage insertStage = new Stage();
+            VBox test = new VBox();
+            Scene newScene = new Scene(test, 950,300);
+            insertStage.setScene(newScene);
+            insertStage.show();
+        });
+
         GridPane.setHalignment(selectTables, HPos.CENTER);
         GridPane.setValignment(selectTables, VPos.TOP);
         outerPane.add(innerPaneTableMenu, 1, 0);
-        RowConstraints filterRows = new RowConstraints();
-        filterRows.setPercentHeight(50);
-        innerPaneTableMenu.getRowConstraints().addAll(filterRows, filterRows);
+        innerPaneTableMenu.getRowConstraints().addAll(heightConstraints, heightConstraints);
 
-
-        GridPane bottomRight = new GridPane();
-        RowConstraints bottomRightConstraint = new RowConstraints();
-        bottomRightConstraint.setPercentHeight(50);
-        bottomRight.getRowConstraints().addAll(bottomRightConstraint, bottomRightConstraint);
-
+        innerPaneTableMenu.add(selectBoxAndInsertGrid,0,0);
+//        GridPane bottomRight = new GridPane();
+//        bottomRight.getRowConstraints().addAll(heightConstraints, heightConstraints);
 
 
         Button goToTable = new Button("Go to Table");
@@ -93,11 +110,14 @@ public class MainWindow implements TableViewUI {
             System.out.println(tableState);
             controller.loadTable(tableState);
         });
+
         filterPane = new FilterPane(controller);
-        innerPaneTableMenu.add(filterPane.returnPane(),0,1);
+        innerPaneTableMenu.add(filterPane.returnPane(),0,2,1,2);
         //Initialize campus as the default table
         controller.loadTable("Campus");
         tableScene = new Scene(outerPane, 1124,798);
+        innerPane.setGridLinesVisible(true);
+        innerPaneTableMenu.setGridLinesVisible(true);
     }
 
     public Scene getScene() {
