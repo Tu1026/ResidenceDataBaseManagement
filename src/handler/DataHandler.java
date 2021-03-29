@@ -107,7 +107,6 @@ public final class DataHandler implements DataHandlerDelegate {
                 callback.accept(finalTable);
             });
         }
-
     }
 
     private List<String> getPKForTable(String[] tableToLookup) {
