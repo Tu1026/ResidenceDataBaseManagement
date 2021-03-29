@@ -1,5 +1,12 @@
 package interfaces;
 
+import model.table.Table;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
 public interface ControllerDelegate {
 
  ConnectionStateDelegate login(String username, String password);
@@ -34,5 +41,7 @@ public interface ControllerDelegate {
  void loadTable(String tableName);
 
  void filter(String filter, String column);
+
+ void getDataForStudentInsertion(String tableName, List<String> columnsToGet, Map<String, String> data, Consumer<Table> callback);
 
 }
