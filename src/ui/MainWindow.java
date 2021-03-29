@@ -150,8 +150,11 @@ public class MainWindow implements TableViewUI {
 
     //Use this to display error
     public void displayError(String errorString){
-        Alert a = new Alert(Alert.AlertType.WARNING);
+        Alert a = new Alert(Alert.AlertType.ERROR);
         a.setTitle("Error in Manipulating Database");
+        if (errorString.contains(":")) {
+            errorString = errorString.split(":")[1];
+        }
         a.setContentText(errorString);
         a.showAndWait();
     }

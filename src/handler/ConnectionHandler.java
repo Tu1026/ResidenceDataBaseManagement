@@ -34,6 +34,9 @@ public final class ConnectionHandler implements ConnectionHandlerDelegate {
                 isLoggedIn = true;
             } catch (SQLException e){
                 message = e.getMessage();
+                if (message.contains(":")) {
+                    message = message.split(":")[1];
+                }
                 System.err.println("Error logging in: " + e.getMessage());
             }
         } else{

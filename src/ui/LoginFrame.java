@@ -124,7 +124,7 @@ public class LoginFrame extends Application {
             } else {
                 Platform.runLater( () -> {
                     loadingLabel.setVisible(false);
-                    Alert a = new Alert(Alert.AlertType.WARNING);
+                    Alert a = new Alert(Alert.AlertType.ERROR);
                     a.setTitle("Error Connecting to Oracle");
                     a.setContentText(connectionState.getMessage());
                     a.showAndWait();

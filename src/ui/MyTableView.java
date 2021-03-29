@@ -45,7 +45,7 @@ public class MyTableView {
 
         try {
 
-            /*q
+            /*
              * ********************************
              * TABLE COLUMN ADDED DYNAMICALLY *
              *********************************
@@ -57,14 +57,14 @@ public class MyTableView {
                     final  int j = i;
                     String columnName = OracleColumnNames.GET_PRETTY_COLUMN_NAMES.get(columnNames.get(i).name);
                     TableColumn<ObservableList<String>, String> col = new TableColumn<>(columnName);
-                    col.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(j).toString()));
+                    col.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(j)));
                     col.setCellFactory(TextFieldTableCell.forTableColumn());
                     col.setOnEditCommit(e -> {
                         ObservableList<String> row = e.getRowValue();
                         row.set(j, e.getNewValue());
                     });
                     tableView.getColumns().add(col);
-                    System.out.println("Column [" + i + "] ");
+                   // System.out.println("Column [" + i + "] ");
                 }
 
                 /*

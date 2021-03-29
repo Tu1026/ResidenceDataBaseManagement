@@ -15,6 +15,8 @@ public class PrintablePreparedStatement implements PreparedStatement {
 
     private final List<String> stringList;
     private final PreparedStatement preparedStatement;
+    public static boolean autoPrint = true;
+    private final boolean localAutoPrint;
 
     public String toString(){
         StringBuilder str = new StringBuilder();
@@ -25,9 +27,24 @@ public class PrintablePreparedStatement implements PreparedStatement {
         return str.toString();
     }
 
+    private void autoPrintQuery() {
+        if (autoPrint && localAutoPrint) {
+            print();
+        }
+    }
+
+    public void print(){
+        System.out.println("Running Query: " + toString());
+    }
+
     public PrintablePreparedStatement(PreparedStatement preparedStatement, String query) {
+       this(preparedStatement, query, true);
+    }
+
+    public PrintablePreparedStatement(PreparedStatement preparedStatement, String query, Boolean autoPrint) {
         this.preparedStatement = preparedStatement;
         stringList = new ArrayList<>(Arrays.asList(query.split("\\?")));
+        this.localAutoPrint = autoPrint;
     }
 
     public <T> T unwrap(Class<T> iface) throws SQLException {
@@ -239,12 +256,12 @@ public class PrintablePreparedStatement implements PreparedStatement {
     }
 
     public ResultSet executeQuery() throws SQLException {
-        System.out.println("Running query: " + toString());
+        autoPrintQuery();
         return preparedStatement.executeQuery();
     }
 
     public int executeUpdate() throws SQLException {
-        System.out.println("Running query: " + toString());
+        autoPrintQuery();
         return preparedStatement.executeUpdate();
     }
 

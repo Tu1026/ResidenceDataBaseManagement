@@ -46,7 +46,7 @@ public final class DataHandler implements DataHandlerDelegate {
     @Override
     public void deleteTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError) {
         if (! prettyTableName.equalsIgnoreCase("Resident")) {
-            onError.accept("Cannot Delete table " + prettyTableName);
+            onError.accept("Cannot delete data from table " + prettyTableName);
             return;
         }
 
@@ -84,7 +84,7 @@ public final class DataHandler implements DataHandlerDelegate {
     public void filterTable(String prettyTable, String filter, String column, Consumer<Table> onSuccess) {
         String[] tablesToLookup = getTablesToLookup(prettyTable);
         String query = buildTableQuery(tablesToLookup);
-        filter += "%";
+        filter = "%" + filter + "%";
         String lowerCaseFilter = filter.toLowerCase();
         String upperCaseFilter = filter.toUpperCase();
         column = OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(column);
@@ -157,7 +157,7 @@ public final class DataHandler implements DataHandlerDelegate {
         List<String> PK = new ArrayList<>();
         String query = "SELECT column_name FROM user_cons_columns WHERE constraint_name = " +
                 "(SELECT constraint_name FROM all_constraints ac  WHERE UPPER(ac.table_name) = UPPER(?) AND CONSTRAINT_TYPE = 'P' AND ac.OWNER = USER)";
-        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
+        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false)) {
             ps.setObject(1, oracleTableName);
             ResultSet resultSet = ps.executeQuery();
 
