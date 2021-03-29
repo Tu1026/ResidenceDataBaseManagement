@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
 import model.OracleColumnNames;
 import model.table.Column;
 import model.table.Table;
@@ -58,6 +59,11 @@ public class MyTableView {
                     String columnName = OracleColumnNames.GET_PRETTY_COLUMN_NAMES.get(columnNames.get(i).name);
                     TableColumn<ObservableList<String>, String> col = new TableColumn<>(columnName);
                     col.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(j).toString()));
+                    col.setCellFactory(TextFieldTableCell.forTableColumn());
+                    col.setOnEditCommit(e -> {
+                        ObservableList row = e.getRowValue();
+                        row.set(j, e.getNewValue());
+                    });
                     tableView.getColumns().add(col);
                     System.out.println("Column [" + i + "] ");
                 }
@@ -79,6 +85,7 @@ public class MyTableView {
             }
             //FINALLY ADDED TO TableView
             tableView.setItems(data);
+            tableView.setEditable(true);
             tableView.refresh();
         } catch (Exception e) {
             e.printStackTrace();
