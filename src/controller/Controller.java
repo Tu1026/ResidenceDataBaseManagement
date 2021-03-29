@@ -99,4 +99,14 @@ public class Controller implements ControllerDelegate {
                 dataHandler.getSpecificTableData(tableName, columnsToGet, columnsToMatch, dataToMatch, callback);
         }).start();
     }
+
+    //Todo:
+    public void updateTable(List<String> rowData){
+
+    }
+
+    //Todo:
+    public void deleteTable(List<String> rowData){
+
+    }
 }
