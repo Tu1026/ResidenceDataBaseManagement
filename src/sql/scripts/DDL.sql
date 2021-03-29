@@ -65,13 +65,13 @@ CREATE TABLE ResidenceBudget(
 --- END RESIDENCE TABLES
 
 CREATE TABLE House(
-                      name 	   	   		char(20),
+                      houseName 	   	   		char(20),
                       capacity	   		int NOT NULL,
                       type		   		char(20) NOT NULL,
                       ageRestriction		int,
                       resStAddress	    char(40),
                       resZipCode			char(7),
-                      PRIMARY KEY(name, resStAddress, resZipCode),
+                      PRIMARY KEY(houseName, resStAddress, resZipCode),
                       FOREIGN KEY(resStAddress, resZipCode) REFERENCES Residence(resStAddress, resZipCode) ON DELETE CASCADE
 );
 
@@ -84,7 +84,7 @@ CREATE TABLE Floor(
                       resStAddress		char(40),
                       resZipCode			char(7),
                       PRIMARY KEY(fNumber, houseName, resStAddress, resZipCode),
-                      FOREIGN KEY(houseName, resStAddress, resZipCode) REFERENCES House(name, resStAddress, resZipCode) ON DELETE CASCADE
+                      FOREIGN KEY(houseName, resStAddress, resZipCode) REFERENCES House(houseName, resStAddress, resZipCode) ON DELETE CASCADE
 );
 
 CREATE TABLE Unit(
@@ -133,7 +133,7 @@ CREATE TABLE SeniorAdvisor(
                               supervisingResZipCode	char(7),
                               UNIQUE(supervisingHouseName, supervisingResStAddress, supervisingResZipCode),
                               FOREIGN KEY(studentNumber) REFERENCES ResidentInfo(studentNumber) ON DELETE CASCADE,
-                              FOREIGN KEY(supervisingHouseName, supervisingResStAddress, supervisingResZipCode) REFERENCES House(name, resStAddress, resZipCode) ON DELETE SET NULL
+                              FOREIGN KEY(supervisingHouseName, supervisingResStAddress, supervisingResZipCode) REFERENCES House(houseName, resStAddress, resZipCode) ON DELETE SET NULL
 );
 
 -- Assertion to make sure 1..n with RA //
@@ -309,54 +309,54 @@ VALUES('Salish', 300, 'first year', null, (SELECT resStAddress FROM Residence WH
 
 
 INSERT INTO Floor
-VALUES(10, 20, 'male', (SELECT name FROM House WHERE name = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resStAddress FROM House WHERE name = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resZipCode FROM House WHERE name = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'));
+VALUES(10, 20, 'male', (SELECT houseName FROM House WHERE houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resStAddress FROM House WHERE houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO Floor
-VALUES(4, 25, null, (SELECT name FROM House WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resStAddress FROM House  WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resZipCode FROM House WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'));
+VALUES(4, 25, null, (SELECT houseName FROM House WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resStAddress FROM House  WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO Floor
-VALUES(15, 20, null, (SELECT name FROM House WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resStAddress FROM House WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resZipCode FROM House WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'));
+VALUES(15, 20, null, (SELECT houseName FROM House WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resStAddress FROM House WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO Floor
-VALUES(6, 25, null, (SELECT name FROM House WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resStAddress FROM House WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resZipCode FROM House WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'));
+VALUES(6, 25, null, (SELECT houseName FROM House WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resStAddress FROM House WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO Floor
-VALUES(16, 16, null, (SELECT name FROM House WHERE name = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resStAddress FROM House WHERE name = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resZipCode FROM House WHERE name = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'));
+VALUES(16, 16, null, (SELECT houseName FROM House WHERE houseName = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resStAddress FROM House WHERE houseName = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resZipCode FROM House WHERE houseName = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO Floor
-VALUES(2, 16, null, (SELECT name FROM House WHERE name = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resStAddress FROM House WHERE name = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resZipCode FROM House WHERE name = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'));
+VALUES(2, 16, null, (SELECT houseName FROM House WHERE houseName = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resStAddress FROM House WHERE houseName = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resZipCode FROM House WHERE houseName = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO Floor
-VALUES(9, 20, 'female', (SELECT name FROM House WHERE name = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
-       (SELECT resStAddress FROM House WHERE name = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
-       (SELECT resZipCode FROM House WHERE name = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'));
+VALUES(9, 20, 'female', (SELECT houseName FROM House WHERE houseName = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
+       (SELECT resStAddress FROM House WHERE houseName = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'));
 
 INSERT INTO Floor
-VALUES(8, 20, null, (SELECT name FROM House WHERE name = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
-       (SELECT resStAddress FROM House WHERE name = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
-       (SELECT resZipCode FROM House WHERE name = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'));
+VALUES(8, 20, null, (SELECT houseName FROM House WHERE houseName = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
+       (SELECT resStAddress FROM House WHERE houseName = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'));
 
 INSERT INTO Floor
-VALUES(3, 20, 'male', (SELECT name FROM House WHERE name = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
-       (SELECT resStAddress FROM House WHERE name = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
-       (SELECT resZipCode FROM House WHERE name = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'));
+VALUES(3, 20, 'male', (SELECT houseName FROM House WHERE houseName = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
+       (SELECT resStAddress FROM House WHERE houseName = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'));
 
 INSERT INTO Floor
-VALUES(2, 20, 'female', (SELECT name FROM House WHERE name = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
-       (SELECT resStAddress FROM House WHERE name = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
-       (SELECT resZipCode FROM House WHERE name = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'));
+VALUES(2, 20, 'female', (SELECT houseName FROM House WHERE houseName = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
+       (SELECT resStAddress FROM House WHERE houseName = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'));
 
 
 INSERT INTO Unit
@@ -551,29 +551,29 @@ VALUES((SELECT email FROM ResidentInfo WHERE email = 'au@ubc.ca'), (SELECT uNumb
 
 --Advisor INSERTIONS
 INSERT INTO SeniorAdvisor
-VALUES(332, null, 600, (SELECT studentNumber FROM ResidentInfo WHERE studentNumber = 23049250), (SELECT name FROM House WHERE name = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resStAddress FROM House WHERE name = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resZipCode FROM House WHERE name = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'));
+VALUES(332, null, 600, (SELECT studentNumber FROM ResidentInfo WHERE studentNumber = 23049250), (SELECT houseName FROM House WHERE houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resStAddress FROM House WHERE houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO SeniorAdvisor
-VALUES(554, 2, 500, (SELECT studentNumber FROM ResidentInfo WHERE studentNumber = 23954485), (SELECT name FROM House WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resStAddress FROM House WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resZipCode FROM House WHERE name = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'));
+VALUES(554, 2, 500, (SELECT studentNumber FROM ResidentInfo WHERE studentNumber = 23954485), (SELECT houseName FROM House WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resStAddress FROM House WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO SeniorAdvisor
-VALUES(668, 4, 550, (SELECT studentNumber FROM ResidentInfo WHERE studentNumber = 45544432), (SELECT name FROM House WHERE name = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
-       (SELECT resStAddress FROM House WHERE name = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
-       (SELECT resZipCode FROM House WHERE name = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'));
+VALUES(668, 4, 550, (SELECT studentNumber FROM ResidentInfo WHERE studentNumber = 45544432), (SELECT houseName FROM House WHERE houseName = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
+       (SELECT resStAddress FROM House WHERE houseName = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Salish' AND resStAddress = '2333 Vine Street' AND resZipCode = 'V1V 1V7'));
 
 INSERT INTO SeniorAdvisor
-VALUES(339, 1, null, (SELECT studentNumber FROM ResidentInfo WHERE studentNumber = 59485932), (SELECT name FROM House WHERE name = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resStAddress FROM House WHERE name = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
-       (SELECT resZipCode FROM House WHERE name = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'));
+VALUES(339, 1, null, (SELECT studentNumber FROM ResidentInfo WHERE studentNumber = 59485932), (SELECT houseName FROM House WHERE houseName = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resStAddress FROM House WHERE houseName = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'),
+       (SELECT resZipCode FROM House WHERE houseName = 'North Tower' AND resStAddress = '4545 Argronomy Road' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO SeniorAdvisor
-VALUES(756, null, 250, (SELECT studentNumber FROM ResidentInfo WHERE studentNumber = 59403945), (SELECT name FROM House WHERE name = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
-       (SELECT resStAddress FROM House WHERE name = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
-       (SELECT resZipCode FROM House WHERE name = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'));
+VALUES(756, null, 250, (SELECT studentNumber FROM ResidentInfo WHERE studentNumber = 59403945), (SELECT houseName FROM House WHERE houseName = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
+       (SELECT resStAddress FROM House WHERE houseName = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'),
+       (SELECT resZipCode FROM House WHERE houseName = 'Korea House' AND resStAddress = '432 East Mall' AND resZipCode = 'V1V 1V7'));
 
 
 

@@ -93,9 +93,8 @@ public final class DataHandler implements DataHandlerDelegate {
             query.append(" WHERE ");
 
             for (String key: columnsToMatch) {
-                query.append(key).append( " = ").append("?").append(" AND ");
+                query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(key)).append( " = ").append("?").append(" AND ");
             }
-
         }
 
         String queryStr = query.toString();
