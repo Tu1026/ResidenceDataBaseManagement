@@ -93,17 +93,17 @@ public final class DataHandler implements DataHandlerDelegate {
             query.append(" WHERE ");
 
             for (String key: columnsToMatch) {
-                query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(key)).append( " = ").append("?").append(" AND ");
+                query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(key)).append( " LIKE ").append("?").append(" AND ");
             }
         }
 
         String queryStr = query.toString();
-        queryStr = queryStr.replaceAll(" AND $", "");
+        queryStr = queryStr.replaceAll(" AND $", "").trim();
 
         Table table = null;
         try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(queryStr), queryStr)){
             for (int i = 0; i < columnsToMatch.size(); i++) {
-                ps.setObject(i+1, dataToMatch.get(i));
+                ps.setString(i+1, "%" + dataToMatch.get(i).trim() +"%");
             }
             table = buildTable(tableName, new String[]{tableName}, ps);
 

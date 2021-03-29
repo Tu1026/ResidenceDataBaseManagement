@@ -40,7 +40,7 @@ public class ResidentInsert extends Application {
         OracleTableNames.buildMaps();
         OracleColumnNames.buildMaps();
         controller = new Controller();
-        controller.login("ora_linshuan","a41053539");
+        controller.login("ora_jmhirsch","a64927676");
         List<String> testList = new ArrayList<>();
         List<String> testList2 = new ArrayList<>();
         List<String> testList3 = new ArrayList<>();
@@ -82,5 +82,7 @@ public class ResidentInsert extends Application {
         for (Column column: table.getColumnsList()){
             System.out.println(column.name);
         }
+
+        controller.logout();
     }
 }
