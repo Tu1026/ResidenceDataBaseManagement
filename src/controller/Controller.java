@@ -4,12 +4,7 @@ import handler.ConnectionHandler;
 import handler.DataHandler;
 import interfaces.*;
 import javafx.application.Platform;
-import model.OracleTableNames;
-import model.table.Column;
 import model.table.Table;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Controller implements ControllerDelegate {
 
@@ -69,18 +64,6 @@ public class Controller implements ControllerDelegate {
         new Thread(() -> {
             dataHandler.getTableData(tableName.trim(), this::resultCallback);
         }).start();
-
-        //This will be deleted in the future
-//        new Thread(() -> {
-//            try {
-//                System.err.println("Filtering in 4 seconds...");
-//                Thread.sleep(4000);
-//                System.out.println("Filtering campus by pop");
-//                filter("5", "POPULATION");
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
     }
 
     private void resultCallback(Table resultTable){
