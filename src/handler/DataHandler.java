@@ -1,6 +1,7 @@
 package handler;
 
 import interfaces.DataHandlerDelegate;
+import javafx.application.Platform;
 import model.OracleColumnNames;
 import sql.PrintablePreparedStatement;
 import model.table.Column;
@@ -35,7 +36,6 @@ public final class DataHandler implements DataHandlerDelegate {
     }
 
     @Override
-
     public void getTableData(String prettyTable, Consumer<Table> callback) {
         String[] tablesToLookup = getTablesToLookup(prettyTable);
         String query = buildTableQuery(tablesToLookup);
@@ -50,6 +50,7 @@ public final class DataHandler implements DataHandlerDelegate {
             callback.accept(table);
         }
     }
+
 
     @Override
     public void filterTable(String prettyTable, String filter, String column, Consumer<Table> callback) {
@@ -73,6 +74,40 @@ public final class DataHandler implements DataHandlerDelegate {
         } finally {
             callback.accept(table);
         }
+    }
+
+    @Override
+    public void getSpecificTableData(String tableName, List<String> columnsToGet, Map<String, String> data, Consumer<Table> callback) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT ");
+
+        for (int i = 0; i < columnsToGet.size() - 1; i++){
+            query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(columnsToGet.get(i))).append(", ");
+        }
+        query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(columnsToGet.get(columnsToGet.size() - 1)));
+
+        query.append(" FROM ");
+        query.append(tableName);
+
+        if (data.size() > 0){
+            // TODO: do stuff here
+        }
+
+        String queryStr = query.toString();
+
+        Table table = null;
+        try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(queryStr), queryStr)){
+            table = buildTable(tableName, new String[]{tableName}, ps);
+
+        }catch (SQLException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }finally {
+            Table finalTable = table;
+            Platform.runLater(() -> {
+                callback.accept(finalTable);
+            });
+        }
+
     }
 
     private List<String> getPKForTable(String[] tableToLookup) {

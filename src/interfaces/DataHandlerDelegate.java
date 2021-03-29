@@ -5,6 +5,8 @@ import model.table.TableModel;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 
@@ -53,5 +55,7 @@ public interface DataHandlerDelegate {
      void getTableData(String tableToLookup, Consumer<Table> callback);
 
     void filterTable(String tableToLookup, String filter, String column, Consumer<Table> callback);
+
+    void getSpecificTableData(String tableName, List<String> columnsToGet, Map<String, String> data, Consumer<Table> callback);
 
 }

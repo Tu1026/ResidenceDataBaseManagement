@@ -95,6 +95,8 @@ public class Controller implements ControllerDelegate {
 
     @Override
     public void getDataForStudentInsertion(String tableName, List<String> columnsToGet, Map<String, String> data, Consumer<Table> callback) {
+        new Thread(() -> {
 
+        });
     }
 }
