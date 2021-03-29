@@ -74,7 +74,6 @@ public class MainWindow implements TableViewUI {
         tableView = new MyTableView();
         tableView.setSizeProperties(innerPane.widthProperty(), innerPane.heightProperty());
 
-
         //Adding tableColumbs to the 0,0 of the inner gridpane
         innerPane.add(tableView.getComponent(), 0,0);
 

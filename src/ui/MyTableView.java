@@ -22,9 +22,8 @@ public class MyTableView {
     ObservableList<ObservableList<String>> data;
 
     public MyTableView() {
-
-
         tableView.setStyle("-fx-border-color: #000000");
+        tableView.setTableMenuButtonVisible(true);
     }
 
 
