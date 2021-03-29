@@ -34,8 +34,8 @@ public class FilterPane {
 
         VBox LabelAndColumn = new VBox();
 
-        Label filterLabel = new Label("Filter by the selected column:");
-        filterLabel.setFont(Font.font("Times New Roman", 20));
+        Label filterLabel = new Label("Filter by column:");
+        filterLabel.setFont(Font.font("Times New Roman", 17));
         filterLabel.setWrapText(true);
         LabelAndColumn.getChildren().addAll(filterLabel, filterColumnNames);
         filterPane.add(LabelAndColumn, 0,0);
