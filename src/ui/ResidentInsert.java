@@ -165,7 +165,7 @@ public class ResidentInsert {
         });
 
         residenceCombo.valueProperty().addListener((obs, oldItem, newItem) -> {
-            if (oldItem == null || newItem == null|| !oldItem.equals(newItem)) {
+            if (oldItem == null || newItem != null|| !oldItem.equals(newItem)) {
                 houseCombo.getItems().clear();
                 houseCombo.getSelectionModel().clearSelection();
                 floorCombo.getItems().clear();
