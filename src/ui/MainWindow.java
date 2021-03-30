@@ -90,9 +90,8 @@ public class MainWindow implements TableViewUI {
         selectBoxAndInsertGrid.add(insertAndUpdateVbox, 0, 1);
         insertButton.setOnAction(event -> {
             Stage insertStage = new Stage();
-            VBox test = new VBox();
-            Scene newScene = new Scene(test, 950,300);
-            insertStage.setScene(newScene);
+            Scene insertScene = new ResidentInsert(controller).getScene();
+            insertStage.setScene(insertScene);
             insertStage.show();
         });
 
