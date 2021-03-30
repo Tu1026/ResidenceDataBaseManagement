@@ -75,20 +75,22 @@ public final class DataHandler implements DataHandlerDelegate {
             return;
         }
 
-        DataTypeErrors error = verifyDataType(prettyTableName, updateObject.colToUpdate, updateObject.newValue);
 
-        switch(error){
-            case VALID: break;
-            case CANNOT_BE_NULL: onError.accept("Data in column '" + updateObject.colToUpdate + "' cannot be empty"); return;
-            case NOT_A_STRING: onError.accept("Input for column '" + updateObject.colToUpdate + "' cannot be a number"); return;
-            case NOT_A_NUM: onError.accept("Input for column '" + updateObject.colToUpdate + "' must be a whole number"); return;
-            case TOO_LONG: onError.accept("Input is too long"); return;
-            case OTHER: onError.accept("Some other error occured"); return;
-        }
 
         if (updateObject.conditionsToCheck.containsKey(updateObject.colToUpdate)) {
             onError.accept("Column '" + updateObject.colToUpdate + "' cannot be updated");
             return;
+        }
+
+        DataTypeErrors error = verifyDataType(prettyTableName, updateObject.colToUpdate, updateObject.newValue);
+
+        switch(error){
+            case VALID: break;
+            case NOT_A_STRING: onError.accept("Input for column '" + updateObject.colToUpdate + "' cannot be a number"); return;
+            case NOT_A_NUM: onError.accept("Input for column '" + updateObject.colToUpdate + "' must be a whole number"); return;
+            case TOO_LONG: onError.accept("Input is too long"); return;
+            case CANNOT_BE_NULL: onError.accept("Data in column '" + updateObject.colToUpdate + "' cannot be empty"); return;
+            case OTHER: onError.accept("Some other error occured"); return;
         }
 
         StringBuilder queryBuilder = new StringBuilder();
