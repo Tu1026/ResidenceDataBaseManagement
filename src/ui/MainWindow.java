@@ -82,6 +82,7 @@ public class MainWindow implements TableViewUI {
         });
 
         GridPane selectBoxAndInsertGrid = new GridPane();
+        GridPane.setMargin(selectTables, new Insets(0,0,10, 0));
 
         VBox insertAndUpdateVbox = new VBox(5);
         selectBoxAndInsertGrid.add(selectTables, 0,0);

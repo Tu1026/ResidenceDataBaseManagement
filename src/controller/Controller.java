@@ -96,9 +96,11 @@ public class Controller implements ControllerDelegate {
 
     @Override
     public void updateTable(UpdateObject updateObject){
-        new Thread(() -> {
-            dataHandler.updateTableData(this.currentTable, updateObject, this::updateResponse, ui::displayError);
-        }).start();
+        if (currentTable != null) {
+            new Thread(() -> {
+                dataHandler.updateTableData(this.currentTable, updateObject, this::updateResponse, ui::displayError);
+            }).start();
+        }
     }
 
     private void updateResponse(String response){
