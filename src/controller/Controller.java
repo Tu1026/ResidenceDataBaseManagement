@@ -3,9 +3,10 @@ package controller;
 import handler.ConnectionHandler;
 import handler.DataHandler;
 import interfaces.*;
-import javafx.application.Platform;
 import model.table.Table;
+import model.table.UpdateObject;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -94,10 +95,15 @@ public class Controller implements ControllerDelegate {
     }
 
     @Override
-    public void updateTable(List<String> rowData) {
+    public void updateTable(UpdateObject updateObject){
         new Thread(() -> {
-            //dosomething
+            dataHandler.updateTableData(this.currentTable, updateObject, this::updateResponse, ui::displayError);
         }).start();
+    }
+
+    private void updateResponse(String response){
+        ui.displayMessage(response);
+        ui.reloadLast(this);
     }
 
     //Todo:

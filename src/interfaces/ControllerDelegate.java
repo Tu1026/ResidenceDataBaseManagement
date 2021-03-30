@@ -1,8 +1,9 @@
 package interfaces;
 
 import model.table.Table;
+import model.table.UpdateObject;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -39,7 +40,7 @@ public interface ControllerDelegate {
  void getDataForStudentInsertion(String tableName, List<String> columnsToGet, List<String> columnsToMatch, List<String> dataToMatch, Consumer<Table> callback);
 
 
- void updateTable(List<String> rowData);
+ void updateTable(UpdateObject updateObject);
 
  void deleteTable(List<String> rowData);
 

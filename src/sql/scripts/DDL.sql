@@ -1,18 +1,18 @@
 CREATE TABLE Campus (
-                        cStAddress 		char(40),
-                        cZipCode		char(7),
-                        name     		char(20)   NOT NULL,
+                        cStAddress 		varchar2(40),
+                        cZipCode		varchar2(7),
+                        name     		varchar2(20)   NOT NULL,
                         population 		int,
                         PRIMARY KEY(cStAddress, cZipCode)
 );
 
 CREATE TABLE ResidentialManagingOffice(
-                                          rMOStAddress  	char(40),
-                                          rMOZipCode		char(7),
-                                          name 			char(20) NOT NULL,
+                                          rMOStAddress  	varchar2(40),
+                                          rMOZipCode		varchar2(7),
+                                          name 			varchar2(20) NOT NULL,
                                           budget     		int,
-                                          cStAddress    	char(40) NOT NULL,
-                                          cZipCode		char(7) NOT NULL,
+                                          cStAddress    	varchar2(40) NOT NULL,
+                                          cZipCode		varchar2(7) NOT NULL,
                                           PRIMARY KEY(rMOStAddress, rMOZipCode),
                                           FOREIGN KEY(cStAddress, cZipCode) REFERENCES Campus(cStAddress, cZipCode) ON DELETE CASCADE
 );
@@ -20,11 +20,11 @@ CREATE TABLE ResidentialManagingOffice(
 
 CREATE TABLE BuildingManager(
                                 bMEmployeeID 		int PRIMARY KEY,
-                                name 				char(20) NOT NULL,
+                                name 				varchar2(20) NOT NULL,
                                 yearsOfExperience 	int,
-                                phoneNumber 		char(12) NOT NULL,
-                                rMOStAddress 		char(40) NOT NULL,
-                                rMOZipCode			char(7) NOT NULL,
+                                phoneNumber 		varchar2(12) NOT NULL,
+                                rMOStAddress 		varchar2(40) NOT NULL,
+                                rMOZipCode			varchar2(7) NOT NULL,
                                 FOREIGN KEY(rMOStAddress, rMOZipCode) REFERENCES ResidentialManagingOffice(rMOStAddress, rMOZipCode)
 );
 
@@ -33,7 +33,7 @@ CREATE TABLE BuildingManager(
 
 
 CREATE TABLE ResidenceCapacity(
-                                  resName				char(20),
+                                  resName				varchar2(20),
                                   bMEmployeeID		int,
                                   capacity			int NOT NULL,
                                   PRIMARY KEY(resName, bMEmployeeID),
@@ -41,11 +41,11 @@ CREATE TABLE ResidenceCapacity(
 );
 
 CREATE TABLE Residence(
-                          resStAddress		char(40),
-                          resZipCode			char(7),
-                          resName				char(20) NOT NULL,
-                          rMOStAddress		char(40) NOT NULL,
-                          rMOZipCode			char(7) NOT NULL,
+                          resStAddress		varchar2(40),
+                          resZipCode			varchar2(7),
+                          resName				varchar2(20) NOT NULL,
+                          rMOStAddress		varchar2(40) NOT NULL,
+                          rMOZipCode			varchar2(7) NOT NULL,
                           bMEmployeeID		int NOT NULL UNIQUE,
                           PRIMARY KEY(resStAddress, resZipCode),
                           FOREIGN KEY(rMOStAddress, rMOZipCode) REFERENCES ResidentialManagingOffice(rMOStAddress, rMOZipCode),
@@ -54,8 +54,8 @@ CREATE TABLE Residence(
 );
 
 CREATE TABLE ResidenceBudget(
-                                resStAddress 			char(40),
-                                resZipCode				char(7),
+                                resStAddress 			varchar2(40),
+                                resZipCode				varchar2(7),
                                 budget					int,
                                 PRIMARY KEY(resStAddress, resZipCode),
                                 FOREIGN KEY(resStAddress, resZipCode) REFERENCES Residence(resStAddress, resZipCode) ON DELETE CASCADE
@@ -65,12 +65,12 @@ CREATE TABLE ResidenceBudget(
 --- END RESIDENCE TABLES
 
 CREATE TABLE House(
-                      houseName 	   	   		char(20),
+                      houseName 	   	   		varchar2(20),
                       capacity	   		int NOT NULL,
-                      type		   		char(20) NOT NULL,
+                      type		   		varchar2(20) NOT NULL,
                       ageRestriction		int,
-                      resStAddress	    char(40),
-                      resZipCode			char(7),
+                      resStAddress	    varchar2(40),
+                      resZipCode			varchar2(7),
                       PRIMARY KEY(houseName, resStAddress, resZipCode),
                       FOREIGN KEY(resStAddress, resZipCode) REFERENCES Residence(resStAddress, resZipCode) ON DELETE CASCADE
 );
@@ -79,10 +79,10 @@ CREATE TABLE House(
 CREATE TABLE Floor(
                       fNumber			  	int,
                       capacity		  	int NOT NULL,
-                      genderRestriction 	char(10),
-                      houseName		  	char(20),
-                      resStAddress		char(40),
-                      resZipCode			char(7),
+                      genderRestriction 	varchar2(10),
+                      houseName		  	varchar2(20),
+                      resStAddress		varchar2(40),
+                      resZipCode			varchar2(7),
                       PRIMARY KEY(fNumber, houseName, resStAddress, resZipCode),
                       FOREIGN KEY(houseName, resStAddress, resZipCode) REFERENCES House(houseName, resStAddress, resZipCode) ON DELETE CASCADE
 );
@@ -90,12 +90,12 @@ CREATE TABLE Floor(
 CREATE TABLE Unit(
                      uNumber				int,
                      capacity			int NOT NULL,
-                     genderRestriction 	char(10) NOT NULL,
+                     genderRestriction 	varchar2(10) NOT NULL,
                      vacancy				int NOT NULL,
                      fNumber 			int,
-                     houseName			char(20),
-                     resStAddress		char(40),
-                     resZipCode			char(7),
+                     houseName			varchar2(20),
+                     resStAddress		varchar2(40),
+                     resZipCode			varchar2(7),
                      PRIMARY KEY(uNumber, fNumber, houseName, resStAddress, resZipCode),
                      FOREIGN KEY(fNumber, houseName, resStAddress, resZipCode) REFERENCES Floor(fNumber, houseName, resStAddress, resZipCode) ON DELETE CASCADE
 );
@@ -104,19 +104,19 @@ CREATE TABLE Unit(
 
 CREATE TABLE ResidentInfo(
                              studentNumber		int PRIMARY KEY,
-                             email				char(60) UNIQUE NOT NULL,
-                             name				char(80) NOT NULL,
-                             dob					char(10),
+                             email				varchar2(60) UNIQUE NOT NULL,
+                             name				varchar2(80) NOT NULL,
+                             dob					varchar2(10),
                              yearsInResidence	int
 );
 
 CREATE TABLE ResidentAddress(
-                                email				char(60) PRIMARY KEY,
+                                email				varchar2(60) PRIMARY KEY,
                                 uNumber				int NOT NULL,
                                 fNumber				int NOT NULL,
-                                houseName			char(20) NOT NULL,
-                                resStAddress		char(40) NOT NULL,
-                                resZipCode			char(7) NOT NULL,
+                                houseName			varchar2(20) NOT NULL,
+                                resStAddress		varchar2(40) NOT NULL,
+                                resZipCode			varchar2(7) NOT NULL,
                                 FOREIGN KEY(uNumber, fNumber, houseName, resStAddress, resZipCode) REFERENCES Unit(uNumber, fNumber, houseName, resStAddress, resZipCode),
                                 FOREIGN KEY(email) REFERENCES ResidentInfo(email) ON DELETE CASCADE
 );
@@ -128,9 +128,9 @@ CREATE TABLE SeniorAdvisor(
                               yearsOfExperience   	int,
                               teamBudget          	int,
                               studentNumber       	int PRIMARY KEY,
-                              supervisingHouseName 	char(20),
-                              supervisingResStAddress char(40),
-                              supervisingResZipCode	char(7),
+                              supervisingHouseName 	varchar2(20),
+                              supervisingResStAddress varchar2(40),
+                              supervisingResZipCode	varchar2(7),
                               UNIQUE(supervisingHouseName, supervisingResStAddress, supervisingResZipCode),
                               FOREIGN KEY(studentNumber) REFERENCES ResidentInfo(studentNumber) ON DELETE CASCADE,
                               FOREIGN KEY(supervisingHouseName, supervisingResStAddress, supervisingResZipCode) REFERENCES House(houseName, resStAddress, resZipCode) ON DELETE SET NULL
@@ -145,9 +145,9 @@ CREATE TABLE ResidenceAdvisor(
                                  studentNumber       	int PRIMARY KEY,
                                  sRAStudentNumber		int NOT NULL,
                                  supervisingFloorNum 	int,
-                                 supervisingHouseName 	char(20),
-                                 supervisingResStAddress char(40),
-                                 supervisingResZipCode	char(7),
+                                 supervisingHouseName 	varchar2(20),
+                                 supervisingResStAddress varchar2(40),
+                                 supervisingResZipCode	varchar2(7),
                                  UNIQUE(supervisingHousename, supervisingResStAddress, supervisingResZipCode, supervisingFloorNum),
                                  FOREIGN KEY(studentNumber) REFERENCES ResidentInfo(studentNumber) ON DELETE CASCADE,
                                  FOREIGN KEY(sRAStudentNumber) REFERENCES SeniorAdvisor(studentNumber),

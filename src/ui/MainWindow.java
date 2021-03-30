@@ -4,6 +4,7 @@ package ui;
 import interfaces.ControllerDelegate;
 import interfaces.TableViewUI;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -11,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -24,6 +26,7 @@ import model.table.Table;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 
 public class MainWindow implements TableViewUI {
@@ -96,7 +99,7 @@ public class MainWindow implements TableViewUI {
             insertStage.show();
         });
 
-        tableView = new MyTableView();
+        tableView = new MyTableView(controller::updateTable);
         tableView.prefWidthProperty().bind(innerPane.widthProperty());
         tableView.prefHeightProperty().bind(innerPane.heightProperty());
 
@@ -104,9 +107,8 @@ public class MainWindow implements TableViewUI {
         deleteRowButton.prefWidthProperty().bind(insertAndUpdateVbox.widthProperty());
         insertAndUpdateVbox.getChildren().add(deleteRowButton);
         deleteRowButton.setOnAction(event -> {
-            List<String> listOfStrToDelete = new ArrayList<String>();
-            String[] stringAr = new String[0];
-            stringAr = tableView.getComponent().getSelectionModel().getSelectedItems().get(0).toString().split(",");
+            List<String> listOfStrToDelete = new ArrayList<>();
+            String[] stringAr = tableView.getComponent().getSelectionModel().getSelectedItems().get(0).toString().split(",");
             for (String str : stringAr) {
                 listOfStrToDelete.add(str.trim());
             }
@@ -189,9 +191,14 @@ public class MainWindow implements TableViewUI {
     @Override public void displayMessage(final String msg){
         Platform.runLater( () -> {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
-            a.setTitle("Error in Manipulating Database");
+            a.setTitle("Success");
             a.setContentText(msg);
             a.showAndWait();
         });
+    }
+
+    @Override
+    public void reloadLast(ControllerDelegate controller){
+        Platform.runLater(() -> requestFiler(controller));
     }
 }
