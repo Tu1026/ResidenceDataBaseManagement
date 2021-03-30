@@ -19,11 +19,13 @@ import java.util.function.Consumer;
 public class MyTableView extends TableView<ObservableList<String>>  {
 
     private final Consumer<UpdateObject> fireUpdateRequest;
-    public MyTableView(Consumer<UpdateObject> fireUpdateRequest) {
+    private final Consumer<Boolean> setIsUpdating;
+    public MyTableView(Consumer<UpdateObject> fireUpdateRequest, Consumer<Boolean> setIsUpdating) {
         //this.setStyle("-fx-border-color: #9f9d9d");
         this.setStyle("-fx-focus-color: transparent; -fx-focus-faint-color: transparent; -fx-border-width: 1 1 1 1; -fx-border-color: #757575");
         this.setTableMenuButtonVisible(false);
         this.fireUpdateRequest = fireUpdateRequest;
+        this.setIsUpdating = setIsUpdating;
     }
 
     public TableView<ObservableList<String>> getComponent(){
@@ -52,7 +54,9 @@ public class MyTableView extends TableView<ObservableList<String>>  {
                     TableColumn<ObservableList<String>, String> col = new TableColumn<>(columnName);
                     col.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(j)));
                     col.setCellFactory(TextFieldTableCell.forTableColumn());
+                    col.setOnEditStart((e) -> setIsUpdating.accept(true));
                     col.setOnEditCommit((e) -> handleEdit(e, table));
+                    col.setOnEditCancel((e) -> setIsUpdating.accept(false));
                     this.getColumns().add(col);
                 }
 
@@ -82,7 +86,7 @@ public class MyTableView extends TableView<ObservableList<String>>  {
     }
 
     private void handleEdit(TableColumn.CellEditEvent<ObservableList<String>, String> e, Table table) {
-
+        setIsUpdating.accept(false);
         Map<String, List<String>> PKs = table.getPKs();
 
         LinkedHashMap<String, String> conditionsToCheck = new LinkedHashMap<>();

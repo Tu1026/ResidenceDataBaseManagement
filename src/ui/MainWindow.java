@@ -36,6 +36,7 @@ public class MainWindow implements TableViewUI {
     private final MyTableView tableView;
     private final FilterPane filterPane;
     private final ViewColumnsPane<String> viewColumnsPane;
+    private boolean isUpdating = false;
     // declare your filter combobox class
 
     public MainWindow(ControllerDelegate controller){
@@ -99,7 +100,7 @@ public class MainWindow implements TableViewUI {
             insertStage.show();
         });
 
-        tableView = new MyTableView(controller::updateTable);
+        tableView = new MyTableView(controller::updateTable, this::setIsUpdating);
         tableView.prefWidthProperty().bind(innerPane.widthProperty());
         tableView.prefHeightProperty().bind(innerPane.heightProperty());
 
@@ -132,10 +133,12 @@ public class MainWindow implements TableViewUI {
         //Adding tableColumbs to the 0,0 of the inner gridpane
         innerPane.add(tableView, 0,0);
         tableView.setOnKeyReleased( key -> {
-            if (key.getCode() == KeyCode.DELETE || key.getCode() == KeyCode.BACK_SPACE){
-                System.out.println("Deleting...");
-                List<String> rowData = tableView.getSelectionModel().getSelectedItem();
-                controller.deleteTable(rowData);
+            if (!isUpdating) {
+                if (key.getCode() == KeyCode.DELETE || key.getCode() == KeyCode.BACK_SPACE) {
+                    System.out.println("Deleting...");
+                    List<String> rowData = tableView.getSelectionModel().getSelectedItem();
+                    controller.deleteTable(rowData);
+                }
             }
         });
 
@@ -200,5 +203,9 @@ public class MainWindow implements TableViewUI {
     @Override
     public void reloadLast(ControllerDelegate controller){
         Platform.runLater(() -> requestFiler(controller));
+    }
+
+    private void setIsUpdating(boolean isUpdating){
+        this.isUpdating = isUpdating;
     }
 }

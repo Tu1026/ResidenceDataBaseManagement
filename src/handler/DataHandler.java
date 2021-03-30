@@ -69,6 +69,7 @@ public final class DataHandler implements DataHandlerDelegate {
     public  void updateTableData(String prettyTableName, UpdateObject updateObject, Consumer<String> onSuccess, Consumer<String> onError) {
         String [] tablesToLookup = getTablesToLookup(prettyTableName);
 
+        updateObject.colToUpdate = updateObject.colToUpdate.trim();
         if (tablesToLookup.length > 1) {
             onError.accept("Cannot update table " + prettyTableName);
             return;
@@ -78,6 +79,7 @@ public final class DataHandler implements DataHandlerDelegate {
 
         switch(error){
             case VALID: break;
+            case NOT_A_STRING: onError.accept("Input for column '" + updateObject.colToUpdate + "' cannot be a number"); return;
             case NOT_A_NUM: onError.accept("Input for column '" + updateObject.colToUpdate + "' must be a whole number"); return;
             case TOO_LONG: onError.accept("Input is too long"); return;
             case OTHER: onError.accept("Some other error occured"); return;
@@ -357,9 +359,15 @@ public final class DataHandler implements DataHandlerDelegate {
                     return DataTypeErrors.NOT_A_NUM;
                 }
             }
-            if (type.equals("varchar2")) {
+            if (type.equalsIgnoreCase("varchar2")) {
                 if (newValue.length() > length) {
                     return DataTypeErrors.TOO_LONG;
+                }
+                try {
+                    Integer.parseInt(newValue);
+                    return DataTypeErrors.NOT_A_STRING;
+                } catch (NumberFormatException e) {
+                   // Valid
                 }
             }
         } catch (SQLException throwables) {
