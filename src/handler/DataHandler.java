@@ -76,7 +76,6 @@ public final class DataHandler implements DataHandlerDelegate {
         }
 
 
-
         if (updateObject.conditionsToCheck.containsKey(updateObject.colToUpdate)) {
             onError.accept("Column '" + updateObject.colToUpdate + "' cannot be updated");
             return;
@@ -388,6 +387,7 @@ public final class DataHandler implements DataHandlerDelegate {
                     }
                 }
             }
+
             if (type.equalsIgnoreCase("varchar2")) {
                 if (newValue.length() > length) {
                     return DataTypeErrors.TOO_LONG;
@@ -399,23 +399,6 @@ public final class DataHandler implements DataHandlerDelegate {
                    // Valid
                 }
             }
-
-
-//            PrintablePreparedStatement ps2 = new PrintablePreparedStatement(connection.prepareStatement(query2), query2);
-//            ps2.setObject(1, OracleTableNames.GET_ORACLE_NAME.get(prettyTable));
-//            ps2.setObject(2, OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(colToUpdate));
-//
-//            rs = ps2.executeQuery();
-//            boolean hasNull = false;
-//            while (rs.next()) {
-//                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-//                    hasNull = true;
-//                    if (rs.getString(i).equalsIgnoreCase("SYS_C00210215")){
-//
-//                    }
-//
-//                }
-//            }
 
             if (hasNull) {
                 if (newValue.trim().equals("")) {
