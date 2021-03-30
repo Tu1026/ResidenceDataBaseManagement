@@ -30,11 +30,9 @@ public class MainWindow implements TableViewUI {
 
 
     public Scene tableScene;
-    private List<Column> columns = new ArrayList<>();
     private final MyTableView tableView;
     private final FilterPane filterPane;
     private final ViewColumnsPane<String> viewColumnsPane;
-    private String currTable;
     // declare your filter combobox class
 
     public MainWindow(ControllerDelegate controller){
@@ -48,11 +46,11 @@ public class MainWindow implements TableViewUI {
         RowConstraints heightConstraints = new RowConstraints();
         heightConstraints.setPercentHeight(50);
         RowConstraints r1 = new RowConstraints();
-        r1.setPercentHeight(20);
+        r1.setPercentHeight(40);
         RowConstraints r2 = new RowConstraints();
         r2.setPercentHeight(40);
         RowConstraints r3 = new RowConstraints();
-        r3.setPercentHeight(40);
+        r3.setPercentHeight(30);
         innerPaneTableMenu.getRowConstraints().addAll(r1, r2, r3);
 
         outerPane.add(innerPane, 0, 0);
@@ -82,12 +80,12 @@ public class MainWindow implements TableViewUI {
 
         GridPane selectBoxAndInsertGrid = new GridPane();
 
-        VBox insertAndUpdateVbox = new VBox();
+        VBox insertAndUpdateVbox = new VBox(5);
         selectBoxAndInsertGrid.add(selectTables, 0,0);
         selectBoxAndInsertGrid.getRowConstraints().addAll(heightConstraints, heightConstraints, heightConstraints);
 
         Button insertButton = new Button("Insert a Resident");
-        insertButton.prefWidthProperty().bind(insertAndUpdateVbox.prefWidthProperty());
+        insertButton.prefWidthProperty().bind(insertAndUpdateVbox.widthProperty());
         insertAndUpdateVbox.getChildren().add(insertButton);
         selectBoxAndInsertGrid.add(insertAndUpdateVbox, 0, 1);
         insertButton.setOnAction(event -> {
@@ -98,10 +96,14 @@ public class MainWindow implements TableViewUI {
             insertStage.show();
         });
 
-        VBox deleteAndUpdate = new VBox();
+
+        tableView = new MyTableView();
+        tableView.prefWidthProperty().bind(innerPane.widthProperty());
+        tableView.prefHeightProperty().bind(innerPane.heightProperty());
+
         Button deleteRowButton = new Button("Delete the selected row");
-        deleteAndUpdate.getChildren().add(deleteRowButton);
-        innerPaneTableMenu.add(deleteAndUpdate,0,1);
+        deleteRowButton.prefWidthProperty().bind(insertAndUpdateVbox.widthProperty());
+        insertAndUpdateVbox.getChildren().add(deleteRowButton);
         deleteRowButton.setOnAction(event -> {
             List<String> listOfStrToDelete = new ArrayList<String>();
             String[] stringAr = new String[0];
@@ -125,10 +127,6 @@ public class MainWindow implements TableViewUI {
         GridPane.setHalignment(searchView, HPos.CENTER);
         GridPane.setValignment(searchView, VPos.CENTER);
 
-
-        tableView = new MyTableView();
-        tableView.prefWidthProperty().bind(innerPane.widthProperty());
-        tableView.prefHeightProperty().bind(innerPane.heightProperty());
 
         //Adding tableColumbs to the 0,0 of the inner gridpane
         innerPane.add(tableView, 0,0);

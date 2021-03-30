@@ -20,7 +20,6 @@ public class ViewColumnsPane<T> extends GridPane {
     public ViewColumnsPane(Consumer<List<T>> getCheckedItems){
         displayColumnNames = new CheckComboBox<>();
 
-
         VBox labelAndColumn = new VBox();
         labelAndColumn.setSpacing(7);
 
@@ -56,7 +55,6 @@ public class ViewColumnsPane<T> extends GridPane {
         filterRows.setPercentHeight(50);
         this.getRowConstraints().addAll(filterRows, filterRows);
     }
-
 
 
 
