@@ -65,7 +65,6 @@ public class MainWindow implements TableViewUI {
         bottomRow.setPercentHeight(40);
         outerPane.getRowConstraints().addAll(topRow, bottomRow);
 
-
         ComboBox<String> selectTables = new ComboBox<>();
         selectTables.setPrefSize(250,36);
         for (String table: OracleTableNames.PRETTY_NAMES) {
@@ -82,7 +81,8 @@ public class MainWindow implements TableViewUI {
 
         VBox insertAndUpdateVbox = new VBox(5);
         selectBoxAndInsertGrid.add(selectTables, 0,0);
-        selectBoxAndInsertGrid.getRowConstraints().addAll(heightConstraints, heightConstraints, heightConstraints);
+
+        //selectBoxAndInsertGrid.getRowConstraints().addAll(heightConstraints, heightConstraints, );
 
         Button insertButton = new Button("Insert a Resident");
         insertButton.prefWidthProperty().bind(insertAndUpdateVbox.widthProperty());
@@ -138,13 +138,9 @@ public class MainWindow implements TableViewUI {
         });
 
         filterPane = new FilterPane();
-        filterPane.setKeyReleased(key -> {
-            requestFiler(controller);
-        });
+        filterPane.setKeyReleased(key -> requestFiler(controller));
 
-        viewColumnsPane = new ViewColumnsPane<>((List<String> data) -> {
-           requestFiler(controller);
-        }, "All");
+        viewColumnsPane = new ViewColumnsPane<>((List<String> data) -> requestFiler(controller), "All");
 
 
         innerPaneTableMenu.add(filterPane,0,1);
