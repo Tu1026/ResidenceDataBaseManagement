@@ -39,6 +39,5 @@ public class SearchView extends BorderPane {
 
         this.setCenter(row);
         BorderPane.setMargin(row, new Insets(10,0,0,0));
-
     }
 }

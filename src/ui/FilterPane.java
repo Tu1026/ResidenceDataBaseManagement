@@ -29,7 +29,6 @@ public class FilterPane extends GridPane {
     public FilterPane(){
         filterColumnNames = new ComboBox<>();
 
-
         filter = new TextField();
         filter.setPromptText("Filtering Value");
 
@@ -39,7 +38,8 @@ public class FilterPane extends GridPane {
         Label filterLabel = new Label("Filter By Column:");
         filterLabel.setFont(Font.font("Times New Roman", 16));
         filterLabel.setWrapText(true);
-        labelAndColumn.getChildren().addAll(filterLabel, filterColumnNames, filter);
+        Label containsLabel = new Label("Containing:");
+        labelAndColumn.getChildren().addAll(filterLabel, filterColumnNames, containsLabel,filter);
         add(labelAndColumn, 0,0);
 
         filter.prefWidthProperty().bind(this.widthProperty());
@@ -51,10 +51,6 @@ public class FilterPane extends GridPane {
                 filter.clear();
             }
         });
-
-        RowConstraints filterRows = new RowConstraints();
-        filterRows.setPercentHeight(50);
-        this.getRowConstraints().addAll(filterRows, filterRows);
     }
 
     public void setKeyReleased(EventHandler<KeyEvent> event){

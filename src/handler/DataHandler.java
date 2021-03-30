@@ -4,7 +4,7 @@ import interfaces.DataHandlerDelegate;
 import javafx.application.Platform;
 import model.DataTypeErrors;
 import model.OracleColumnNames;
-import model.table.UpdateObject;
+import model.UpdateObject;
 import sql.PrintablePreparedStatement;
 import model.table.Column;
 import model.table.Table;
@@ -75,7 +75,6 @@ public final class DataHandler implements DataHandlerDelegate {
             return;
         }
 
-
         if (updateObject.conditionsToCheck.containsKey(updateObject.colToUpdate)) {
             onError.accept("Column '" + updateObject.colToUpdate + "' cannot be updated");
             return;
@@ -110,12 +109,15 @@ public final class DataHandler implements DataHandlerDelegate {
                 counter++;
             }
 
-           int row =  ps.executeUpdate();
+           ps.executeUpdate();
 
             connection.commit();
             connection.setAutoCommit(true);
-            System.out.println(row);
-            onSuccess.accept("Updated data successfully, table reloaded");
+            if (updateObject.newValue.trim().equals("")){
+                updateObject.newValue = "(empty)";
+            }
+            onSuccess.accept("Updated row in column '" + updateObject.colToUpdate  +  "' \n of '"+ prettyTableName +
+                    "' to '" + updateObject.newValue + "' successfully.\n Table reloaded");
 
         } catch (SQLException throwables) {
             onError.accept(throwables.getMessage());

@@ -69,10 +69,6 @@ public class ViewColumnsPane<T> extends GridPane {
 
             return cell;
         });
-
-        RowConstraints filterRows = new RowConstraints();
-        filterRows.setPercentHeight(50);
-        this.getRowConstraints().addAll(filterRows, filterRows);
     }
 
     public List<T> getSelectedColumns() {

@@ -11,7 +11,7 @@ import model.OracleColumnNames;
 import model.table.Column;
 import model.table.Table;
 import model.table.TableRow;
-import model.table.UpdateObject;
+import model.UpdateObject;
 
 import java.util.*;
 import java.util.function.Consumer;

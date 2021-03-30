@@ -4,9 +4,8 @@ import handler.ConnectionHandler;
 import handler.DataHandler;
 import interfaces.*;
 import model.table.Table;
-import model.table.UpdateObject;
+import model.UpdateObject;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;

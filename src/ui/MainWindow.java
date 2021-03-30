@@ -37,102 +37,45 @@ public class MainWindow implements TableViewUI {
     private final FilterPane filterPane;
     private final ViewColumnsPane<String> viewColumnsPane;
     private boolean isUpdating = false;
+    private Button deleteRowButton = null;
     // declare your filter combobox class
 
     public MainWindow(ControllerDelegate controller){
         controller.setUI(this);
         GridPane outerPane = new GridPane();
-        GridPane innerPane = new GridPane();
-        innerPane.setPadding(new Insets( 0, 10, 0, 10));
         outerPane.setPadding(new Insets(20, 20, 20, 10));
 
-        GridPane innerPaneTableMenu = new GridPane();
-        RowConstraints heightConstraints = new RowConstraints();
-        heightConstraints.setPercentHeight(50);
-        RowConstraints r1 = new RowConstraints();
-        r1.setPercentHeight(40);
-        RowConstraints r2 = new RowConstraints();
-        r2.setPercentHeight(40);
-        RowConstraints r3 = new RowConstraints();
-        r3.setPercentHeight(30);
-        innerPaneTableMenu.getRowConstraints().addAll(r1, r2, r3);
-
-        outerPane.add(innerPane, 0, 0);
         ColumnConstraints c1 = new ColumnConstraints();
         c1.setPercentWidth(85);
         ColumnConstraints c2 = new ColumnConstraints();
         c2.setPercentWidth(15);
         outerPane.getColumnConstraints().addAll(c1, c2);
+
         RowConstraints topRow = new RowConstraints();
         topRow.setPercentHeight(60);
         RowConstraints bottomRow = new RowConstraints();
         bottomRow.setPercentHeight(40);
         outerPane.getRowConstraints().addAll(topRow, bottomRow);
 
-        ComboBox<String> selectTables = new ComboBox<>();
-        selectTables.setPrefSize(250,36);
-        for (String table: OracleTableNames.PRETTY_NAMES) {
-            selectTables.getItems().add(table);
-        }
-        selectTables.getSelectionModel().selectFirst();
-        selectTables.valueProperty().addListener((obs, oldItem, newItem) -> {
-            if (!oldItem.equals(newItem)) {
-                controller.loadTable(newItem);
-            }
-        });
+        /* ==================
+         * Top Pane
+         * ===================
+         */
 
-        GridPane selectBoxAndInsertGrid = new GridPane();
-        GridPane.setMargin(selectTables, new Insets(0,0,10, 0));
+        /*
+         * Left Pane (Table)
+         */
 
-        VBox insertAndUpdateVbox = new VBox(5);
-        selectBoxAndInsertGrid.add(selectTables, 0,0);
-
-        //selectBoxAndInsertGrid.getRowConstraints().addAll(heightConstraints, heightConstraints, );
-
-        Button insertButton = new Button("Insert a Resident");
-        insertButton.prefWidthProperty().bind(insertAndUpdateVbox.widthProperty());
-        insertAndUpdateVbox.getChildren().add(insertButton);
-        selectBoxAndInsertGrid.add(insertAndUpdateVbox, 0, 1);
-        insertButton.setOnAction(event -> {
-            Stage insertStage = new Stage();
-            Scene insertScene = new ResidentInsert(controller).getScene();
-            insertStage.setResizable(false);
-            insertStage.setScene(insertScene);
-            insertStage.show();
-        });
+        GridPane leftPane = new GridPane();
+        leftPane.setPadding(new Insets( 0, 10, 0, 10));
+        outerPane.add(leftPane, 0, 0);
 
         tableView = new MyTableView(controller::updateTable, this::setIsUpdating);
-        tableView.prefWidthProperty().bind(innerPane.widthProperty());
-        tableView.prefHeightProperty().bind(innerPane.heightProperty());
-
-        Button deleteRowButton = new Button("Delete the selected row");
-        deleteRowButton.prefWidthProperty().bind(insertAndUpdateVbox.widthProperty());
-        insertAndUpdateVbox.getChildren().add(deleteRowButton);
-        deleteRowButton.setOnAction(event -> {
-            List<String> listOfStrToDelete = new ArrayList<>();
-            String[] stringAr = tableView.getComponent().getSelectionModel().getSelectedItems().get(0).toString().split(",");
-            for (String str : stringAr) {
-                listOfStrToDelete.add(str.trim());
-            }
-            controller.deleteTable(listOfStrToDelete);
-        });
-
-
-        GridPane.setHalignment(selectTables, HPos.CENTER);
-        GridPane.setValignment(selectTables, VPos.TOP);
-        outerPane.add(innerPaneTableMenu, 1, 0);
-
-        innerPaneTableMenu.add(selectBoxAndInsertGrid,0,0);
-
-        SearchView searchView = new SearchView(controller);
-        outerPane.add(searchView, 0, 1, 2, 1);
-        GridPane.setMargin(searchView, new Insets(25, 0,10,11));
-        GridPane.setHalignment(searchView, HPos.CENTER);
-        GridPane.setValignment(searchView, VPos.CENTER);
-
+        tableView.prefWidthProperty().bind(leftPane.widthProperty());
+        tableView.prefHeightProperty().bind(leftPane.heightProperty());
 
         //Adding tableColumbs to the 0,0 of the inner gridpane
-        innerPane.add(tableView, 0,0);
+        leftPane.add(tableView, 0,0);
         tableView.setOnKeyReleased( key -> {
             if (!isUpdating) {
                 if (key.getCode() == KeyCode.DELETE || key.getCode() == KeyCode.BACK_SPACE) {
@@ -143,14 +86,101 @@ public class MainWindow implements TableViewUI {
             }
         });
 
+
+
+        /*
+         * Right Pane (Value Selection)
+         */
+
+
+        GridPane innerPaneTableMenu = new GridPane();
+        RowConstraints r1 = new RowConstraints();
+        r1.setPercentHeight(40);
+        RowConstraints r2 = new RowConstraints();
+        r2.setPercentHeight(40);
+        RowConstraints r3 = new RowConstraints();
+        r3.setPercentHeight(20);
+        innerPaneTableMenu.getRowConstraints().addAll(r1, r2, r3);
+        outerPane.add(innerPaneTableMenu, 1, 0);
+
+        // ----- Table Selection ---- //
+        VBox selectInsertDeleteBox = new VBox(10);
+
+        ComboBox<String> selectTables = new ComboBox<>();
+        selectTables.setPrefSize(250,36);
+        for (String table: OracleTableNames.PRETTY_NAMES) {
+            selectTables.getItems().add(table);
+        }
+
+        selectTables.getSelectionModel().selectFirst();
+        selectTables.valueProperty().addListener((obs, oldItem, newItem) -> {
+            if (!oldItem.equals(newItem)) {
+                controller.loadTable(newItem);
+                deleteRowButton.setVisible(newItem.equals("Resident"));
+            }
+        });
+
+        GridPane.setMargin(selectTables, new Insets(0,0,10, 0));
+        selectInsertDeleteBox.getChildren().add(selectTables);
+
+        // ----- Table Updates ---- //
+
+        VBox insertDeleteBox = new VBox(5);
+
+        Button insertButton = new Button("Insert a Resident");
+        insertButton.prefWidthProperty().bind(insertDeleteBox.widthProperty());
+        insertDeleteBox.getChildren().add(insertButton);
+        selectInsertDeleteBox.getChildren().add(insertDeleteBox);
+        insertButton.setOnAction(event -> {
+            Stage insertStage = new Stage();
+            Scene insertScene = new ResidentInsert(controller).getScene();
+            insertStage.setResizable(false);
+            insertStage.setScene(insertScene);
+            insertStage.show();
+        });
+
+        deleteRowButton = new Button("Delete the selected row");
+        deleteRowButton.prefWidthProperty().bind(insertDeleteBox.widthProperty());
+        insertDeleteBox.getChildren().add(deleteRowButton);
+        deleteRowButton.setOnAction(event -> {
+            List<String> listOfStrToDelete = new ArrayList<>();
+            String[] stringAr = tableView.getComponent().getSelectionModel().getSelectedItems().get(0).toString().split(",");
+            for (String str : stringAr) {
+                listOfStrToDelete.add(str.trim());
+            }
+            controller.deleteTable(listOfStrToDelete);
+        });
+        deleteRowButton.setVisible(false);
+
+
+        GridPane.setHalignment(selectTables, HPos.CENTER);
+        GridPane.setValignment(selectTables, VPos.TOP);
+
+        // ----- Table Filtering ---- //
         filterPane = new FilterPane();
         filterPane.setKeyReleased(key -> requestFiler(controller));
 
         viewColumnsPane = new ViewColumnsPane<>((List<String> data) -> requestFiler(controller), "All");
 
-
+        innerPaneTableMenu.add(selectInsertDeleteBox,0,0);
         innerPaneTableMenu.add(filterPane,0,1);
         innerPaneTableMenu.add(viewColumnsPane, 0, 2);
+
+
+        /* ==================
+         * Bottom Pane
+         * ==================
+         */
+        SearchView searchView = new SearchView(controller);
+        outerPane.add(searchView, 0, 1, 2, 1);
+        GridPane.setMargin(searchView, new Insets(25, 0,10,11));
+        GridPane.setHalignment(searchView, HPos.CENTER);
+        GridPane.setValignment(searchView, VPos.CENTER);
+
+        /*
+         * INITIALIZE
+         */
+
         //Initialize campus as the default table
         controller.loadTable("Campus");
         tableScene = new Scene(outerPane, 1124,798);

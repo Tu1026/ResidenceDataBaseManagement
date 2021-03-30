@@ -1,4 +1,4 @@
-package model.table;
+package model;
 
 import java.util.LinkedHashMap;
 
