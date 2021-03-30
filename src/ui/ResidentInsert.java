@@ -177,7 +177,6 @@ public class ResidentInsert {
                 String [] houseMatchData;
                 houseMatchData = newItem.split(",");
                 for (int i = 1; i < houseMatchData.length; i++){
-                    houseMatchData[i].trim();
                     houseDataToMatch.add(houseMatchData[i]);
                 }
                 controller.getDataForStudentInsertion("HOUSE", houseColumnsToGet, houseColumnsToMatch, houseDataToMatch, this::updateHouse);
@@ -240,13 +239,12 @@ public class ResidentInsert {
         for (TableRow tableRow : table){
             String temp = "";
             for (Column column: columnNames){
-                if (temp != "") {
+                if (!temp.equals("")) {
                     temp += ", " + tableRow.get(column);
                 }else {
                     temp += tableRow.get(column);
                 }
             }
-            temp.replaceAll(", $", "");
             house.add(temp);
         }
 
@@ -267,13 +265,12 @@ public class ResidentInsert {
         for (TableRow tableRow : table){
             String temp = "";
             for (Column column: columnNames){
-                if (temp != "") {
+                if (!temp.equals("")) {
                     temp += ", " + tableRow.get(column);
                 }else {
                     temp += tableRow.get(column);
                 }
             }
-            temp.replaceAll(", $", "");
             floor.add(temp);
         }
 
@@ -293,13 +290,12 @@ public class ResidentInsert {
         for (TableRow tableRow : table){
             String temp = "";
             for (Column column: columnNames){
-                if (temp != "") {
+                if (!temp.equals("")) {
                     temp += ", " + tableRow.get(column);
                 }else {
                     temp += tableRow.get(column);
                 }
             }
-            temp.replaceAll(", $", "");
             unit.add(temp);
         }
 
@@ -316,13 +312,12 @@ public class ResidentInsert {
         for (TableRow tableRow : table){
             String temp = "";
             for (Column column: columnNames){
-                if (temp != "") {
+                if (!temp.equals("")) {
                     temp += ", " + tableRow.get(column);
                 }else {
                     temp += tableRow.get(column);
                 }
             }
-            temp.replaceAll(", $", "");
             System.out.println(temp);
             residence.add(temp);
         }
