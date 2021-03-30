@@ -141,7 +141,7 @@ public class MainWindow implements TableViewUI {
         controller.loadTable("Campus");
         tableScene = new Scene(outerPane, 1124,798);
         innerPane.setGridLinesVisible(true);
-        innerPaneTableMenu.setGridLinesVisible(true);
+        //innerPaneTableMenu.setGridLinesVisible(true);
     }
 
     private void requestFiler(ControllerDelegate controller) {

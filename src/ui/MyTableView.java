@@ -19,8 +19,9 @@ public class MyTableView extends TableView<ObservableList<String>>  {
     ObservableList<ObservableList<String>> data;
 
     public MyTableView() {
-        this.setStyle("-fx-border-color: #000000");
-        this.setTableMenuButtonVisible(true);
+        //this.setStyle("-fx-border-color: #9f9d9d");
+        this.setStyle("-fx-focus-color: transparent");
+        this.setTableMenuButtonVisible(false);
     }
 
     //    Following the tutorial here to help generate dynamic columns https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/

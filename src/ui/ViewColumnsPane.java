@@ -1,21 +1,14 @@
 package ui;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.event.Event;
-import javafx.event.EventType;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.DocumentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +20,7 @@ public class ViewColumnsPane<T> extends GridPane {
     private final ObservableList<ComboBoxItemWrap<T>> cells = FXCollections.observableArrayList();
     private final T defaultItem;
 
-    public ViewColumnsPane(Consumer<List<T>> getCheckedItems, T defaultItem){
+    public ViewColumnsPane(Consumer<List<T>> getCheckedItems, T defaultItem) {
         displayColumnNames = new ComboBox<>();
         this.defaultItem = defaultItem;
 
@@ -39,12 +32,12 @@ public class ViewColumnsPane<T> extends GridPane {
         filterLabel.setFont(Font.font("Times New Roman", 16));
         filterLabel.setWrapText(true);
         labelAndColumn.getChildren().addAll(filterLabel, displayColumnNames);
-        add(labelAndColumn, 0,0);
+        add(labelAndColumn, 0, 0);
 
         displayColumnNames.prefWidthProperty().bind(this.widthProperty());
         displayColumnNames.setMinHeight(25);
-        displayColumnNames.setCellFactory( c -> {
-            ListCell<ComboBoxItemWrap<T>> cell = new ListCell<ComboBoxItemWrap<T>>(){
+        displayColumnNames.setCellFactory(c -> {
+            ListCell<ComboBoxItemWrap<T>> cell = new ListCell<ComboBoxItemWrap<T>>() {
                 @Override
                 protected void updateItem(ComboBoxItemWrap<T> item, boolean empty) {
                     super.updateItem(item, empty);
@@ -65,7 +58,7 @@ public class ViewColumnsPane<T> extends GridPane {
                 displayColumnNames.getItems()
                         .filtered(Objects::nonNull)
                         .filtered(ComboBoxItemWrap::getCheck)
-                        .forEach((p) ->{
+                        .forEach((p) -> {
                             sb.append("; ").append(p.getItem());
                             items.add(p.getItem());
                         });
@@ -88,9 +81,9 @@ public class ViewColumnsPane<T> extends GridPane {
         displayColumnNames.getItems()
                 .filtered(Objects::nonNull)
                 .filtered(ComboBoxItemWrap::getCheck)
-                .forEach((p)->items.add(p.getItem()));
+                .forEach((p) -> items.add(p.getItem()));
 
-        if (items.size() == 0){
+        if (items.size() == 0) {
             items.add(defaultItem);
         }
 
@@ -98,16 +91,16 @@ public class ViewColumnsPane<T> extends GridPane {
     }
 
     private void checkSelection(Cell<ComboBoxItemWrap<T>> cellCalled) {
-        if (cellCalled.getItem().getItem() == defaultItem){
+        if (cellCalled.getItem().getItem() == defaultItem) {
             displayColumnNames.getItems().forEach(item -> item.setCheck(false));
             cellCalled.getItem().setCheck(true);
-        }else{
+        } else {
             displayColumnNames.getItems().get(0).setCheck(false);
         }
     }
 
     public void updateFilterList(List<T> columns, String tableName) {
-        if (this.tableName == null || !this.tableName.equals(tableName)){
+        if (this.tableName == null || !this.tableName.equals(tableName)) {
             this.tableName = tableName;
 
             cells.clear();

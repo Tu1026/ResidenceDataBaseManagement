@@ -78,13 +78,13 @@ public class Controller implements ControllerDelegate {
 
         System.out.println("Displaying query results in table");
         ui.updateVisibleTable(resultTable);
-        System.out.println("PKs: ");
-        for (String key : resultTable.getPKs().keySet()) {
-            System.out.println("Table --: " + key);
-            for (String str : resultTable.getPKs().get(key)) {
-                System.out.println("   " + str);
-            }
-        }
+//        System.out.println("PKs: ");
+//        for (String key : resultTable.getPKs().keySet()) {
+//            System.out.println("Table --: " + key);
+//            for (String str : resultTable.getPKs().get(key)) {
+//                System.out.println("   " + str);
+//            }
+//        }
     }
 
     public void filter(String filter, String columnName, List<String> columnsToDisplay) {
