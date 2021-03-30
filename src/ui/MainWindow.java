@@ -140,10 +140,10 @@ public class MainWindow implements TableViewUI {
         //Initialize campus as the default table
         controller.loadTable("Campus");
         tableScene = new Scene(outerPane, 1124,798);
-        innerPane.setGridLinesVisible(true);
+        //innerPane.setGridLinesVisible(true);
         //innerPaneTableMenu.setGridLinesVisible(true);
         //innerPaneTableMenu.setStyle("-fx-border-width: 1 1 1 1; -fx-border-color: #838181");
-        innerPaneTableMenu.setPadding(new Insets(5,5,5,5));
+        //innerPaneTableMenu.setPadding(new Insets(5,5,5,5));
     }
 
     private void requestFiler(ControllerDelegate controller) {
