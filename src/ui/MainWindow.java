@@ -88,6 +88,21 @@ public class MainWindow implements TableViewUI {
             insertStage.show();
         });
 
+        VBox deleteAndUpdate = new VBox();
+        Button deleteRowButton = new Button("Delete the selected row");
+        deleteAndUpdate.getChildren().add(deleteRowButton);
+        innerPaneTableMenu.add(deleteAndUpdate,0,1);
+        deleteRowButton.setOnAction(event -> {
+            List<String> listOfStrToDelete = new ArrayList<String>();
+            String[] stringAr = new String[0];
+            stringAr = tableView.getComponent().getSelectionModel().getSelectedItems().get(0).toString().split(",");
+            for (String str : stringAr) {
+                listOfStrToDelete.add(str.trim());
+            }
+            controller.deleteTable(listOfStrToDelete);
+        });
+
+
         GridPane.setHalignment(selectTables, HPos.CENTER);
         GridPane.setValignment(selectTables, VPos.TOP);
         outerPane.add(innerPaneTableMenu, 1, 0);

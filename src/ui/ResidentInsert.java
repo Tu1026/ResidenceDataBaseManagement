@@ -59,8 +59,49 @@ public class ResidentInsert extends Application {
         emailText.prefWidthProperty().bind(emailBox.prefWidthProperty());
         emailBox.getChildren().addAll(emailLabel, emailText);
 
+        VBox StudentNumberVBox = new VBox();
+        Label StudentNumberLabel = new Label("E-mail");
+        TextField StudentNumberText = new TextField();
+        emailText.prefWidthProperty().bind(StudentNumberVBox.prefWidthProperty());
+        StudentNumberVBox.getChildren().addAll(StudentNumberLabel, StudentNumberText);
+
+        VBox NameBox = new VBox();
+        Label NameLabel = new Label("E-mail");
+        TextField NameText = new TextField();
+        NameText.prefWidthProperty().bind(NameBox.prefWidthProperty());
+        NameBox.getChildren().addAll(NameLabel, NameText);
+
+        VBox DoBBox = new VBox();
+        Label DoBLabel = new Label("E-mail");
+        TextField DoBText = new TextField();
+        DoBText.prefWidthProperty().bind(DoBBox.prefWidthProperty());
+        DoBBox.getChildren().addAll(DoBLabel, DoBText);
+
+        VBox YearsInResidenceBox = new VBox();
+        Label YearsInResidenceLabel = new Label("E-mail");
+        TextField YearsInResidenceText = new TextField();
+        YearsInResidenceText.prefWidthProperty().bind(YearsInResidenceBox.prefWidthProperty());
+        YearsInResidenceBox.getChildren().addAll(YearsInResidenceLabel, YearsInResidenceText);
+
+//        VBox UnitBox = new VBox();
+//        Label UnitLabel = new Label("E-mail");
+//        TextField UnitText = new TextField();
+//        UnitText.prefWidthProperty().bind(UnitBox.prefWidthProperty());
+//        UnitBox.getChildren().addAll(UnitLabel, UnitText);
+//
+//        VBox emailBox = new VBox();
+//        Label emailLabel = new Label("E-mail");
+//        TextField emailText = new TextField();
+//        emailText.prefWidthProperty().bind(emailBox.prefWidthProperty());
+//        emailBox.getChildren().addAll(emailLabel, emailText);
+
+
 
         masterGridPane.add(emailBox,0,1);
+        masterGridPane.add(StudentNumberVBox, 1, 1);
+        masterGridPane.add(NameBox,2,1);
+        masterGridPane.add(DoBBox,3,1);
+        masterGridPane.add(YearsInResidenceBox,4,1);
 
 
         Scene newScene = new Scene(masterGridPane, 1600,300);
