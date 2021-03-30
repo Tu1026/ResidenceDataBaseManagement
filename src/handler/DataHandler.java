@@ -79,6 +79,7 @@ public final class DataHandler implements DataHandlerDelegate {
 
         switch(error){
             case VALID: break;
+            case CANNOT_BE_NULL: onError.accept("Data in column '" + updateObject.colToUpdate + "' cannot be empty"); return;
             case NOT_A_STRING: onError.accept("Input for column '" + updateObject.colToUpdate + "' cannot be a number"); return;
             case NOT_A_NUM: onError.accept("Input for column '" + updateObject.colToUpdate + "' must be a whole number"); return;
             case TOO_LONG: onError.accept("Input is too long"); return;
@@ -329,15 +330,17 @@ public final class DataHandler implements DataHandlerDelegate {
 
     private DataTypeErrors verifyDataType(String prettyTable, String colToUpdate, String newValue) {
         String query = "SELECT data_type, data_length FROM all_tab_columns WHERE table_name = ? AND COLUMN_NAME = ?";
-
+        String query2 = "select CONSTRAINT_NAME from  USER_CONS_COLUMNS " +
+                "WHERE table_name = ?" +
+                "and column_name = ?";
         try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)){
             ps.setObject(1, OracleTableNames.GET_ORACLE_NAME.get(prettyTable));
             ps.setObject(2, OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(colToUpdate));
             ResultSet rs = ps.executeQuery();
 
-
             String type = "";
             int length = 0;
+
 
             while (rs.next()) {
                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
@@ -350,13 +353,37 @@ public final class DataHandler implements DataHandlerDelegate {
                }
             }
 
+            PrintablePreparedStatement ps2 = new PrintablePreparedStatement(connection.prepareStatement(query2), query2);
+            ps2.setObject(1, OracleTableNames.GET_ORACLE_NAME.get(prettyTable));
+            ps2.setObject(2, OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(colToUpdate));
+
+            rs = ps2.executeQuery();
+            boolean hasNull = false;
+            while (rs.next()) {
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                    hasNull = true;
+                    if (rs.getString(i).equalsIgnoreCase("SYS_C00210215")){
+
+                    }
+
+                }
+            }
+
+            if (hasNull) {
+                if (newValue.trim().equals("")) {
+                    return DataTypeErrors.CANNOT_BE_NULL;
+                }
+            }
+
             //System.out.println("Type: " + type + ", length: " + length);
 
             if (type.equalsIgnoreCase("Number")) {
                 try {
                     Integer.parseInt(newValue);
                 }catch (NumberFormatException e){
-                    return DataTypeErrors.NOT_A_NUM;
+                    if (hasNull) {
+                        return DataTypeErrors.NOT_A_NUM;
+                    }
                 }
             }
             if (type.equalsIgnoreCase("varchar2")) {
@@ -370,6 +397,30 @@ public final class DataHandler implements DataHandlerDelegate {
                    // Valid
                 }
             }
+
+
+//            PrintablePreparedStatement ps2 = new PrintablePreparedStatement(connection.prepareStatement(query2), query2);
+//            ps2.setObject(1, OracleTableNames.GET_ORACLE_NAME.get(prettyTable));
+//            ps2.setObject(2, OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(colToUpdate));
+//
+//            rs = ps2.executeQuery();
+//            boolean hasNull = false;
+//            while (rs.next()) {
+//                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+//                    hasNull = true;
+//                    if (rs.getString(i).equalsIgnoreCase("SYS_C00210215")){
+//
+//                    }
+//
+//                }
+//            }
+
+            if (hasNull) {
+                if (newValue.trim().equals("")) {
+                    return DataTypeErrors.CANNOT_BE_NULL;
+                }
+            }
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return DataTypeErrors.OTHER;
