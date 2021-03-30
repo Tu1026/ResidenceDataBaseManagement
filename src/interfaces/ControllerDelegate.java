@@ -40,7 +40,7 @@ public interface ControllerDelegate {
   */
  void loadTable(String tableName);
 
- void filter(String filter, String column);
+ void filter(String filter, String column, List<String> columnsToDisplay);
 
  void getDataForStudentInsertion(String tableName, List<String> columnsToGet, List<String> columnsToMatch, List<String> dataToMatch, Consumer<Table> callback);
 

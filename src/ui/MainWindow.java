@@ -127,17 +127,12 @@ public class MainWindow implements TableViewUI {
 
         filterPane = new FilterPane();
         filterPane.setKeyReleased(key -> {
-            String filterCol = filterPane.getSelectedColumn();
-            String filterText = filterPane.getFilterText();
-            System.out.println("Filtering by Column " + filterCol + " with value " + filterText);
-            controller.filter(filterText, filterCol.trim());
+            requestFiler(controller);
         });
 
         viewColumnsPane = new ViewColumnsPane<>((List<String> data) -> {
-            for (String str: data) {
-                System.out.println(str);
-            }
-        });
+           requestFiler(controller);
+        }, "All");
 
 
         innerPaneTableMenu.add(filterPane,0,1);
@@ -147,6 +142,14 @@ public class MainWindow implements TableViewUI {
         tableScene = new Scene(outerPane, 1124,798);
         innerPane.setGridLinesVisible(true);
         innerPaneTableMenu.setGridLinesVisible(true);
+    }
+
+    private void requestFiler(ControllerDelegate controller) {
+        String filterCol = filterPane.getSelectedColumn();
+        String filterText = filterPane.getFilterText();
+        List<String> filterColumns = viewColumnsPane.getSelectedColumns();
+        System.out.println("Filtering by Column " + filterCol + " with value " + filterText);
+        controller.filter(filterText, filterCol.trim(), filterColumns);
     }
 
     public Scene getScene() {

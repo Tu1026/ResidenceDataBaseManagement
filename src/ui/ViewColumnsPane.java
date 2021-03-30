@@ -1,24 +1,35 @@
 package ui;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.event.Event;
+import javafx.event.EventType;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import org.controlsfx.control.CheckComboBox;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.DocumentEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ViewColumnsPane<T> extends GridPane {
-    private final CheckComboBox<T> displayColumnNames;
+    private final ComboBox<ComboBoxItemWrap<T>> displayColumnNames;
     private String tableName;
+    private final ObservableList<ComboBoxItemWrap<T>> cells = FXCollections.observableArrayList();
+    private final T defaultItem;
 
-    public ViewColumnsPane(Consumer<List<T>> getCheckedItems){
-        displayColumnNames = new CheckComboBox<>();
+    public ViewColumnsPane(Consumer<List<T>> getCheckedItems, T defaultItem){
+        displayColumnNames = new ComboBox<>();
+        this.defaultItem = defaultItem;
 
 
         VBox labelAndColumn = new VBox();
@@ -32,40 +43,80 @@ public class ViewColumnsPane<T> extends GridPane {
 
         displayColumnNames.prefWidthProperty().bind(this.widthProperty());
         displayColumnNames.setMinHeight(25);
-        //displayColumnNames.getCheckModel().getCheckedItems().addListener((ListChangeListener<T>) c -> {
-//            while (c.next()) {
-//                if (c.wasRemoved()){
-        // if (displayColumnNames.getCheckModel().getSelectedItems().size() == 0) {
-        //   displayColumnNames.getCheckModel().selectLast();
-        //T item = displayColumnNames.getCheckModel().getSelectedItems().get(0);
-        //displayColumnNames.getItemBooleanProperty(item).setValue(true);
-        //displayColumnNames.checkModelProperty().
-//                    }
-//                }
-//            }
-        List<T> columns = new ArrayList<>();
-        try {
-            // columns = displayColumnNames.getCheckModel().getCheckedItems();
-        }catch (Exception e){
+        displayColumnNames.setCellFactory( c -> {
+            ListCell<ComboBoxItemWrap<T>> cell = new ListCell<ComboBoxItemWrap<T>>(){
+                @Override
+                protected void updateItem(ComboBoxItemWrap<T> item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (!empty) {
+                        final CheckBox cb = new CheckBox(item.toString());
+                        cb.selectedProperty().bind(item.checkProperty());
+                        setGraphic(cb);
+                    }
+                }
+            };
 
-        }
-        getCheckedItems.accept(columns);
-        //  });
+            cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+                cell.getItem().checkProperty().set(!cell.getItem().checkProperty().get());
+                StringBuilder sb = new StringBuilder();
+                checkSelection(cell);
+                List<T> items = new ArrayList<>();
+
+                displayColumnNames.getItems()
+                        .filtered(Objects::nonNull)
+                        .filtered(ComboBoxItemWrap::getCheck)
+                        .forEach((p) ->{
+                            sb.append("; ").append(p.getItem());
+                            items.add(p.getItem());
+                        });
+                final String string = sb.toString();
+                getCheckedItems.accept(items);
+
+                displayColumnNames.setPromptText(string.substring(Integer.min(2, string.length())));
+            });
+
+            return cell;
+        });
 
         RowConstraints filterRows = new RowConstraints();
         filterRows.setPercentHeight(50);
         this.getRowConstraints().addAll(filterRows, filterRows);
     }
 
+    public List<T> getSelectedColumns() {
+        List<T> items = new ArrayList<>();
+        displayColumnNames.getItems()
+                .filtered(Objects::nonNull)
+                .filtered(ComboBoxItemWrap::getCheck)
+                .forEach((p)->items.add(p.getItem()));
 
+        if (items.size() == 0){
+            items.add(defaultItem);
+        }
 
+        return items;
+    }
+
+    private void checkSelection(Cell<ComboBoxItemWrap<T>> cellCalled) {
+        if (cellCalled.getItem().getItem() == defaultItem){
+            displayColumnNames.getItems().forEach(item -> item.setCheck(false));
+            cellCalled.getItem().setCheck(true);
+        }else{
+            displayColumnNames.getItems().get(0).setCheck(false);
+        }
+    }
 
     public void updateFilterList(List<T> columns, String tableName) {
         if (this.tableName == null || !this.tableName.equals(tableName)){
-            displayColumnNames.getItems().clear();
             this.tableName = tableName;
-            displayColumnNames.getItems().addAll(columns);
-            displayColumnNames.getCheckModel().selectAll();
+
+            cells.clear();
+            ComboBoxItemWrap<T> cb = new ComboBoxItemWrap<>(defaultItem);
+            cb.setCheck(true);
+            cells.add(cb);
+            columns.forEach(item -> cells.add(new ComboBoxItemWrap<>(item)));
+            displayColumnNames.setItems(cells);
+            displayColumnNames.setPromptText(defaultItem.toString());
         }
     }
 }

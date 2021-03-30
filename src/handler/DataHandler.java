@@ -81,9 +81,9 @@ public final class DataHandler implements DataHandlerDelegate {
 
 
     @Override
-    public void filterTable(String prettyTable, String filter, String column, Consumer<Table> onSuccess) {
+    public void filterTable(String prettyTable, String filter, String column, List<String> columnsToDisplay, Consumer<Table> onSuccess) {
         String[] tablesToLookup = getTablesToLookup(prettyTable);
-        String query = buildTableQuery(tablesToLookup);
+        String query = buildTableQuery(tablesToLookup, columnsToDisplay);
         filter = "%" + filter + "%";
         String lowerCaseFilter = filter.toLowerCase();
         String upperCaseFilter = filter.toUpperCase();
@@ -171,8 +171,26 @@ public final class DataHandler implements DataHandlerDelegate {
         return PK;
     }
 
+
     private String buildTableQuery(String[] tablesToLookup) {
-        StringBuilder query = new StringBuilder("SELECT * FROM ");
+        List<String> singleQuery = new ArrayList<>(Collections.singletonList("All"));
+        return buildTableQuery(tablesToLookup, singleQuery);
+    }
+
+    private String buildTableQuery(String[] tablesToLookup, List<String> columnsToQuery) {
+        StringBuilder query = new StringBuilder("SELECT ");
+
+        if (columnsToQuery.size() == 1 && columnsToQuery.get(0).equalsIgnoreCase("All")){
+            query.append("* ");
+        }else {
+            for (int i = 0; i < columnsToQuery.size() - 1; i++) {
+                query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(columnsToQuery.get(i))).append(", ");
+            }
+
+            query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(columnsToQuery.get(columnsToQuery.size() - 1))).append(" ");
+        }
+
+       query.append("FROM ");
         query.append(tablesToLookup[0]);
         if (tablesToLookup.length > 1) {
             for (int i = 1; i < tablesToLookup.length; i++) {

@@ -103,6 +103,7 @@ public class LoginFrame extends Application {
 
         primaryStage.setResizable(false);
         userNameText.requestFocus();
+        // autologin
 //        userNameText.setText("");
 //        passwordText.setText("");
 //        login(primaryStage, userNameText, passwordText, imgView);
