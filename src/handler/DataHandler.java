@@ -81,20 +81,21 @@ public final class DataHandler implements DataHandlerDelegate {
 
 
     @Override
-    public void filterTable(String prettyTable, String filter, String column, Consumer<Table> onSuccess) {
+    public void filterTable(String prettyTable, String filter, String column, List<String> columnsToDisplay, Consumer<Table> onSuccess) {
         String[] tablesToLookup = getTablesToLookup(prettyTable);
-        String query = buildTableQuery(tablesToLookup);
-        filter = "%" + filter + "%";
+        String query = buildTableQuery(tablesToLookup, columnsToDisplay);
+        filter = "%" + filter.trim() + "%";
         String lowerCaseFilter = filter.toLowerCase();
-        String upperCaseFilter = filter.toUpperCase();
         column = OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(column);
-        query += " WHERE " + column + " LIKE ? OR " + column + " LIKE ?";
+        if (filter.length() != 2) {
+            query += " WHERE LOWER(" + column + ") LIKE ?";
+        }
         Table table = null;
 
         try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
-            ps.setObject(1, lowerCaseFilter);
-            ps.setObject(2, upperCaseFilter);
-
+            if (filter.length() != 2) {
+                ps.setObject(1, lowerCaseFilter);
+            }
             table = buildTable(prettyTable, tablesToLookup, ps);
 
         } catch (SQLException | ExecutionException | InterruptedException throwables) {
@@ -145,34 +146,52 @@ public final class DataHandler implements DataHandlerDelegate {
         }
     }
 
-    private Map<String, List<String>> getPKForTable(String[] tableToLookup) {
-        Map<String, List<String>> PKs = new HashMap<>();
-        for (String table : tableToLookup) {
-            PKs.put(table, getPKForTable(table));
-        }
-        return PKs;
-    }
+//    private Map<String, List<String>> getPKForTable(String[] tableToLookup) {
+//        Map<String, List<String>> PKs = new HashMap<>();
+//        for (String table : tableToLookup) {
+//            PKs.put(table, getPKForTable(table));
+//        }
+//        return PKs;
+//    }
+//
+//    private List<String> getPKForTable(String oracleTableName) {
+//        List<String> PK = new ArrayList<>();
+//        String query = "SELECT column_name FROM user_cons_columns WHERE constraint_name = " +
+//                "(SELECT constraint_name FROM all_constraints ac  WHERE UPPER(ac.table_name) = UPPER(?) AND CONSTRAINT_TYPE = 'P' AND ac.OWNER = USER)";
+//        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false)) {
+//            ps.setObject(1, oracleTableName);
+//            ResultSet resultSet = ps.executeQuery();
+//
+//            while (resultSet.next()) {
+//                for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++)
+//                    PK.add(resultSet.getString(i));
+//            }
+//        }catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return PK;
+//    }
 
-    private List<String> getPKForTable(String oracleTableName) {
-        List<String> PK = new ArrayList<>();
-        String query = "SELECT column_name FROM user_cons_columns WHERE constraint_name = " +
-                "(SELECT constraint_name FROM all_constraints ac  WHERE UPPER(ac.table_name) = UPPER(?) AND CONSTRAINT_TYPE = 'P' AND ac.OWNER = USER)";
-        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false)) {
-            ps.setObject(1, oracleTableName);
-            ResultSet resultSet = ps.executeQuery();
-
-            while (resultSet.next()) {
-                for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++)
-                    PK.add(resultSet.getString(i));
-            }
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return PK;
-    }
 
     private String buildTableQuery(String[] tablesToLookup) {
-        StringBuilder query = new StringBuilder("SELECT * FROM ");
+        List<String> singleQuery = new ArrayList<>(Collections.singletonList("All"));
+        return buildTableQuery(tablesToLookup, singleQuery);
+    }
+
+    private String buildTableQuery(String[] tablesToLookup, List<String> columnsToQuery) {
+        StringBuilder query = new StringBuilder("SELECT ");
+
+        if (columnsToQuery.size() == 1 && columnsToQuery.get(0).equalsIgnoreCase("All")){
+            query.append("* ");
+        }else {
+            for (int i = 0; i < columnsToQuery.size() - 1; i++) {
+                query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(columnsToQuery.get(i))).append(", ");
+            }
+
+            query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(columnsToQuery.get(columnsToQuery.size() - 1))).append(" ");
+        }
+
+       query.append("FROM ");
         query.append(tablesToLookup[0]);
         if (tablesToLookup.length > 1) {
             for (int i = 1; i < tablesToLookup.length; i++) {
@@ -193,17 +212,18 @@ public final class DataHandler implements DataHandlerDelegate {
     }
 
     private Table buildTable(String prettyTable, String[] tablesToLookup, PrintablePreparedStatement ps) throws SQLException, ExecutionException, InterruptedException {
-        SwingWorker<Map<String, List<String>>, Void> worker = new SwingWorker<Map<String, List<String>>, Void>() {
-            @Override
-            protected Map<String, List<String>> doInBackground() {
-                return getPKForTable(tablesToLookup);
-            }
-        };
-        worker.execute();
+//        SwingWorker<Map<String, List<String>>, Void> worker = new SwingWorker<Map<String, List<String>>, Void>() {
+//            @Override
+//            protected Map<String, List<String>> doInBackground() {
+//                //return getPKForTable(tablesToLookup);
+//                return null;
+//            }
+//        };
+//        worker.execute();
         Table table = executeQueryAndParse(ps);
 
         table.setName(prettyTable);
-        table.setPKs(worker.get());
+        //table.setPKs(worker.get());
         return table;
     }
 

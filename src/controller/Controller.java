@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class Controller implements ControllerDelegate {
 
-    private ConnectionHandlerDelegate connectionHandler;
+    private final ConnectionHandlerDelegate connectionHandler;
     private DataHandlerDelegate dataHandler;
     private TableViewUI ui;
     private String currentTable = null;
@@ -78,19 +78,19 @@ public class Controller implements ControllerDelegate {
 
         System.out.println("Displaying query results in table");
         ui.updateVisibleTable(resultTable);
-        System.out.println("PKs: ");
-        for (String key : resultTable.getPKs().keySet()) {
-            System.out.println("Table --: " + key);
-            for (String str : resultTable.getPKs().get(key)) {
-                System.out.println("   " + str);
-            }
-        }
+//        System.out.println("PKs: ");
+//        for (String key : resultTable.getPKs().keySet()) {
+//            System.out.println("Table --: " + key);
+//            for (String str : resultTable.getPKs().get(key)) {
+//                System.out.println("   " + str);
+//            }
+//        }
     }
 
-    public void filter(String filter, String columnName) {
+    public void filter(String filter, String columnName, List<String> columnsToDisplay) {
         if (currentTable != null) {
             new Thread(() -> {
-                dataHandler.filterTable(currentTable, filter, columnName, this::resultCallback);
+                dataHandler.filterTable(currentTable, filter, columnName, columnsToDisplay, this::resultCallback);
             }).start();
         }
     }

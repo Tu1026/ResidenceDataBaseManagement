@@ -63,9 +63,9 @@ public class LoginFrame extends Application {
         imgView.setLayoutY(260);
         imgView.maxHeight(30);
         imgView.maxWidth(60);
-        //String path = this.getClass().getResource(LOADING_IMG_PATH).toExternalForm();
-        //Image img = new Image(LOADING_IMG_PATH);
-        //imgView.setImage(img);
+        String path = this.getClass().getResource("/ui/images/loading_small.gif").toExternalForm();
+        Image img = new Image(path);
+        imgView.setImage(img);
         imgView.setVisible(false);
 
         userNameText.prefWidthProperty().bind(userBox.widthProperty());
@@ -103,6 +103,7 @@ public class LoginFrame extends Application {
 
         primaryStage.setResizable(false);
         userNameText.requestFocus();
+        // autologin
 //        userNameText.setText("");
 //        passwordText.setText("");
 //        login(primaryStage, userNameText, passwordText, imgView);

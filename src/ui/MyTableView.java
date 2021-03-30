@@ -19,8 +19,9 @@ public class MyTableView extends TableView<ObservableList<String>>  {
     ObservableList<ObservableList<String>> data;
 
     public MyTableView() {
-        this.setStyle("-fx-border-color: #000000");
-        this.setTableMenuButtonVisible(true);
+        //this.setStyle("-fx-border-color: #9f9d9d");
+        this.setStyle("-fx-focus-color: transparent; -fx-focus-faint-color: transparent; -fx-border-width: 1 1 1 1; -fx-border-color: #757575");
+        this.setTableMenuButtonVisible(false);
     }
 
     public TableView<ObservableList<String>> getComponent(){

@@ -41,7 +41,6 @@ public class FilterPane extends GridPane {
         filterLabel.setWrapText(true);
         labelAndColumn.getChildren().addAll(filterLabel, filterColumnNames, filter);
         add(labelAndColumn, 0,0);
-        //filterPane.add(filter, 0, 1);
 
         filter.prefWidthProperty().bind(this.widthProperty());
         filter.setMinHeight(25);
@@ -77,6 +76,7 @@ public class FilterPane extends GridPane {
             this.tableName = tableName;
             filterColumnNames.getItems().addAll(columns);
             filterColumnNames.getSelectionModel().selectFirst();
+            filter.setText("");
         }
     }
 }

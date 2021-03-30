@@ -45,7 +45,7 @@ public interface DataHandlerDelegate {
      */
      void getTableData(String tableToLookup, Consumer<Table> callback);
 
-    void filterTable(String tableToLookup, String filter, String column, Consumer<Table> callback);
+    void filterTable(String tableToLookup, String filter, String column, List<String> columnsToDisplay, Consumer<Table> callback);
 
     void getSpecificTableData(String tableName, List<String> columnsToGet, List<String> columnsToMatch, List<String> dataToMatch, Consumer<Table> callback);
 
