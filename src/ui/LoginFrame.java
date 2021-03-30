@@ -103,9 +103,9 @@ public class LoginFrame extends Application {
 
         primaryStage.setResizable(false);
         userNameText.requestFocus();
-        userNameText.setText("ora_jmhirsch");
-        passwordText.setText("a64927676");
-        login(primaryStage, userNameText, passwordText, imgView);
+//        userNameText.setText("");
+//        passwordText.setText("");
+//        login(primaryStage, userNameText, passwordText, imgView);
     }
 
     private void login(Stage primaryStage, TextField userNameText, PasswordField passwordText, Node loadingLabel) {
