@@ -91,6 +91,7 @@ public class MainWindow implements TableViewUI {
         insertButton.setOnAction(event -> {
             Stage insertStage = new Stage();
             Scene insertScene = new ResidentInsert(controller).getScene();
+            insertStage.setTitle("Insert a Resident Here");
             insertStage.setResizable(false);
             insertStage.setScene(insertScene);
             insertStage.show();
