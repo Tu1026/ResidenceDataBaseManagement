@@ -22,7 +22,7 @@ public class LoginFrame extends Application {
 
 
     public ControllerDelegate controller;
-    private static final String LOADING_IMG_PATH = "/ui/images/loading_small.gif";
+    private static final String LOADING_IMG_PATH = "out/production/CPSC304Project/ui/images/loading_small.gif";
 
 
     @Override
@@ -63,9 +63,9 @@ public class LoginFrame extends Application {
         imgView.setLayoutY(260);
         imgView.maxHeight(30);
         imgView.maxWidth(60);
-        String path = this.getClass().getResource(LOADING_IMG_PATH).toExternalForm();
-        Image img = new Image(path);
-        imgView.setImage(img);
+        //String path = this.getClass().getResource(LOADING_IMG_PATH).toExternalForm();
+        //Image img = new Image(LOADING_IMG_PATH);
+        //imgView.setImage(img);
         imgView.setVisible(false);
 
         userNameText.prefWidthProperty().bind(userBox.widthProperty());
@@ -103,6 +103,9 @@ public class LoginFrame extends Application {
 
         primaryStage.setResizable(false);
         userNameText.requestFocus();
+        userNameText.setText("ora_jmhirsch");
+        passwordText.setText("a64927676");
+        login(primaryStage, userNameText, passwordText, imgView);
     }
 
     private void login(Stage primaryStage, TextField userNameText, PasswordField passwordText, Node loadingLabel) {
