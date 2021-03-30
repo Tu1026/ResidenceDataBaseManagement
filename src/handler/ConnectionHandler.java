@@ -63,6 +63,4 @@ public final class ConnectionHandler implements ConnectionHandlerDelegate {
 
         return new ConnectionState(connection, isLoggedIn);
     }
-
-
 }
