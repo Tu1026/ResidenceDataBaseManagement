@@ -17,7 +17,6 @@ import model.table.Table;
 import model.table.TableRow;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ResidentInsert extends Application {
@@ -25,10 +24,11 @@ public class ResidentInsert extends Application {
     private ControllerDelegate controller;
     private Scene scene;
     private List<String> residence;
-    private String residenceName;
-    private String address;
-    private String zipcode;
-
+    private List<String> house;
+    private ComboBox<String> residenceCombo;
+    private ComboBox<String> houseCombo;
+    private ComboBox<String> unitCombo;
+    private ComboBox<String> floorCombo;
 
 //    public ResidentInsert(ControllerDelegate controller){
 //        this.controller = controller;
@@ -91,27 +91,79 @@ public class ResidentInsert extends Application {
 
         VBox ResidenceBox = new VBox(5);
         Label ResidenceLabel = new Label("Choose From a residence you want to add the resident to");
+        ResidenceLabel.setWrapText(true);
         ResidenceLabel.setFont(Font.font("Times New Roman", 14));
-        ComboBox<String> residenceCombo = new ComboBox<>();
+        residenceCombo = new ComboBox<>();
         residenceCombo.prefWidthProperty().bind(ResidenceBox.widthProperty());
         List<String> residenceColumnsToGet = new ArrayList<>();
         residenceColumnsToGet.add("Residence Name");
         residenceColumnsToGet.add("Address");
         residenceColumnsToGet.add("Zipcode");
         controller.getDataForStudentInsertion("RESIDENCE", residenceColumnsToGet, new ArrayList<>(), new ArrayList<>(), this::updateResidence);
-        for (String str : residence) {
-            residenceCombo.getItems().add(str);
-        }
         ResidenceBox.getChildren().addAll(ResidenceLabel, residenceCombo);
 
 
-//
-//        VBox UnitBox = new VBox(5);
-//        Label UnitLabel = new Label("Unit #");
-//        ComboBox<String> unitCombo = new ComboBox<>();
-//        TextField UnitText = new TextField();
-//        UnitText.prefWidthProperty().bind(UnitBox.prefWidthProperty());
-//        UnitBox.getChildren().addAll(UnitLabel, UnitText);
+
+        VBox houseBox = new VBox(5);
+        Label houseLabel = new Label("Choose From a house you want to add the resident to");
+        houseLabel.setWrapText(true);
+        houseLabel.setFont(Font.font("Times New Roman", 14));
+        houseCombo = new ComboBox<>();
+        houseCombo.prefWidthProperty().bind(houseBox.widthProperty());
+        List<String> houseColumnsToGet = new ArrayList<>();
+        houseColumnsToGet.add("House Name");
+
+        List<String> houseColumnsToMatch = new ArrayList<>();
+        houseColumnsToMatch.add("Address");
+        houseColumnsToMatch.add("Zipcode");
+        List<String> houseDataToMatch = new ArrayList<>();
+        houseBox.getChildren().addAll(houseLabel, houseCombo);
+
+        VBox floorBox = new VBox(5);
+        Label floorLabel = new Label("Choose From a house you want to add the resident to");
+        floorLabel.setWrapText(true);
+        floorLabel.setFont(Font.font("Times New Roman", 14));
+        floorCombo = new ComboBox<>();
+        floorCombo.prefWidthProperty().bind(floorBox.widthProperty());
+        List<String> floorColumnsToGet = new ArrayList<>();
+        floorColumnsToGet.add("House Name");
+
+        List<String> floorColumnsToMatch = new ArrayList<>();
+        floorColumnsToMatch.add("Address");
+        floorColumnsToMatch.add("Zipcode");
+        List<String> floorDataToMatch = new ArrayList<>();
+        houseBox.getChildren().addAll(floorLabel, floorCombo);
+
+
+        residenceCombo.valueProperty().addListener((obs, oldItem, newItem) -> {
+            if (oldItem == null || !oldItem.equals(newItem)) {
+                houseDataToMatch.clear();
+                String [] houseMatchData;
+                houseMatchData = newItem.split(",");
+                for (int i = 1; i < houseMatchData.length; i++){
+                    houseMatchData[i].trim();
+                    houseDataToMatch.add(houseMatchData[i]);
+                }
+                controller.getDataForStudentInsertion("HOUSE", houseColumnsToGet, houseColumnsToMatch, houseDataToMatch, this::updateHouse);
+
+            }
+        });
+
+        houseCombo.valueProperty().addListener((obs, oldItem, newItem) -> {
+            if (oldItem == null || !oldItem.equals(newItem)) {
+                floorDataToMatch.clear();
+                String [] houseMatchData;
+                houseMatchData = newItem.split(",");
+                for (int i = 1; i < houseMatchData.length; i++){
+                    houseMatchData[i].trim();
+                    houseDataToMatch.add(houseMatchData[i]);
+                }
+                controller.getDataForStudentInsertion("FLOOR", floorColumnsToGet, floorColumnsToMatch, floorDataToMatch, this::updateHouse);
+
+            }
+        });
+
+
 
         masterGridPane.add(emailBox,0,1);
         masterGridPane.add(StudentNumberVBox, 1, 1);
@@ -119,6 +171,7 @@ public class ResidentInsert extends Application {
         masterGridPane.add(DoBBox,3,1);
         masterGridPane.add(YearsInResidenceBox,4,1);
         masterGridPane.add(ResidenceBox,5,1);
+        masterGridPane.add(houseBox,6,1);
 
 
         Scene newScene = new Scene(masterGridPane, 1600,300);
@@ -138,10 +191,30 @@ public class ResidentInsert extends Application {
         ///### Pass (HashMap(column:key, String, tableName)
     }
 
-    private void getResAddres(Table table){
-        for (Column column: table.getColumnsList()){
-            System.out.println(column.name);
+    private void updateHouse(Table table){
+        List<Column> columnNames = table.getColumnsList();
+        List<String> house = new ArrayList<>();
+        houseCombo.getItems().clear();
+        houseCombo.getSelectionModel().clearSelection();
+
+        for (TableRow tableRow : table){
+            String temp = "";
+            for (Column column: columnNames){
+                if (temp != "") {
+                    temp += ", " + tableRow.get(column);
+                }else {
+                    temp += tableRow.get(column);
+                }
+            }
+            temp.replaceAll(", $", "");
+            house.add(temp);
         }
+
+        for (int i = 0; i < house.size(); i++){
+            houseCombo.getItems().add(house.get(i));
+            System.out.println(house.get(i));
+        }
+        this.house = house;
     }
 
     private void getHouseName(Table table){
@@ -155,17 +228,22 @@ public class ResidentInsert extends Application {
     private void updateResidence(Table table){
         List<Column> columnNames = table.getColumnsList();
         List<String> residence = new ArrayList<>();
-
-
         for (TableRow tableRow : table){
             String temp = "";
             for (Column column: columnNames){
-                temp += tableRow.get(column) + ", ";
-                residence.add(tableRow.get(column));
+                if (temp != "") {
+                    temp += ", " + tableRow.get(column);
+                }else {
+                    temp += tableRow.get(column);
+                }
             }
-            System.out.println("temp");
             temp.replaceAll(", $", "");
+            System.out.println(temp);
             residence.add(temp);
+        }
+
+        for (int i = 0; i < residence.size(); i++){
+            residenceCombo.getItems().add(residence.get(i));
         }
         this.residence = residence;
     }
