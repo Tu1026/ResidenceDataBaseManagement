@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import model.table.Table;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class Controller implements ControllerDelegate {
@@ -37,19 +38,9 @@ public class Controller implements ControllerDelegate {
         return cs;
     }
 
-    // TODO: delete this, queries should be prepared.
-    @Override
-    public void performQuery(String query) {
-        System.out.println("Query initializing...");
-        new Thread(() -> {
-            dataHandler.performQuery(query, this::resultCallback);
-        }).start();
-    }
-
     public void initializeSQLDDL() {
         if (dataHandler != null) {
             dataHandler.initializeDDL();
-            ;
         }
     }
 
@@ -113,11 +104,14 @@ public class Controller implements ControllerDelegate {
     @Override
     public void deleteTable(List<String> rowData) {
         new Thread(() -> {
-            dataHandler.deleteTableData(this.currentTable, rowData, (Table) -> loadTable(this.currentTable), this::displayError);
+            dataHandler.deleteTableData(this.currentTable, rowData, (Table) -> loadTable(this.currentTable), ui::displayError);
         }).start();
     }
 
-    private void displayError(String errorMsg) {
-        ui.displayError(errorMsg);
+    @Override
+    public void insertStudent(Map<String, String> data) {
+        new Thread(() -> {
+            dataHandler.insertTableData(data, ui::displayMessage, ui::displayError);
+        }).start();
     }
 }
