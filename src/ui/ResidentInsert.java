@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import model.OracleColumnNames;
 import model.table.Column;
 import model.table.Table;
 import model.table.TableRow;
@@ -151,16 +152,16 @@ public class ResidentInsert {
                 });
             } else {
                 insertMap = new HashMap<>();
-                insertMap.put("E-Mail", emailText.getText());
-                insertMap.put("Student#", StudentNumberText.getText());
-                insertMap.put("Name", NameText.getText());
-                insertMap.put("Date of Birth", DoBText.getText());
-                insertMap.put("Years in Residence", YearsInResidenceText.getText());
-                insertMap.put("Unit #", unitCombo.getValue());
-                insertMap.put("Floor #", floorCombo.getValue());
-                insertMap.put("House Name", houseCombo.getValue());
-                insertMap.put("Address", residenceCombo.getValue().split(",")[1].trim());
-                insertMap.put("Zipcode", residenceCombo.getValue().split(",")[2].trim());
+                insertMap.put(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get("E-Mail"), emailText.getText());
+                insertMap.put(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get("Student #"), StudentNumberText.getText());
+                insertMap.put(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get("Name"), NameText.getText());
+                insertMap.put(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get("Date of Birth"), DoBText.getText());
+                insertMap.put(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get("Years in Residence"), YearsInResidenceText.getText());
+                insertMap.put(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get("Unit #"), unitCombo.getValue());
+                insertMap.put(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get("Floor #"), floorCombo.getValue());
+                insertMap.put(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get("House Name"), houseCombo.getValue());
+                insertMap.put(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get("Address"), residenceCombo.getValue().split(",")[1].trim());
+                insertMap.put(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get("Zipcode"), residenceCombo.getValue().split(",")[2].trim());
                 controller.insertStudent(insertMap);
             }
         });
@@ -238,20 +239,20 @@ public class ResidentInsert {
         houseCombo.getSelectionModel().clearSelection();
 
         for (TableRow tableRow : table){
-            String temp = "";
+            StringBuilder temp = new StringBuilder();
             for (Column column: columnNames){
-                if (!temp.equals("")) {
-                    temp += ", " + tableRow.get(column);
+                if (!temp.toString().equals("")) {
+                    temp.append(", ").append(tableRow.get(column));
                 }else {
-                    temp += tableRow.get(column);
+                    temp.append(tableRow.get(column));
                 }
             }
-            house.add(temp);
+            house.add(temp.toString());
         }
 
-        for (int i = 0; i < house.size(); i++){
-            houseCombo.getItems().add(house.get(i));
-            System.out.println(house.get(i));
+        for (String s : house) {
+            houseCombo.getItems().add(s);
+            System.out.println(s);
         }
         this.house = house;
     }
@@ -264,20 +265,20 @@ public class ResidentInsert {
         floorCombo.getSelectionModel().clearSelection();
 
         for (TableRow tableRow : table){
-            String temp = "";
+            StringBuilder temp = new StringBuilder();
             for (Column column: columnNames){
-                if (!temp.equals("")) {
-                    temp += ", " + tableRow.get(column);
+                if (!temp.toString().equals("")) {
+                    temp.append(", ").append(tableRow.get(column));
                 }else {
-                    temp += tableRow.get(column);
+                    temp.append(tableRow.get(column));
                 }
             }
-            floor.add(temp);
+            floor.add(temp.toString());
         }
 
-        for (int i = 0; i < floor.size(); i++){
-            floorCombo.getItems().add(floor.get(i));
-            System.out.println(floor.get(i));
+        for (String s : floor) {
+            floorCombo.getItems().add(s);
+            System.out.println(s);
         }
         this.floor = floor;
     }
@@ -289,20 +290,20 @@ public class ResidentInsert {
         unitCombo.getSelectionModel().clearSelection();
 
         for (TableRow tableRow : table){
-            String temp = "";
+            StringBuilder temp = new StringBuilder();
             for (Column column: columnNames){
-                if (!temp.equals("")) {
-                    temp += ", " + tableRow.get(column);
+                if (!temp.toString().equals("")) {
+                    temp.append(", ").append(tableRow.get(column));
                 }else {
-                    temp += tableRow.get(column);
+                    temp.append(tableRow.get(column));
                 }
             }
-            unit.add(temp);
+            unit.add(temp.toString());
         }
 
-        for (int i = 0; i < unit.size(); i++){
-            unitCombo.getItems().add(unit.get(i));
-            System.out.println(unit.get(i));
+        for (String s : unit) {
+            unitCombo.getItems().add(s);
+            System.out.println(s);
         }
         this.unit = unit;
     }
@@ -311,20 +312,20 @@ public class ResidentInsert {
         List<Column> columnNames = table.getColumnsList();
         List<String> residence = new ArrayList<>();
         for (TableRow tableRow : table){
-            String temp = "";
+            StringBuilder temp = new StringBuilder();
             for (Column column: columnNames){
-                if (!temp.equals("")) {
-                    temp += ", " + tableRow.get(column);
+                if (!temp.toString().equals("")) {
+                    temp.append(", ").append(tableRow.get(column));
                 }else {
-                    temp += tableRow.get(column);
+                    temp.append(tableRow.get(column));
                 }
             }
             System.out.println(temp);
-            residence.add(temp);
+            residence.add(temp.toString());
         }
 
-        for (int i = 0; i < residence.size(); i++){
-            residenceCombo.getItems().add(residence.get(i));
+        for (String s : residence) {
+            residenceCombo.getItems().add(s);
         }
         this.residence = residence;
     }

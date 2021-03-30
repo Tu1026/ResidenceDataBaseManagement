@@ -91,6 +91,7 @@ public class MainWindow implements TableViewUI {
         insertButton.setOnAction(event -> {
             Stage insertStage = new Stage();
             Scene insertScene = new ResidentInsert(controller).getScene();
+            insertStage.setResizable(false);
             insertStage.setScene(insertScene);
             insertStage.show();
         });
@@ -181,6 +182,15 @@ public class MainWindow implements TableViewUI {
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Error in Manipulating Database");
             a.setContentText(error);
+            a.showAndWait();
+        });
+    }
+
+    @Override public void displayMessage(final String msg){
+        Platform.runLater( () -> {
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setTitle("Error in Manipulating Database");
+            a.setContentText(msg);
             a.showAndWait();
         });
     }

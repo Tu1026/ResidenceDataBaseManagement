@@ -27,7 +27,7 @@ public interface DataHandlerDelegate {
      * Insert the specified model into the database
      * @param data model to be inserted into the database
      */
-    void insertTableData(Map<String, String> data, Consumer<Table> onSuccess, Consumer<String> onError);
+    void insertTableData(Map<String, String> data, Consumer<String> onSuccess, Consumer<String> onError);
 
 
     void updateTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError);

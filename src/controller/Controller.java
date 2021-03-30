@@ -104,18 +104,14 @@ public class Controller implements ControllerDelegate {
     @Override
     public void deleteTable(List<String> rowData) {
         new Thread(() -> {
-            dataHandler.deleteTableData(this.currentTable, rowData, (Table) -> loadTable(this.currentTable), this::displayError);
+            dataHandler.deleteTableData(this.currentTable, rowData, (Table) -> loadTable(this.currentTable), ui::displayError);
         }).start();
     }
 
     @Override
     public void insertStudent(Map<String, String> data) {
         new Thread(() -> {
-            dataHandler.insertTableData(data, this::resultCallback, this::displayError);
+            dataHandler.insertTableData(data, ui::displayMessage, ui::displayError);
         }).start();
-    }
-
-    private void displayError(String errorMsg) {
-        ui.displayError(errorMsg);
     }
 }

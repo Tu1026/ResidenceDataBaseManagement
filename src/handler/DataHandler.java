@@ -32,13 +32,48 @@ public final class DataHandler implements DataHandlerDelegate {
 
 
     @Override
-    public void insertTableData(Map<String, String> data, Consumer<Table> onSuccess, Consumer<String> onError) {
+    public void insertTableData(Map<String, String> data, Consumer<String> onSuccess, Consumer<String> onError) {
+
+
+        String resInfo = "INSERT INTO RESIDENTINFO VALUES (?, ?, ?, ?, ?)";
+        String resAddress = "INSERT INTO RESIDENTADDRESS VALUES (?, ?, ?, ?, ?, ?)";
+
+
+        try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(resInfo), resInfo)){
+            connection.setAutoCommit(false);
+            ps.setObject(1, data.get("STUDENTNUMBER"));
+            ps.setObject(2, data.get("EMAIL"));
+            ps.setObject(3, data.get("NAME"));
+            ps.setObject(4, data.get("DOB"));
+            ps.setObject(5, data.get("YEARSINRESIDENCE"));
+            ps.executeUpdate();
+
+            PrintablePreparedStatement ps2 = new PrintablePreparedStatement(connection.prepareStatement(resAddress), resAddress);
+            ps2.setObject(1, data.get("EMAIL"));
+            ps2.setObject(2, data.get("UNUMBER"));
+            ps2.setObject(3, data.get("FNUMBER"));
+            ps2.setObject(4, data.get("HOUSENAME"));
+            ps2.setObject(5, data.get("RESSTADDRESS"));
+            ps2.setObject(6, data.get("RESZIPCODE"));
+            ps2.executeUpdate();
+
+
+            connection.commit();
+            connection.setAutoCommit(true);
+            onSuccess.accept("Student '" + data.get("NAME") + "' inserted successfully");
+        } catch (SQLException throwables) {
+            onError.accept(throwables.getMessage());
+            throwables.printStackTrace();
+        }
 
     }
 
     @Override
     public void updateTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError) {
         String [] tablesToLookup = getTablesToLookup(prettyTableName);
+
+
+
         if (tablesToLookup.length == 1){
 
         }
