@@ -12,12 +12,6 @@ public interface ControllerDelegate {
  ConnectionStateDelegate login(String username, String password);
 
  /**
-  * Performs specified query, returns all data to TableViewUI
-  * @param query queryy to perform
-  */
- void performQuery(String query);
-
- /**
   * Loads initial SQL script
   */
  void initializeSQLDDL();
@@ -48,5 +42,7 @@ public interface ControllerDelegate {
  void updateTable(List<String> rowData);
 
  void deleteTable(List<String> rowData);
+
+ void insertStudent(Map<String, String> data);
 
 }

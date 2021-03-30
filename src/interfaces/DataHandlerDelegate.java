@@ -23,14 +23,11 @@ public interface DataHandlerDelegate {
      */
     void initializeDDL();
 
-
-    void performQuery(String query, Consumer<Table> callback);
-
     /**
      * Insert the specified model into the database
      * @param data model to be inserted into the database
      */
-    void insertTableData(TableModel data);
+    void insertTableData(Map<String, String> data, Consumer<Table> onSuccess, Consumer<String> onError);
 
 
     void updateTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError);

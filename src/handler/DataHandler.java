@@ -30,9 +30,10 @@ public final class DataHandler implements DataHandlerDelegate {
         new OracleSchemaBuilder().initializeSchema(connection);
     }
 
+
     @Override
-    public void insertTableData(TableModel data) {
-        throw new RuntimeException("Insert TableData not implemented yet");
+    public void insertTableData(Map<String, String> data, Consumer<Table> onSuccess, Consumer<String> onError) {
+
     }
 
     @Override
@@ -249,18 +250,4 @@ public final class DataHandler implements DataHandlerDelegate {
         }
         return table;
     }
-
-    // TODO: Delete this in the future
-    @Override
-    public void performQuery(String query, Consumer<Table> callback) {
-        Table table = null;
-        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
-            table = this.executeQueryAndParse(ps);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } finally {
-            callback.accept(table);
-        }
-    }
-
 }

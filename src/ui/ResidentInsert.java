@@ -161,6 +161,7 @@ public class ResidentInsert {
                 insertMap.put("House Name", houseCombo.getValue());
                 insertMap.put("Address", residenceCombo.getValue().split(",")[1].trim());
                 insertMap.put("Zipcode", residenceCombo.getValue().split(",")[2].trim());
+                controller.insertStudent(insertMap);
             }
         });
 
@@ -316,7 +317,7 @@ public class ResidentInsert {
         for (TableRow tableRow : table){
             String temp = "";
             for (Column column: columnNames){
-                if (temp != "") {
+                if (!temp.equals("")) {
                     temp += ", " + tableRow.get(column);
                 }else {
                     temp += tableRow.get(column);
