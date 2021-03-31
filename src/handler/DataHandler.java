@@ -133,10 +133,10 @@ public final class DataHandler implements DataHandlerDelegate {
             return;
         }
 
-        String query = "DELETE FROM ResidentInfo WHERE StudentNumber LIKE ?";
+        String query = "DELETE FROM ResidentInfo WHERE StudentNumber = ?";
 
         try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)){
-            ps.setObject(1, columnsToUpdate.get(1) + "%");
+            ps.setObject(1, columnsToUpdate.get(1));
             ps.executeUpdate();
             onSuccess.accept(null);
         } catch (SQLException throwables) {
