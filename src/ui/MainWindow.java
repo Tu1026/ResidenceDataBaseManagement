@@ -182,6 +182,18 @@ public class MainWindow implements TableViewUI {
         GridPane.setHalignment(searchView, HPos.CENTER);
         GridPane.setValignment(searchView, VPos.CENTER);
 
+
+        /*
+        Test Button please ignore
+         */
+        Button testing = new Button("Testing Please ignore");
+        outerPane.add(testing,0,1);
+        testing.setOnAction(event -> {
+            AggregatePane newAggPane = new AggregatePane(controller);
+        });
+
+
+
         /*
          * INITIALIZE
          */

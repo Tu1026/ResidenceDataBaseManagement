@@ -20,6 +20,7 @@ public class MyTableView extends TableView<ObservableList<String>>  {
 
     private final Consumer<UpdateObject> fireUpdateRequest;
     private final Consumer<Boolean> setIsUpdating;
+
     public MyTableView(Consumer<UpdateObject> fireUpdateRequest, Consumer<Boolean> setIsUpdating) {
         //this.setStyle("-fx-border-color: #9f9d9d");
         this.setStyle("-fx-focus-color: transparent; -fx-focus-faint-color: transparent; -fx-border-width: 1 1 1 1; -fx-border-color: #757575");
