@@ -1,10 +1,9 @@
 package interfaces;
 
 import model.table.Table;
-import model.table.TableModel;
+import model.UpdateObject;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -30,7 +29,7 @@ public interface DataHandlerDelegate {
     void insertTableData(Map<String, String> data, Consumer<String> onSuccess, Consumer<String> onError);
 
 
-    void updateTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError);
+    void updateTableData(String prettyTableName, UpdateObject updateObject, Consumer<String> onSuccess, Consumer<String> onError);
 
     void deleteTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError);
 

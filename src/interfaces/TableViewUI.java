@@ -13,4 +13,6 @@ public interface TableViewUI {
     void displayError(String errorString);
 
     void displayMessage(String msg);
+
+    void reloadLast(ControllerDelegate controllerDelegate);
 }

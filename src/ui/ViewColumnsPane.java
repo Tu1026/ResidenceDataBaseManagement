@@ -69,10 +69,6 @@ public class ViewColumnsPane<T> extends GridPane {
 
             return cell;
         });
-
-        RowConstraints filterRows = new RowConstraints();
-        filterRows.setPercentHeight(50);
-        this.getRowConstraints().addAll(filterRows, filterRows);
     }
 
     public List<T> getSelectedColumns() {
@@ -84,7 +80,10 @@ public class ViewColumnsPane<T> extends GridPane {
 
         if (items.size() == 0) {
             items.add(defaultItem);
+            displayColumnNames.getItems().get(0).setCheck(true);
+            displayColumnNames.setPromptText(defaultItem.toString());
         }
+
 
         return items;
     }
@@ -96,6 +95,7 @@ public class ViewColumnsPane<T> extends GridPane {
         } else {
             displayColumnNames.getItems().get(0).setCheck(false);
         }
+
     }
 
     public void updateFilterList(List<T> columns, String tableName) {
