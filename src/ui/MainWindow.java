@@ -4,7 +4,6 @@ package ui;
 import interfaces.ControllerDelegate;
 import interfaces.TableViewUI;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -12,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -26,7 +24,6 @@ import model.table.Table;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 
 public class MainWindow implements TableViewUI {
@@ -36,9 +33,11 @@ public class MainWindow implements TableViewUI {
     private final MyTableView tableView;
     private final FilterPane filterPane;
     private final ViewColumnsPane<String> viewColumnsPane;
+    private final AggregatePane aggregateTest;
     private boolean isUpdating = false;
     private Button deleteRowButton = null;
     private Button insertButton = null;
+
 
     // declare your filter combobox class
 
@@ -184,14 +183,10 @@ public class MainWindow implements TableViewUI {
 
 
         /*
-        Test Button please ignore
+        Testing layout
          */
-        Button testing = new Button("Testing Please ignore");
-        outerPane.add(testing,0,1);
-        testing.setOnAction(event -> {
-            AggregatePane newAggPane = new AggregatePane(controller);
-        });
-
+        aggregateTest = new AggregatePane(controller);
+        outerPane.add(aggregateTest.getMasterGridPane(),0,1);
 
 
         /*
@@ -224,6 +219,8 @@ public class MainWindow implements TableViewUI {
             }
             filterPane.updateFilterList(columnNames, table.getName());
             viewColumnsPane.updateFilterList(columnNames, table.getName());
+            aggregateTest.updateComboForAggregate(columnNames, table.getName(), "groupByCombo");
+
             tableView.buildData(table);
         });
     }
