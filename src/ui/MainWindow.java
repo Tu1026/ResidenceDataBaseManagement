@@ -38,6 +38,7 @@ public class MainWindow implements TableViewUI {
     private final ViewColumnsPane<String> viewColumnsPane;
     private boolean isUpdating = false;
     private Button deleteRowButton = null;
+    private Button insertButton = null;
     // declare your filter combobox class
 
     public MainWindow(ControllerDelegate controller){
@@ -117,6 +118,7 @@ public class MainWindow implements TableViewUI {
             if (!oldItem.equals(newItem)) {
                 controller.loadTable(newItem);
                 deleteRowButton.setVisible(newItem.equals("Resident"));
+                insertButton.setVisible(newItem.equals("Resident"));
             }
         });
 
@@ -127,7 +129,7 @@ public class MainWindow implements TableViewUI {
 
         VBox insertDeleteBox = new VBox(5);
 
-        Button insertButton = new Button("Insert a Resident");
+        insertButton = new Button("Insert a Resident");
         insertButton.prefWidthProperty().bind(insertDeleteBox.widthProperty());
         insertDeleteBox.getChildren().add(insertButton);
         selectInsertDeleteBox.getChildren().add(insertDeleteBox);
@@ -139,6 +141,7 @@ public class MainWindow implements TableViewUI {
             insertStage.setScene(insertScene);
             insertStage.show();
         });
+        insertButton.setVisible(false);
 
         deleteRowButton = new Button("Delete the selected row");
         deleteRowButton.prefWidthProperty().bind(insertDeleteBox.widthProperty());
