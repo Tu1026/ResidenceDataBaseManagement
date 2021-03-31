@@ -147,26 +147,33 @@ public class AggregatePane extends Application {
     }
 
 
-    public void updateComboForAggregate(List<String> globalColumns, String tableName, String comboString) {
+    public void updateComboForAggregate(List<String> columns, String tableName, String comboString) {
         ComboBox<String> combo = null;
-        List <String> columns = globalColumns;
             switch (comboString) {
                 case ("groupByCombo"):
                     combo = groupByCombo;
+                    combo.getSelectionModel().clearSelection();
+                    combo.getItems().clear();
                     this.tableName = tableName;
                     this.columnNames = columns;
+                    combo.getItems().addAll(columns);
                     break;
                 case ("columnsCanBePerformedCombo"):
                     combo = columnsCanBePerformedCombo;
-                    columns.remove(groupByCombo.getValue());
+                    combo.getSelectionModel().clearSelection();
+                    combo.getItems().clear();
+                    for (String str : columns){
+                        if (!str.equals(groupByCombo.getValue())) {
+                            combo.getItems().add(str);
+                        }
+                    }
                     break;
                 case ("columnsToBeDisplayedCombo"):
                     combo = columnsToBeDisplayedCombo;
+                    combo.getSelectionModel().clearSelection();
+                    combo.getItems().clear();
                     break;
             }
-            combo.getSelectionModel().clearSelection();
-            combo.getItems().clear();
-            combo.getItems().addAll(columns);
             combo.getSelectionModel().selectFirst();
     }
 
