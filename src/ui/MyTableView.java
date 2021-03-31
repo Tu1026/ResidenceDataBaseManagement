@@ -32,7 +32,7 @@ public class MyTableView extends TableView<ObservableList<String>>  {
         return this;
     }
 
-    //    Following the tutorial here to help generate dynamic columns https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
+    //   Following the tutorial here to help generate dynamic columns https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
     public void buildData(Table table) {
         ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
         this.getItems().clear();
