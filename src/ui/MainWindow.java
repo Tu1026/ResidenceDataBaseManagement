@@ -220,7 +220,6 @@ public class MainWindow implements TableViewUI {
             filterPane.updateFilterList(columnNames, table.getName());
             viewColumnsPane.updateFilterList(columnNames, table.getName());
             aggregateTest.updateComboForAggregate(columnNames, table.getName(), "groupByCombo");
-
             tableView.buildData(table);
         });
     }

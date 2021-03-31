@@ -124,7 +124,7 @@ public class MyTableView extends TableView<ObservableList<String>>  {
             }
         }
 
-            System.out.println(colToUpdate + " .. " + newValue);
+        System.out.println(colToUpdate + " .. " + newValue);
 
         UpdateObject obj = new UpdateObject();
         obj.colToUpdate = colToUpdate;

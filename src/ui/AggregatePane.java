@@ -25,7 +25,7 @@ public class AggregatePane extends Application {
     private ControllerDelegate controller;
 
     private GridPane masterGridPane = new GridPane();
-    private String tableName;
+    private String tableName = null;
     private List<String> columnNames;
 
     //What comboBoxes we have
@@ -64,8 +64,10 @@ public class AggregatePane extends Application {
         //------------------Setting up row constraints-------///
         RowConstraints masterRowConstraintsTop = new RowConstraints();
         RowConstraints masterRowConstraintsBot = new RowConstraints();
+
         masterRowConstraintsTop.setPercentHeight(35);
         masterRowConstraintsBot.setPercentHeight(65);
+
         masterGridPane.getRowConstraints().addAll(masterRowConstraintsTop, masterRowConstraintsBot);
         masterColumnConstraint.setPercentWidth(100.0 / (listOfControls.size() - 1));
 
@@ -76,10 +78,13 @@ public class AggregatePane extends Application {
             masterGridPane.add(tempBox, i, 1);
             masterGridPane.getColumnConstraints().add(masterColumnConstraint);
         }
+        aggregateFunctionCombo();
 
+
+        //------------Action Events----------------------//
         groupByCombo.valueProperty().addListener((obs, oldItem, newItem) -> {
-            if (!oldItem.equals(newItem)) {
-//                updateComboForAggregate(this.columnNames, this.tableName,"columnsCanBePerformedCombo");
+            if (oldItem == null || !oldItem.equals(newItem)) {
+                updateComboForAggregate(this.columnNames, this.tableName,"columnsCanBePerformedCombo");
             }
         });
 
@@ -119,7 +124,7 @@ public class AggregatePane extends Application {
 
 
         //---------Text field-----//
-        aggregateCondition.setPromptText("You can use > = < operators");
+        aggregateCondition.setPromptText("You can use > >= = < <= operators");
 
 
         //Initializing
@@ -142,15 +147,18 @@ public class AggregatePane extends Application {
     }
 
 
-    public void updateComboForAggregate(List<String> columns, String tableName, String comboString) {
+    public void updateComboForAggregate(List<String> globalColumns, String tableName, String comboString) {
         ComboBox<String> combo = null;
-        if (this.tableName == null || !this.tableName.equals(tableName)) {
+        List <String> columns = globalColumns;
             switch (comboString) {
                 case ("groupByCombo"):
                     combo = groupByCombo;
+                    this.tableName = tableName;
+                    this.columnNames = columns;
                     break;
                 case ("columnsCanBePerformedCombo"):
                     combo = columnsCanBePerformedCombo;
+                    columns.remove(groupByCombo.getValue());
                     break;
                 case ("columnsToBeDisplayedCombo"):
                     combo = columnsToBeDisplayedCombo;
@@ -158,11 +166,8 @@ public class AggregatePane extends Application {
             }
             combo.getSelectionModel().clearSelection();
             combo.getItems().clear();
-            this.tableName = tableName;
-            this.columnNames = columns;
             combo.getItems().addAll(columns);
             combo.getSelectionModel().selectFirst();
-        }
     }
 
 
