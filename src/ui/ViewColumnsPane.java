@@ -80,7 +80,10 @@ public class ViewColumnsPane<T> extends GridPane {
 
         if (items.size() == 0) {
             items.add(defaultItem);
+            displayColumnNames.getItems().get(0).setCheck(true);
+            displayColumnNames.setPromptText(defaultItem.toString());
         }
+
 
         return items;
     }
@@ -92,6 +95,7 @@ public class ViewColumnsPane<T> extends GridPane {
         } else {
             displayColumnNames.getItems().get(0).setCheck(false);
         }
+
     }
 
     public void updateFilterList(List<T> columns, String tableName) {
