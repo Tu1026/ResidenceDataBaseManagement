@@ -11,4 +11,8 @@ public interface TableViewUI {
     void updateVisibleTable(Table table);
 
     void displayError(String errorString);
+
+    void displayMessage(String msg);
+
+    void reloadLast(ControllerDelegate controllerDelegate);
 }

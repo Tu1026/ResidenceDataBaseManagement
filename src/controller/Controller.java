@@ -3,15 +3,16 @@ package controller;
 import handler.ConnectionHandler;
 import handler.DataHandler;
 import interfaces.*;
-import javafx.application.Platform;
 import model.table.Table;
+import model.UpdateObject;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class Controller implements ControllerDelegate {
 
-    private ConnectionHandlerDelegate connectionHandler;
+    private final ConnectionHandlerDelegate connectionHandler;
     private DataHandlerDelegate dataHandler;
     private TableViewUI ui;
     private String currentTable = null;
@@ -22,36 +23,28 @@ public class Controller implements ControllerDelegate {
 
     /**
      * Requests connection from ConnectionHandler, dispatches connection to DataHandler if successful
+     *
      * @param username username string
-     * @param pwd password string
+     * @param pwd      password string
      */
-    public ConnectionStateDelegate login(String username, String pwd){
+    public ConnectionStateDelegate login(String username, String pwd) {
         ConnectionStateDelegate cs = connectionHandler.login(username, pwd);
         if (cs.isConnected()) {
             dataHandler = new DataHandler();
             dataHandler.setConnection(cs.getConnection());
-        } else{
+        } else {
             System.err.println("Error initializing dataHandler: Not connected to oracle services");
         }
         return cs;
     }
 
-    // TODO: delete this, queries should be prepared.
-    @Override
-    public void performQuery(String query) {
-        System.out.println("Query initializing...");
-        new Thread(() -> {
-            dataHandler.performQuery(query, this::resultCallback);
-        }).start();
-    }
-
-    public void initializeSQLDDL(){
+    public void initializeSQLDDL() {
         if (dataHandler != null) {
-            dataHandler.initializeDDL();;
+            dataHandler.initializeDDL();
         }
     }
 
-    public ConnectionStateDelegate logout(){
+    public ConnectionStateDelegate logout() {
         return connectionHandler.close();
     }
 
@@ -67,30 +60,28 @@ public class Controller implements ControllerDelegate {
         }).start();
     }
 
-    private void resultCallback(Table resultTable){
-        if (! resultTable.getName().equalsIgnoreCase("no name")) {
+    private void resultCallback(Table resultTable) {
+        if (!resultTable.getName().equalsIgnoreCase("no name")) {
             currentTable = resultTable.getName();
-        }else{
+        } else {
             currentTable = null;
         }
 
-        Platform.runLater(() -> {
-            System.out.println("Displaying query results in table");
-            ui.updateVisibleTable(resultTable);
-            System.out.println("PKs: ");
-            for (String key: resultTable.getPKs().keySet()) {
-                System.out.println("Table --: " + key);
-                for (String str: resultTable.getPKs().get(key)) {
-                    System.out.println("   " + str);
-                }
-            }
-        });
+        System.out.println("Displaying query results in table");
+        ui.updateVisibleTable(resultTable);
+//        System.out.println("PKs: ");
+//        for (String key : resultTable.getPKs().keySet()) {
+//            System.out.println("Table --: " + key);
+//            for (String str : resultTable.getPKs().get(key)) {
+//                System.out.println("   " + str);
+//            }
+//        }
     }
 
-    public void filter(String filter, String columnName){
-        if (currentTable != null){
+    public void filter(String filter, String columnName, List<String> columnsToDisplay) {
+        if (currentTable != null) {
             new Thread(() -> {
-                dataHandler.filterTable(currentTable, filter, columnName, this::resultCallback);
+                dataHandler.filterTable(currentTable, filter, columnName, columnsToDisplay, this::resultCallback);
             }).start();
         }
     }
@@ -98,28 +89,36 @@ public class Controller implements ControllerDelegate {
     @Override
     public void getDataForStudentInsertion(String tableName, List<String> columnsToGet, List<String> columnsToMatch, List<String> dataToMatch, Consumer<Table> callback) {
         new Thread(() -> {
-                dataHandler.getSpecificTableData(tableName, columnsToGet, columnsToMatch, dataToMatch, callback);
+            dataHandler.getSpecificTableData(tableName, columnsToGet, columnsToMatch, dataToMatch, callback);
         }).start();
     }
 
     @Override
-    public void updateTable(List<String> rowData){
-        new Thread(() -> {
-         //dosomething
-        }).start();
+    public void updateTable(UpdateObject updateObject){
+        if (currentTable != null) {
+            new Thread(() -> {
+                dataHandler.updateTableData(this.currentTable, updateObject, this::updateResponse, ui::displayError);
+            }).start();
+        }
+    }
+
+    private void updateResponse(String response){
+        ui.displayMessage(response);
+        ui.reloadLast(this);
     }
 
     //Todo:
     @Override
-    public void deleteTable(List<String> rowData){
+    public void deleteTable(List<String> rowData) {
         new Thread(() -> {
-            dataHandler.deleteTableData(this.currentTable, rowData, (Table) -> loadTable(this.currentTable), this::displayError);
+            dataHandler.deleteTableData(this.currentTable, rowData, (Table) -> loadTable(this.currentTable), ui::displayError);
         }).start();
     }
 
-    private void displayError(String errorMsg) {
-        Platform.runLater(() -> {
-            ui.displayError(errorMsg);
-        });
+    @Override
+    public void insertStudent(Map<String, String> data) {
+        new Thread(() -> {
+            dataHandler.insertTableData(data, ui::displayMessage, ui::displayError);
+        }).start();
     }
 }
