@@ -39,6 +39,7 @@ public class MainWindow implements TableViewUI {
     private boolean isUpdating = false;
     private Button deleteRowButton = null;
     private Button insertButton = null;
+
     // declare your filter combobox class
 
     public MainWindow(ControllerDelegate controller){
