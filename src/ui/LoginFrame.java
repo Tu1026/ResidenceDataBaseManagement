@@ -27,6 +27,8 @@ public class LoginFrame extends Application {
     private static final String LOADING_IMG_PATH = "out/production/CPSC304Project/ui/images/loading_small.gif";
     private Text infoLabel;
     private Text loadingLabel;
+    private Button login;
+    private ImageView imgView;
 
 
     @Override
@@ -65,7 +67,7 @@ public class LoginFrame extends Application {
         passwordBox.setPrefHeight(35);
         passwordBox.setPrefWidth(464);
 
-        ImageView imgView = new ImageView();
+        imgView = new ImageView();
         imgView.setLayoutX(272);
         imgView.setLayoutY(255);
         imgView.maxHeight(30);
@@ -82,11 +84,11 @@ public class LoginFrame extends Application {
         passwordText.prefHeightProperty().bind(userBox.heightProperty());
         passwordText.setOnKeyReleased(key -> {
             if (key.getCode() == KeyCode.ENTER) {
-                login(primaryStage, userNameText, passwordText, imgView);
+                login(primaryStage, userNameText, passwordText);
             }
         });
 
-        Button login = new Button("Log In");
+        login = new Button("Log In");
         login.setLayoutY(325);
         login.setLayoutX(261);
         login.setPrefSize(77, 41);
@@ -107,12 +109,12 @@ public class LoginFrame extends Application {
         //infoLabel.setPrefSize(140, 25);
 
         login.setOnAction(e -> {
-            login(primaryStage, userNameText, passwordText, imgView);
+            login(primaryStage, userNameText, passwordText);
         });
 
         login.setOnKeyReleased(key -> {
             if (key.getCode() == KeyCode.ENTER) {
-                login(primaryStage, userNameText, passwordText, imgView);
+                login(primaryStage, userNameText, passwordText);
             }
         });
 
@@ -130,9 +132,10 @@ public class LoginFrame extends Application {
 //        login(primaryStage, userNameText, passwordText, imgView);
     }
 
-    private void login(Stage primaryStage, TextField userNameText, PasswordField passwordText, Node loadingImg) {
-        loadingImg.setVisible(true);
+    private void login(Stage primaryStage, TextField userNameText, PasswordField passwordText) {
+        imgView.setVisible(true);
         infoLabel.setVisible(true);
+        login.setOnKeyReleased(null);
 
 
         new Thread(() -> {
@@ -155,7 +158,7 @@ public class LoginFrame extends Application {
                 });
             } else {
                 Platform.runLater( () -> {
-                    loadingImg.setVisible(false);
+                    imgView.setVisible(false);
                     infoLabel.setVisible(false);
                     loadingLabel.setVisible(false);
                     Alert a = new Alert(Alert.AlertType.ERROR);
