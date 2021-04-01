@@ -14,6 +14,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import model.OracleColumnNames;
 import model.OracleTableNames;
@@ -23,24 +25,29 @@ public class LoginFrame extends Application {
 
     public ControllerDelegate controller;
     private static final String LOADING_IMG_PATH = "out/production/CPSC304Project/ui/images/loading_small.gif";
+    private Text infoLabel;
+    private Text loadingLabel;
 
 
     @Override
     public void start(Stage primaryStage) {
         OracleTableNames.buildMaps();
         OracleColumnNames.buildMaps();
+
         Pane layout = new Pane();
         Label userName = new Label("UserName");
         userName.setLayoutX(32);
         userName.setLayoutY(130);
 
+        TextField userNameText = new TextField();
+        userNameText.setPromptText("ora_CWL");
+        userNameText.setMinHeight(36);
+
         Label password = new Label("Password");
         password.setLayoutX(32);
         password.setLayoutY(216);
 
-        TextField userNameText = new TextField();
-        userNameText.setPromptText("ora_CWL");
-        userNameText.setMinHeight(36);
+
 
         PasswordField passwordText = new PasswordField();
         passwordText.setPromptText("a<studentNumber>");
@@ -59,8 +66,8 @@ public class LoginFrame extends Application {
         passwordBox.setPrefWidth(464);
 
         ImageView imgView = new ImageView();
-        imgView.setLayoutX(310);
-        imgView.setLayoutY(260);
+        imgView.setLayoutX(272);
+        imgView.setLayoutY(255);
         imgView.maxHeight(30);
         imgView.maxWidth(60);
         String path = this.getClass().getResource("/ui/images/loading_small.gif").toExternalForm();
@@ -80,10 +87,24 @@ public class LoginFrame extends Application {
         });
 
         Button login = new Button("Log In");
-        login.setLayoutY(316);
-        login.setLayoutX(300);
+        login.setLayoutY(325);
+        login.setLayoutX(261);
         login.setPrefSize(77, 41);
 
+
+        infoLabel = new Text("Loggin in...");
+        infoLabel.setLayoutY(320);
+        infoLabel.setLayoutX(270);
+        infoLabel.setTextAlignment(TextAlignment.CENTER);
+        infoLabel.setVisible(false);
+
+        loadingLabel = new Text("Logged in! \nLoading DDL/DML...");
+        loadingLabel.setTextAlignment(TextAlignment.CENTER);
+        loadingLabel.setLayoutY(305);
+        loadingLabel.setLayoutX(240);
+        loadingLabel.setVisible(false);
+
+        //infoLabel.setPrefSize(140, 25);
 
         login.setOnAction(e -> {
             login(primaryStage, userNameText, passwordText, imgView);
@@ -95,7 +116,7 @@ public class LoginFrame extends Application {
             }
         });
 
-        layout.getChildren().addAll(password, userName, login, userBox, passwordBox, imgView);
+        layout.getChildren().addAll(password, userName, login, userBox, passwordBox, imgView,  infoLabel, loadingLabel);
         primaryStage.setTitle("Log into the database here");
         Scene scene = new Scene(layout, 600, 400);
         primaryStage.setScene(scene);
@@ -109,8 +130,11 @@ public class LoginFrame extends Application {
 //        login(primaryStage, userNameText, passwordText, imgView);
     }
 
-    private void login(Stage primaryStage, TextField userNameText, PasswordField passwordText, Node loadingLabel) {
-        loadingLabel.setVisible(true);
+    private void login(Stage primaryStage, TextField userNameText, PasswordField passwordText, Node loadingImg) {
+        loadingImg.setVisible(true);
+        infoLabel.setVisible(true);
+
+
         new Thread(() -> {
             String sUserName = userNameText.getText().toLowerCase().trim();
             String sPassword = passwordText.getText().toLowerCase().trim();
@@ -118,6 +142,10 @@ public class LoginFrame extends Application {
             controller = new Controller();
             ConnectionStateDelegate connectionState = controller.login(sUserName, sPassword);
             if (connectionState.isConnected()) {
+                Platform.runLater(() -> {
+                    infoLabel.setVisible(false);
+                    loadingLabel.setVisible(true);
+                });
 
                 controller.initializeSQLDDL();
                 Platform.runLater(() -> {
@@ -127,6 +155,8 @@ public class LoginFrame extends Application {
                 });
             } else {
                 Platform.runLater( () -> {
+                    loadingImg.setVisible(false);
+                    infoLabel.setVisible(false);
                     loadingLabel.setVisible(false);
                     Alert a = new Alert(Alert.AlertType.ERROR);
                     a.setTitle("Error Connecting to Oracle");
