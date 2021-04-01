@@ -584,42 +584,42 @@ VALUES(17, 2, 'female', 0, (SELECT fNumber FROM Floor WHERE fNumber = 4 AND hous
 --RESIDENT INSERTIONS
 
 INSERT INTO ResidentInfo
-VALUES(23049250, 'test1@ubc.ca', 'Bill', '5/2/99', null);
+VALUES(23049250, 'test1@ubc.ca', 'Bill', '5/2/1999', null);
 
 INSERT INTO ResidentInfo
-VALUES(23954485, 'tuu@ubc.ca', 'Will', '5/2/99', 3);
+VALUES(23954485, 'tuu@ubc.ca', 'Will', '5/2/1999', 3);
 
 INSERT INTO ResidentInfo
-VALUES(68594095, 'mar@ubc.ca', 'Maryam', '3/25/00', 2);
+VALUES(68594095, 'mar@ubc.ca', 'Maryam', '3/25/2000', 2);
 
 INSERT INTO ResidentInfo
 VALUES(45069450, 'sarah@ubc.ca', 'Sarah', null, 5);
 
 INSERT INTO ResidentInfo
-VALUES(59403945, 'bobby@ubc.ca', 'Bob', '2/6/89', null);
+VALUES(59403945, 'bobby@ubc.ca', 'Bob', '2/6/1989', null);
 
 INSERT INTO ResidentInfo
-VALUES(59485932, 'joan@ubc.ca', 'Joan', '7/17/89', 3);
+VALUES(59485932, 'joan@ubc.ca', 'Joan', '7/17/1989', 3);
 
 INSERT INTO ResidentInfo
-VALUES(45544432, 'timothy@ubc.ca', 'Timothy', '12/4/93', 2);
+VALUES(45544432, 'timothy@ubc.ca', 'Timothy', '12/4/1993', 2);
 
 INSERT INTO ResidentInfo
-VALUES(23452034, 'au@ubc.ca', 'Arthur', '12/23/98', null);
+VALUES(23452034, 'au@ubc.ca', 'Arthur', '12/23/1998', null);
 
 INSERT INTO ResidentInfo
-VALUES(34534605, 'katy@ubc.ca', 'Katy', '9/3/97', 2);
+VALUES(34534605, 'katy@ubc.ca', 'Katy', '9/3/1997', 2);
 
 INSERT INTO ResidentInfo
-VALUES(23490506, 'stef@ubc.ca', 'Stefani', '8/13/00', 3);
+VALUES(23490506, 'stef@ubc.ca', 'Stefani', '8/13/2000', 3);
 
 INSERT INTO ResidentInfo
-VALUES(60892195, 'alex@ubc.ca', 'Alex', '1/7/98', 3);
+VALUES(60892195, 'alex@ubc.ca', 'Alex', '1/7/1998', 3);
 
 --
 
 INSERT INTO ResidentInfo
-VALUES(64651115, 'sam@ubc.ca', 'Sam', '1/7/00', null);
+VALUES(64651115, 'sam@ubc.ca', 'Sam', '1/7/2000', null);
 INSERT INTO ResidentAddress
 VALUES((SELECT email FROM ResidentInfo WHERE email = 'sam@ubc.ca'), (SELECT uNumber FROM Unit WHERE uNumber = 1 AND fNUmber = 12 AND houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
        (SELECT fNumber FROM Unit WHERE uNumber = 1 AND fNUmber = 12 AND houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
@@ -628,7 +628,7 @@ VALUES((SELECT email FROM ResidentInfo WHERE email = 'sam@ubc.ca'), (SELECT uNum
        (SELECT resZipCode FROM Unit WHERE uNumber = 1 AND fNUmber = 12 AND houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO ResidentInfo
-VALUES(6515444, 'ben@ubc.ca', 'Ben', '3/4/01', 1);
+VALUES(6515444, 'ben@ubc.ca', 'Ben', '3/4/2001', 1);
 INSERT INTO ResidentAddress
 VALUES((SELECT email FROM ResidentInfo WHERE email = 'ben@ubc.ca'), (SELECT uNumber FROM Unit WHERE uNumber = 1 AND fNUmber = 12 AND houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
        (SELECT fNumber FROM Unit WHERE uNumber = 1 AND fNUmber = 12 AND houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'),
@@ -637,7 +637,7 @@ VALUES((SELECT email FROM ResidentInfo WHERE email = 'ben@ubc.ca'), (SELECT uNum
        (SELECT resZipCode FROM Unit WHERE uNumber = 1 AND fNUmber = 12 AND houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO ResidentInfo
-VALUES(1614416, 'clara@ubc.ca', 'Clara', '4/15/00', 0);
+VALUES(1614416, 'clara@ubc.ca', 'Clara', '4/15/2000', 0);
 INSERT INTO ResidentAddress
 VALUES((SELECT email FROM ResidentInfo WHERE email = 'clara@ubc.ca'), (SELECT uNumber FROM Unit WHERE uNumber = 13 AND fNumber = 15 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
        (SELECT fNumber FROM Unit WHERE uNumber = 13 AND fNumber = 15 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
@@ -648,25 +648,28 @@ VALUES((SELECT email FROM ResidentInfo WHERE email = 'clara@ubc.ca'), (SELECT uN
 INSERT INTO ResidentInfo VALUES(4664484, 'jim@ubc.ca', 'Jim', null, 7);
 INSERT INTO ResidentAddress VALUES('jim@ubc.ca', 5, 8, 'Building Five', '2205 Lower Mall', 'V6T 1Z4');
 
-INSERT INTO ResidentInfo VALUES(4755614, 'arman@ubc.ca', 'Arman', '3/9/89', null);
+INSERT INTO ResidentInfo VALUES(1254876, 'joe@ubc.ca', 'Joe', null, 7);
+INSERT INTO ResidentAddress VALUES('joe@ubc.ca', 2, 17, 'Building Five', '2205 Lower Mall', 'V6T 1Z4');
+
+INSERT INTO ResidentInfo VALUES(4755614, 'arman@ubc.ca', 'Arman', '3/9/1989', null);
 INSERT INTO ResidentAddress VALUES('arman@ubc.ca', 15, 6, 'Building Five', '2205 Lower Mall', 'V6T 1Z4');
 
-INSERT INTO ResidentInfo VALUES(5164941, 'claire@ubc.ca', 'Claire', '4/7/89', 1);
-INSERT INTO ResidentAddress VALUES('claire@ubc.ca', 12, 2, 'Salish', '2333 Vine Street', 'V1V 1V7');
+INSERT INTO ResidentInfo VALUES(5164941, 'claire@ubc.ca', 'Claire', '4/7/1992', 1);
+INSERT INTO ResidentAddress VALUES('claire@ubc.ca', 17, 4, 'Salish', '2333 Vine Street', 'V1V 1V7');
 
-INSERT INTO ResidentInfo VALUES(4699416, 'dom@ubc.ca', 'Dom', '1/7/95', 0);
-INSERT INTO ResidentAddress VALUES('dom@ubc.ca', 1, 5, 'Salish', '2333 Vine Street', 'V1V 1V7');
+INSERT INTO ResidentInfo VALUES(4699416, 'dom@ubc.ca', 'Dom', '1/7/1995', 0);
+INSERT INTO ResidentAddress VALUES('dom@ubc.ca', 4, 3, 'Salish', '2333 Vine Street', 'V1V 1V7');
 
-INSERT INTO ResidentInfo VALUES(4699746, 'jeff@ubc.ca', 'Jeff', '12/20/99', 0);
+INSERT INTO ResidentInfo VALUES(4699746, 'jeff@ubc.ca', 'Jeff', '12/20/1999', 0);
 INSERT INTO ResidentAddress VALUES('jeff@ubc.ca', 1, 5, 'Salish', '2333 Vine Street', 'V1V 1V7');
 
-INSERT INTO ResidentInfo VALUES(4669744, 'kat@ubc.ca', 'Kat', '4/1/93', null);
+INSERT INTO ResidentInfo VALUES(4669744, 'kat@ubc.ca', 'Kat', '4/1/1993', null);
 INSERT INTO ResidentAddress VALUES('kat@ubc.ca', 1, 18, 'North Tower', '4545 Argronomy Road', 'V6T 1Z4');
 
-INSERT INTO ResidentInfo VALUES(7894315, 'julie@ubc.ca', 'Julie', '10/12/00', null);
+INSERT INTO ResidentInfo VALUES(7894315, 'julie@ubc.ca', 'Julie', '10/12/2000', null);
 INSERT INTO ResidentAddress VALUES('julie@ubc.ca', 9, 4, 'North Tower', '4545 Argronomy Road', 'V6T 1Z4');
 
-INSERT INTO ResidentInfo VALUES(146794619, 'rox@ubc.ca', 'Roxanna', '4/1/99', 2);
+INSERT INTO ResidentInfo VALUES(146794619, 'rox@ubc.ca', 'Roxanna', '4/1/1999', 2);
 INSERT INTO ResidentAddress VALUES('rox@ubc.ca', 18, 10, 'Korea House', '432 East Mall', 'V1V 1V7');
 
 
