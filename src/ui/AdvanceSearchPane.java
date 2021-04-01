@@ -60,13 +60,11 @@ public class AdvanceSearchPane extends GridPane {
         row2.setAlignment(Pos.BASELINE_CENTER);
 
 
-        for(AdvanceQueries query: AdvanceQueries.values()){
-            if(!query.toString().matches("\\D*[EXPLAIN]")){
+        for(AdvanceQueries query: AdvanceQueries.values()) {
+            if (!query.toString().endsWith("EXPLAIN")) {
                 advanceCombo.getItems().add(query.getText());
                 System.out.println(query.toString());
             }
-               else
-                   System.out.println(query.toString());
         }
 
         advanceCombo.setMaxWidth(300);
@@ -149,8 +147,9 @@ public class AdvanceSearchPane extends GridPane {
     }
 
     private void updateQueryDescription(AdvanceQueries advance) {
-        String explaination = advance.toString() + "EXPLAIN";
-        queryExplaination.setText(AdvanceQueries.valueOf(explaination).getText());
+        String explanation = advance.toString() + "EXPLAIN";
+        System.out.println(explanation);
+        queryExplaination.setText(AdvanceQueries.valueOf(explanation).getText());
 
     }
 
