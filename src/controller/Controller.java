@@ -67,15 +67,7 @@ public class Controller implements ControllerDelegate {
             currentTable = null;
         }
 
-        System.out.println("Displaying query results in table");
         ui.updateVisibleTable(resultTable);
-//        System.out.println("PKs: ");
-//        for (String key : resultTable.getPKs().keySet()) {
-//            System.out.println("Table --: " + key);
-//            for (String str : resultTable.getPKs().get(key)) {
-//                System.out.println("   " + str);
-//            }
-//        }
     }
 
     public void filter(String filter, String columnName, List<String> columnsToDisplay) {
@@ -103,11 +95,12 @@ public class Controller implements ControllerDelegate {
     }
 
     private void updateResponse(String response){
-        ui.displayMessage(response);
+        if (!response.trim().equals("")) {
+            ui.displayMessage(response);
+        }
         ui.reloadLast(this);
     }
 
-    //Todo:
     @Override
     public void deleteTable(List<String> rowData) {
         new Thread(() -> {

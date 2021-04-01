@@ -19,7 +19,7 @@ public class OracleColumnNames {
     public static List<String> PRETTY_COLUMN_NAMES = new ArrayList<>(Arrays.asList("Campus Address", "Campus Zip", "Name", "Population", // Campus
             "Office Address", "Office Zipcode", "Budget",  // Residential Managing Office
             "Manager ID", "Years of Experience", "Phone #", // Building Manager
-            "RA ID", "Budget", "Student #", "SA Student #", "Assigned Floor", "Assigned House",
+            "RA ID", "Individual Budget", "Student #", "SA Student #", "Assigned Floor", "Assigned House",
             "House Address", "House Zipcode", // RA
             "SA ID", "Team Budget", // SA
             "Floor #", "Capacity", "Gender Restriction", "House Name", "Address", "Zipcode", // Floor
