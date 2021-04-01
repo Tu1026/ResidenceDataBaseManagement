@@ -2,13 +2,11 @@ package handler;
 
 import interfaces.DataHandlerDelegate;
 import javafx.application.Platform;
-import model.DataTypeErrors;
-import model.OracleColumnNames;
-import model.UpdateObject;
+import model.*;
+import sql.AdvancedQueryList;
 import sql.PrintablePreparedStatement;
 import model.table.Column;
 import model.table.Table;
-import model.OracleTableNames;
 
 import javax.swing.*;
 import java.sql.*;
@@ -226,6 +224,26 @@ public final class DataHandler implements DataHandlerDelegate {
             Platform.runLater(() -> {
                 callback.accept(finalTable);
             });
+        }
+    }
+
+    @Override
+    public void runAdvancedQuery(AdvanceQueries query, String input, Consumer<Table> onSuccess, Consumer<String> onError) {
+        System.out.println(query.toString());
+        String queryStr = AdvancedQueryList.QUERY_MAP.get(query);
+        System.out.println(queryStr);
+
+        try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(queryStr), queryStr)) {
+            if (queryStr.contains("\\?")) {
+                ps.setObject(1, input);
+            }
+
+            Table table = executeQueryAndParse(ps);
+            onSuccess.accept(table);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            onError.accept(throwables.getMessage());
         }
     }
 

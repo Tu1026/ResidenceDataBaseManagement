@@ -1,20 +1,12 @@
 package ui;
 
 import interfaces.ControllerDelegate;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
-import model.OracleTableNames;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import model.AdvanceQueries;
 
 public class AdvanceSearchPane extends BorderPane {
     ComboBox<String> advanceCombo = new ComboBox<>();
@@ -76,24 +68,24 @@ public class AdvanceSearchPane extends BorderPane {
         // This is where it would call controller ---------------> needs back end handling here
         //Check the enum AdvanceQueries
         runQuery.setOnAction(event -> {
-            if (advanceCombo.getValue().equals(AdvanceQueries.JOIN.getText()) ||
-                    advanceCombo.getValue().equals(AdvanceQueries.HAVING.getText())) {
+            AdvanceQueries enumVal = AdvanceQueries.getEnum(advanceCombo.getValue());
+            if (enumVal == AdvanceQueries.JOIN ||
+                    enumVal == AdvanceQueries.HAVING) {
                 if (condition.getText().trim().isEmpty()){
                     displayError("You must enter a condition for this special query");
                 }else if (!condition.getText().trim().matches("\\d+")){
                     displayError("You can only enter a integer for the condition");
                 } else {
-                    //pass query type (AdvanceQueries.getEnums(advanceCombo.getValue())), condition.getText() to helper
+                    controller.runAdvancedQuery(enumVal, condition.getText());
                 }
             } else {
                 if(!condition.getText().trim().isEmpty()){
                     displayError("This type of query cannot have condition");
                 }else {
-                    //pass query type (AdvanceQueries.getEnums(advanceCombo.getValue())), empty String to helper
+                    controller.runAdvancedQuery(enumVal, "");
                 }
             }
         });
-
 
         BorderPane.setMargin(row1, new Insets(20,0,0,0));
 

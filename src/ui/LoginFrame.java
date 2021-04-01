@@ -14,8 +14,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.AdvanceQueries;
 import model.OracleColumnNames;
 import model.OracleTableNames;
+import sql.AdvancedQueryList;
 
 public class LoginFrame extends Application {
 
@@ -28,6 +30,7 @@ public class LoginFrame extends Application {
     public void start(Stage primaryStage) {
         OracleTableNames.buildMaps();
         OracleColumnNames.buildMaps();
+        AdvancedQueryList.buildMap();
         Pane layout = new Pane();
         Label userName = new Label("UserName");
         userName.setLayoutX(32);

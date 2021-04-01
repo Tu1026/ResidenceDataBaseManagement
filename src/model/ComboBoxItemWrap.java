@@ -1,4 +1,4 @@
-package ui;
+package model;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -15,7 +15,7 @@ public class ComboBoxItemWrap<T> {
     ComboBoxItemWrap() {
     }
 
-    ComboBoxItemWrap(T item) {
+    public ComboBoxItemWrap(T item) {
         this.item.set(item);
     }
 

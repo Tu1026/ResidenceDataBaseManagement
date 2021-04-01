@@ -1,4 +1,4 @@
-package ui;
+package model;
 
 public enum AdvanceQueries {
     GROUPBY ("Find the average years of experience of RAs/SRAs per age group: Can this be turned into a nested aggregation instead?"),
@@ -17,14 +17,13 @@ public enum AdvanceQueries {
         return this.value;
     }
 
-    public AdvanceQueries getEnums(String text){
+    public static AdvanceQueries getEnum(String text){
         AdvanceQueries returnNum = null;
         for (AdvanceQueries enums: AdvanceQueries.values()) {
             if (enums.getText().equals(text)) {
-                returnNum = enums;
+                return enums;
             }
         }
-        return returnNum;
+        return null;
     }
-
 }

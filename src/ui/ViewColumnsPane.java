@@ -5,9 +5,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import model.ComboBoxItemWrap;
 
 import java.util.ArrayList;
 import java.util.List;

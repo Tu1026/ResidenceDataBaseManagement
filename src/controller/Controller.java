@@ -3,6 +3,7 @@ package controller;
 import handler.ConnectionHandler;
 import handler.DataHandler;
 import interfaces.*;
+import model.AdvanceQueries;
 import model.table.Table;
 import model.UpdateObject;
 
@@ -107,7 +108,6 @@ public class Controller implements ControllerDelegate {
         ui.reloadLast(this);
     }
 
-    //Todo:
     @Override
     public void deleteTable(List<String> rowData) {
         new Thread(() -> {
@@ -119,6 +119,13 @@ public class Controller implements ControllerDelegate {
     public void insertStudent(Map<String, String> data) {
         new Thread(() -> {
             dataHandler.insertTableData(data, ui::displayMessage, ui::displayError);
+        }).start();
+    }
+
+    @Override
+    public void runAdvancedQuery(AdvanceQueries query, String input) {
+        new Thread (() -> {
+            dataHandler.runAdvancedQuery(query, input, ui::updateVisibleTable, ui::displayError);
         }).start();
     }
 }

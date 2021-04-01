@@ -1,5 +1,6 @@
 package interfaces;
 
+import model.AdvanceQueries;
 import model.table.Table;
 import model.UpdateObject;
 
@@ -44,5 +45,7 @@ public interface ControllerDelegate {
  void deleteTable(List<String> rowData);
 
  void insertStudent(Map<String, String> data);
+
+ void runAdvancedQuery(AdvanceQueries query, String input);
 
 }
