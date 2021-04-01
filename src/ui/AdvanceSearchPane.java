@@ -63,7 +63,6 @@ public class AdvanceSearchPane extends GridPane {
         for(AdvanceQueries query: AdvanceQueries.values()) {
             if (!query.toString().endsWith("EXPLAIN")) {
                 advanceCombo.getItems().add(query.getText());
-                System.out.println(query.toString());
             }
         }
 
@@ -88,7 +87,6 @@ public class AdvanceSearchPane extends GridPane {
 
         this.add(queryExplaination,2,1);
 
-        this.setGridLinesVisible(true);
 
         //----------------Setting up action events-------------//
         advanceCombo.valueProperty().addListener((obs, oldItem, newItem) -> {
@@ -148,7 +146,6 @@ public class AdvanceSearchPane extends GridPane {
 
     private void updateQueryDescription(AdvanceQueries advance) {
         String explanation = advance.toString() + "EXPLAIN";
-        System.out.println(explanation);
         queryExplaination.setText(AdvanceQueries.valueOf(explanation).getText());
 
     }

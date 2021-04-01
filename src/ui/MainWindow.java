@@ -212,7 +212,6 @@ public class MainWindow implements TableViewUI {
         //Initialize campus as the default table
         controller.loadTable("Campus");
         tableScene = new Scene(outerPane, 1124,798);
-        outerPane.setGridLinesVisible(true);
     }
 
     private void requestFiler(ControllerDelegate controller) {
