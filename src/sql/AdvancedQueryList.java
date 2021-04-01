@@ -5,8 +5,7 @@ import model.AdvanceQueries;
 import java.util.HashMap;
 import java.util.Map;
 
-import static model.AdvanceQueries.GROUPBY;
-import static model.AdvanceQueries.NESTED;
+import static model.AdvanceQueries.*;
 
 public class AdvancedQueryList {
     public static final Map<AdvanceQueries, String> QUERY_MAP = new HashMap<>();
@@ -38,5 +37,26 @@ public class AdvancedQueryList {
                 " GROUP BY (HOUSENAME, YEARSINRESIDENCE)" +
                 " HAVING (YEARSINRESIDENCE >= ALL (SELECT YEARSINRESIDENCE" +
                 " FROM RESIDENTADDRESS NATURAL JOIN RESIDENTINFO NATURAL JOIN HOUSE WHERE RESIDENTINFO.YEARSINRESIDENCE IS NOT NULL AND ra.HOUSENAME = HOUSENAME))");
+
+        QUERY_MAP.put(JOIN, "SELECT HOUSENAME, COUNT(*) as numOfResidents, round(AVG(round(months_between(sysdate,to_date(dob,'MM-DD-YYYY'))/12)), 2) as AvgAge," +
+                " round(MAX(round(months_between(sysdate,to_date(dob,'MM-DD-YYYY'))/12)), 2) as Oldest" +
+                " FROM RESIDENTINFO NATURAL JOIN RESIDENTADDRESS NATURAL JOIN HOUSE" +
+                " WHERE (round(months_between(sysdate,to_date(dob,'MM-DD-YYYY'))/12)) > ? AND dob IS NOT NULL" +
+                " GROUP BY HOUSENAME");
+
+        QUERY_MAP.put(DIVISION, "SELECT *" +
+                "FROM HOUSE h" +
+                " WHERE NOT EXISTS(SELECT *" +
+                " FROM UNIT u" +
+                " WHERE (u.CAPACITY = 5)" +
+                " AND NOT EXISTS (SELECT *" +
+                " FROM HOUSE h2" +
+                " WHERE h.HOUSENAME = u.HOUSENAME " +
+                " AND u.HOUSENAME = h2.HOUSENAME))");
+
+        QUERY_MAP.put(HAVING, "SELECT HOUSENAME, FNUMBER, SUM(VACANCY) as Vacancies" +
+                " FROM UNIT" +
+                " GROUP BY FNUMBER, HOUSENAME" +
+                " HAVING SUM(VACANCY) > ?");
     }
 }

@@ -1,11 +1,11 @@
 package model;
 
 public enum AdvanceQueries {
-    GROUPBY ("Find the average years of experience of RAs/SRAs per age group: Can this be turned into a nested aggregation instead?"),
-    NESTED ("Select the Name of each house, num of students living alone, and the years they have been living in res for all students who live alone and have been in that res at least as long as anyone else"),
-    JOIN ("Select # of student in each house who are older than , their avg age, and the age of the oldest student"),
-    DIVISION("Find the house the has all the units that have a capacity of 5"),
-    HAVING("Find floors in houses that have more than 3 vacancies");
+    GROUPBY ("The average years of experience of RAs & SRAs per age group"),
+    NESTED ("The name of each house, # of students living alone, and years they have been living in res for all students who live alone and have been in that res at least as long as anyone else"),
+    JOIN ("The # of student in each house who are older than <X>, their avg age, and the age of the oldest student"),
+    DIVISION("The house with all units that have capacity of 5"),
+    HAVING("The floors in houses that have more than <X> vacancies");
 
     private final String value;
 
@@ -18,7 +18,6 @@ public enum AdvanceQueries {
     }
 
     public static AdvanceQueries getEnum(String text){
-        AdvanceQueries returnNum = null;
         for (AdvanceQueries enums: AdvanceQueries.values()) {
             if (enums.getText().equals(text)) {
                 return enums;

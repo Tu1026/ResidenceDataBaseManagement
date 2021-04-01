@@ -15,7 +15,11 @@ public class OracleColumnNames {
             "TYPE", "AGERESTRICTION", // House
             "UNUMBER", "VACANCY", // Unit
             "EMAIL", "DOB", "YEARSINRESIDENCE", // Resident
-            "RESNAME")); // Residence
+            "RESNAME",// Residence
+            "ADVISORAGE", "AVGEXPERIENCE", // ADVANCED -> GROUPBY
+            "STUDENTSALONEINRES",  // Advanced -> NESTED
+            "AVGAGE", "OLDEST", "NUMOFRESIDENTS", // ADVANCED -> JOIN
+            "VACANCIES")); // ADVANCED -> HAVING
     public static List<String> PRETTY_COLUMN_NAMES = new ArrayList<>(Arrays.asList("Campus Address", "Campus Zip", "Name", "Population", // Campus
             "Office Address", "Office Zipcode", "Budget",  // Residential Managing Office
             "Manager ID", "Years of Experience", "Phone #", // Building Manager
@@ -26,7 +30,11 @@ public class OracleColumnNames {
             "Type", "Min. Age", // House
             "Unit #", "Vacancy", // Unit
             "E-Mail", "Date of Birth", "Years in Residence",// Resident
-            "Residence Name")); // Residence
+            "Residence Name", // Residence
+            "Advisor Age Group", "Average Experience", // ADVANCED -> GROUP BY
+            "Students Alone in Res", // ADVANCED -> NESTED
+            "Average Age", "Oldest Age", "# of Residents", // ADVANCED -> JOIN
+            "Vacancies")); // ADVANCED -> HAVING
 
     public static Map<String, String> GET_PRETTY_COLUMN_NAMES = new HashMap<>();
     public static Map<String, String> GET_ORACLE_COLUMN_NAMES = new HashMap<>();

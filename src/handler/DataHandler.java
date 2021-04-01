@@ -234,7 +234,7 @@ public final class DataHandler implements DataHandlerDelegate {
         System.out.println(queryStr);
 
         try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(queryStr), queryStr)) {
-            if (queryStr.contains("\\?")) {
+            if (queryStr.contains("?")) {
                 ps.setObject(1, input);
             }
 

@@ -170,11 +170,7 @@ public class MainWindow implements TableViewUI {
          * Bottom Pane
          * ==================
          */
-//        SearchView searchView = new SearchView(controller);
-//        outerPane.add(searchView, 0, 1, 2, 1);
-//        GridPane.setMargin(searchView, new Insets(25, 0,10,11));
-//        GridPane.setHalignment(searchView, HPos.CENTER);
-//        GridPane.setValignment(searchView, VPos.CENTER);
+
             AdvanceSearchPane searchView = new AdvanceSearchPane(controller);
             outerPane.add(searchView, 0, 1, 2, 1);
             GridPane.setMargin(searchView, new Insets(25, 0,10,11));
@@ -193,7 +189,9 @@ public class MainWindow implements TableViewUI {
                     filterPane.setDisable(true);
                     viewColumnsPane.setDisable(true);
                     searchView.setDisable(false);
-                    tableView.buildData(new Table(new String [] {}));
+                    if (!searchView.runIfSelected()) {
+                        tableView.buildData(new Table(new String[]{}));
+                    }
 
                 }else {
                     controller.loadTable(newItem);
