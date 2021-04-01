@@ -33,7 +33,7 @@ public class MainWindow implements TableViewUI {
     private final MyTableView tableView;
     private final FilterPane filterPane;
     private final ViewColumnsPane<String> viewColumnsPane;
-    private final AggregatePane aggregateTest;
+//    private final AggregatePane aggregateTest;
     private boolean isUpdating = false;
     private Button deleteRowButton = null;
     private Button insertButton = null;
@@ -112,15 +112,7 @@ public class MainWindow implements TableViewUI {
         for (String table: OracleTableNames.PRETTY_NAMES) {
             selectTables.getItems().add(table);
         }
-
-        selectTables.getSelectionModel().selectFirst();
-        selectTables.valueProperty().addListener((obs, oldItem, newItem) -> {
-            if (!oldItem.equals(newItem)) {
-                controller.loadTable(newItem);
-                deleteRowButton.setVisible(newItem.equals("Resident"));
-                insertButton.setVisible(newItem.equals("Resident"));
-            }
-        });
+        selectTables.getItems().add("Advance Search");
 
         GridPane.setMargin(selectTables, new Insets(0,0,10, 0));
         selectInsertDeleteBox.getChildren().add(selectTables);
@@ -183,10 +175,28 @@ public class MainWindow implements TableViewUI {
 
 
         /*
-        Testing layout
+        Action event for select table
          */
-        aggregateTest = new AggregatePane(controller);
-        outerPane.add(aggregateTest.getMasterGridPane(),0,1);
+        selectTables.getSelectionModel().selectFirst();
+        selectTables.valueProperty().addListener((obs, oldItem, newItem) -> {
+            if (!oldItem.equals(newItem)) {
+                if(newItem.equals("Advance Search")) {
+                    deleteRowButton.setVisible(false);
+                    insertButton.setVisible(false);
+                    filterPane.setVisible(false);
+                    viewColumnsPane.setVisible(false);
+                    tableView.buildData(new Table(new String [] {}));
+
+                }else {
+                    controller.loadTable(newItem);
+                    deleteRowButton.setVisible(newItem.equals("Resident"));
+                    insertButton.setVisible(newItem.equals("Resident"));
+                    filterPane.setVisible(true);
+                    viewColumnsPane.setVisible(true);
+                }
+            }
+        });
+
 
 
         /*
@@ -219,7 +229,7 @@ public class MainWindow implements TableViewUI {
             }
             filterPane.updateFilterList(columnNames, table.getName());
             viewColumnsPane.updateFilterList(columnNames, table.getName());
-            aggregateTest.updateComboForAggregate(columnNames, table.getName(), "groupByCombo");
+//            aggregateTest.updateComboForAggregate(columnNames, table.getName(), "groupByCombo");
             tableView.buildData(table);
         });
     }
