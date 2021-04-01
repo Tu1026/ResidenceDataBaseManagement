@@ -2,14 +2,12 @@ package ui;
 
 import interfaces.ControllerDelegate;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -22,16 +20,6 @@ public class AdvanceSearchPane extends BorderPane {
     ComboBox<String> advanceCombo = new ComboBox<>();
     ControllerDelegate controller;
 
-    private final ArrayList<String> listOfQueries = new ArrayList<>(
-            Arrays.asList(
-                    "Find the average years of experience of RAs/SRAs per age group: Can this be turned into a nested aggregation instead?",
-                    "Select the Name of each house, num of students living alone, and the years they have been living in res for all students who live alone and have been in that res at least as long as anyone else",
-                    "Select # of student in each house who are older than , their avg age, and the age of the oldest student",
-                    "Find the house the has all the units that have a capacity of 5",
-                    "Find floors in houses that have more than 3 vacancies"
-            )
-    );
-
     public AdvanceSearchPane(ControllerDelegate controller){
         this.controller = controller;
 
@@ -41,26 +29,84 @@ public class AdvanceSearchPane extends BorderPane {
         this.setTop(lineLabel);
         this.setPadding(new Insets(10,10,10,10));
 
-        VBox column1 = new VBox();
-        HBox row = new HBox();
-        row.getChildren().add(new Label("Find"));
-        row.setSpacing(10);
-        row.setFillHeight(true);
-        row.setAlignment(Pos.BASELINE_CENTER);
+        VBox column = new VBox(30);
 
-        for(String str: listOfQueries){
-            advanceCombo.getItems().add(str);
+        HBox row1 = new HBox();
+        row1.getChildren().add(new Label("Find"));
+        row1.setSpacing(10);
+        row1.setFillHeight(true);
+        row1.setAlignment(Pos.BASELINE_CENTER);
+
+        HBox row2 = new HBox();
+        TextField condition = new TextField();
+        condition.setPromptText("No need for condition for this query");
+        Button runQuery = new Button("Run Query");
+        row2.getChildren().addAll(condition, runQuery);
+        row2.setSpacing(10);
+        row2.setFillHeight(true);
+        row2.setAlignment(Pos.BASELINE_CENTER);
+
+
+        for(AdvanceQueries query: AdvanceQueries.values()){
+            advanceCombo.getItems().add(query.getText());
         }
 
-        row.getChildren().add(advanceCombo);
+        advanceCombo.setMaxWidth(row1.getMaxWidth()*0.7);
+        HBox.setHgrow(lineLabel, Priority.ALWAYS);
+        row1.getChildren().add(advanceCombo);
 
-        this.setCenter(row);
-        BorderPane.setMargin(row, new Insets(20,0,0,0));
+        column.getChildren().addAll(row1,row2);
+        this.setCenter(column);
+
+
+        //----------------Setting up action events-------------//
+        advanceCombo.valueProperty().addListener((obs, oldItem, newItem) -> {
+            if (oldItem == null || !oldItem.equals(newItem)) {
+                if (newItem.equals(AdvanceQueries.JOIN.getText()) ||
+                        newItem.equals(AdvanceQueries.HAVING.getText())) {
+                    condition.setPromptText("Please enter an integer");
+                }
+                else {
+                    condition.setPromptText("No need for condition for this query");
+                }
+            }
+        });
+
+
+        // This is where it would call controller ---------------> needs back end handling here
+        //Check the enum AdvanceQueries
+        runQuery.setOnAction(event -> {
+            if (advanceCombo.getValue().equals(AdvanceQueries.JOIN.getText()) ||
+                    advanceCombo.getValue().equals(AdvanceQueries.HAVING.getText())) {
+                if (condition.getText().trim().isEmpty()){
+                    displayError("You must enter a condition for this special query");
+                }else if (!condition.getText().trim().matches("\\d+")){
+                    displayError("You can only enter a integer for the condition");
+                } else {
+                    //pass query type (AdvanceQueries.getEnums(advanceCombo.getValue())), condition.getText() to helper
+                }
+            } else {
+                if(!condition.getText().trim().isEmpty()){
+                    displayError("This type of query cannot have condition");
+                }else {
+                    //pass query type (AdvanceQueries.getEnums(advanceCombo.getValue())), empty String to helper
+                }
+            }
+        });
+
+
+        BorderPane.setMargin(row1, new Insets(20,0,0,0));
 
     }
 
-    public Node getPane(){
-        return this;
+
+    public void displayError(final String msg){
+        Platform.runLater( () -> {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Invalid operation");
+            a.setContentText(msg);
+            a.showAndWait();
+        });
     }
 
 

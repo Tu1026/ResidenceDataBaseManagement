@@ -13,5 +13,18 @@ public enum AdvanceQueries {
         this.value = value;
     }
 
+    public String getText() {
+        return this.value;
+    }
+
+    public AdvanceQueries getEnums(String text){
+        AdvanceQueries returnNum = null;
+        for (AdvanceQueries enums: AdvanceQueries.values()) {
+            if (enums.getText().equals(text)) {
+                returnNum = enums;
+            }
+        }
+        return returnNum;
+    }
 
 }

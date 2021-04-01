@@ -13,7 +13,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.OracleColumnNames;
 import model.OracleTableNames;

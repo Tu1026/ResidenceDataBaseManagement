@@ -133,7 +133,8 @@ public class MainWindow implements TableViewUI {
             insertStage.setScene(insertScene);
             insertStage.show();
         });
-        insertButton.setVisible(false);
+//        insertButton.setVisible(false);
+        insertButton.setDisable(true);
 
         deleteRowButton = new Button("Delete the selected row");
         deleteRowButton.prefWidthProperty().bind(insertDeleteBox.widthProperty());
@@ -146,7 +147,9 @@ public class MainWindow implements TableViewUI {
             }
             controller.deleteTable(listOfStrToDelete);
         });
-        deleteRowButton.setVisible(false);
+//        deleteRowButton.setVisible(false);
+        deleteRowButton.setDisable(true);
+
 
 
         GridPane.setHalignment(selectTables, HPos.CENTER);
@@ -177,6 +180,7 @@ public class MainWindow implements TableViewUI {
             GridPane.setMargin(searchView, new Insets(25, 0,10,11));
             GridPane.setHalignment(searchView, HPos.CENTER);
             GridPane.setValignment(searchView, VPos.CENTER);
+            searchView.setDisable(true);
 
 
         /*
@@ -186,20 +190,18 @@ public class MainWindow implements TableViewUI {
         selectTables.valueProperty().addListener((obs, oldItem, newItem) -> {
             if (!oldItem.equals(newItem)) {
                 if(newItem.equals("Advance Search")) {
-                    deleteRowButton.setVisible(false);
-                    insertButton.setVisible(false);
-                    filterPane.setVisible(false);
-                    viewColumnsPane.setVisible(false);
+                    filterPane.setDisable(true);
+                    viewColumnsPane.setDisable(true);
+                    searchView.setDisable(false);
                     tableView.buildData(new Table(new String [] {}));
-                    searchView.setVisible(true);
 
                 }else {
                     controller.loadTable(newItem);
-                    deleteRowButton.setVisible(newItem.equals("Resident"));
-                    insertButton.setVisible(newItem.equals("Resident"));
-                    filterPane.setVisible(true);
-                    viewColumnsPane.setVisible(true);
-                    searchView.setVisible(false);
+                    deleteRowButton.setDisable(!newItem.equals("Resident"));
+                    insertButton.setDisable(!newItem.equals("Resident"));
+                    filterPane.setDisable(false);
+                    viewColumnsPane.setDisable(false);
+                    searchView.setDisable(true);
                 }
             }
         });
