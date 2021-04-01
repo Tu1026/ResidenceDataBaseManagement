@@ -1,28 +1,26 @@
 package ui;
 
+import interfaces.ControllerDelegate;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import model.OracleTableNames;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class AdvanceSearchPane extends Application {
-    GridPane masterGridPane = new GridPane();
+public class AdvanceSearchPane extends BorderPane {
     ComboBox<String> advanceCombo = new ComboBox<>();
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+    ControllerDelegate controller;
 
     private final ArrayList<String> listOfQueries = new ArrayList<>(
             Arrays.asList(
@@ -34,39 +32,36 @@ public class AdvanceSearchPane extends Application {
             )
     );
 
-    @Override
-    public void start(Stage primaryStage) {
-        //------------------Setting up row constraints-------///
-        RowConstraints masterRowConstraintsTop = new RowConstraints();
-        RowConstraints masterRowConstraintsBot = new RowConstraints();
+    public AdvanceSearchPane(ControllerDelegate controller){
+        this.controller = controller;
 
-        masterRowConstraintsTop.setPercentHeight(35);
-        masterRowConstraintsBot.setPercentHeight(65);
+        Label lineLabel = new Label("Advanced Search");
+        setStyle("-fx-border-width: 1 0 0 0; -fx-border-color: #838181");
 
-        masterGridPane.getRowConstraints().addAll(masterRowConstraintsTop, masterRowConstraintsBot);
+        this.setTop(lineLabel);
+        this.setPadding(new Insets(10,10,10,10));
 
-        VBox advanceBox = new VBox();
-        Label advanceSearchLabel = new Label("Find");
-        advanceSearchLabel.setFont(Font.font("Times New Roman", 16));
+        VBox column1 = new VBox();
+        HBox row = new HBox();
+        row.getChildren().add(new Label("Find"));
+        row.setSpacing(10);
+        row.setFillHeight(true);
+        row.setAlignment(Pos.BASELINE_CENTER);
 
         for(String str: listOfQueries){
             advanceCombo.getItems().add(str);
         }
 
-        advanceBox.getChildren().addAll(advanceSearchLabel,advanceCombo);
-        masterGridPane.add(advanceBox,0,1);
-        Scene scene = new Scene(masterGridPane, 600,600);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        row.getChildren().add(advanceCombo);
 
+        this.setCenter(row);
+        BorderPane.setMargin(row, new Insets(20,0,0,0));
 
     }
 
     public Node getPane(){
-        return masterGridPane;
+        return this;
     }
-
-
 
 
 }
