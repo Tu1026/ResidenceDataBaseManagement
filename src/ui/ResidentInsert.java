@@ -231,7 +231,7 @@ public class ResidentInsert {
 
 
 //        masterGridPane.setGridLinesVisible(true);
-        masterGridPane.setStyle("-fx-background-color: #e022c6");
+        masterGridPane.setStyle("-fx-background-color: #ee0ba8");
         this.scene = newScene;
     }
 
