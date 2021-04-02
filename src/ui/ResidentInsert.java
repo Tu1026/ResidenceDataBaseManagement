@@ -36,7 +36,7 @@ public class ResidentInsert {
     public ResidentInsert(ControllerDelegate controller){
         this.controller = controller;
         ColumnConstraints insertColumnConstraints = new ColumnConstraints();
-        insertColumnConstraints.setPercentWidth(10);
+        insertColumnConstraints.setPercentWidth(20);
 
 
         GridPane masterGridPane = new GridPane();
@@ -203,31 +203,31 @@ public class ResidentInsert {
         });
 
 
-        masterGridPane.add(emailBox,0,1);
-        masterGridPane.add(StudentNumberVBox, 1, 1);
-        masterGridPane.add(NameBox,2,1);
-        masterGridPane.add(DoBBox,3,1);
-        masterGridPane.add(YearsInResidenceBox,4,1);
-        masterGridPane.add(ResidenceBox,5,1);
-        masterGridPane.add(houseBox,6,1);
-        masterGridPane.add(floorBox,7,1);
-        masterGridPane.add(unitBox,8,1);
-        masterGridPane.add(insertBox,9,1);
+        masterGridPane.add(emailBox,0,0);
+        masterGridPane.add(StudentNumberVBox, 1, 0);
+        masterGridPane.add(NameBox,2,0);
+        masterGridPane.add(DoBBox,3,0);
+        masterGridPane.add(YearsInResidenceBox,4,0);
+        masterGridPane.add(ResidenceBox,0,1,2,1);
+        masterGridPane.add(houseBox,2,1);
+        masterGridPane.add(floorBox,3,1);
+        masterGridPane.add(unitBox,4,1);
+        masterGridPane.add(insertBox,2,2);
 //        masterGridPane.setGridLinesVisible(true);
 
-        Scene newScene = new Scene(masterGridPane, 1600,300);
+        Scene newScene = new Scene(masterGridPane, 700,300);
         RowConstraints masterRowConstraint1 = new RowConstraints();
-        masterRowConstraint1.setPercentHeight(30);
+        masterRowConstraint1.setPercentHeight(33);
         RowConstraints masterRowConstraint2 = new RowConstraints();
-        masterRowConstraint2.setPercentHeight(70);
+        masterRowConstraint2.setPercentHeight(34);
 
-        masterGridPane.setHgap(10); //horizontal gap in pixels => that's what you are asking for
-        masterGridPane.setVgap(10); //vertical gap in pixels
-        masterGridPane.setPadding(new Insets(10, 10, 10, 10));
+        masterGridPane.setHgap(10);
+        masterGridPane.setVgap(10);
+        masterGridPane.setPadding(new Insets(20, 20, 10, 20));
 
-        masterGridPane.getRowConstraints().addAll(masterRowConstraint1, masterRowConstraint2);
-        masterGridPane.getColumnConstraints().addAll(insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,
-                insertColumnConstraints, insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,insertColumnConstraints);
+        masterGridPane.getRowConstraints().addAll(masterRowConstraint1, masterRowConstraint1, masterRowConstraint2);
+        masterGridPane.getColumnConstraints().addAll(insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,
+                insertColumnConstraints,insertColumnConstraints);
 
 
 //        masterGridPane.setGridLinesVisible(true);
