@@ -2,6 +2,7 @@ package ui;
 
 import interfaces.ControllerDelegate;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
@@ -31,6 +32,7 @@ public class ResidentInsert {
     private ComboBox<String> unitCombo;
     private ComboBox<String> floorCombo;
     private HashMap<String, String> insertMap;
+
     public ResidentInsert(ControllerDelegate controller){
         this.controller = controller;
         ColumnConstraints insertColumnConstraints = new ColumnConstraints();
@@ -219,10 +221,18 @@ public class ResidentInsert {
         RowConstraints masterRowConstraint2 = new RowConstraints();
         masterRowConstraint2.setPercentHeight(70);
 
+        masterGridPane.setHgap(10); //horizontal gap in pixels => that's what you are asking for
+        masterGridPane.setVgap(10); //vertical gap in pixels
+        masterGridPane.setPadding(new Insets(10, 10, 10, 10));
+
         masterGridPane.getRowConstraints().addAll(masterRowConstraint1, masterRowConstraint2);
         masterGridPane.getColumnConstraints().addAll(insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,
                 insertColumnConstraints, insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,insertColumnConstraints);
 
+
+        insertTheResidentIntoDB.setStyle("-fx-border-width: ")
+        masterGridPane.setGridLinesVisible(true);
+        masterGridPane.setStyle("-fx-background-color: #a3b316");
         this.scene = newScene;
     }
 
