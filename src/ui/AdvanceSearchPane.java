@@ -113,6 +113,9 @@ public class AdvanceSearchPane extends GridPane {
         //----------------Setting up action events-------------//
         advanceCombo.valueProperty().addListener((obs, oldItem, newItem) -> {
             if (oldItem == null || !oldItem.equals(newItem)) {
+                if (! newItem.equals(JOIN.getText()) && !newItem.equals(HAVING.getText())) {
+                    conditionField.clear();
+                }
                 conditionField.setVisible(newItem.equals(JOIN.getText()) ||
                         newItem.equals(AdvanceQueries.HAVING.getText()));
                         updateQueryDescription(AdvanceQueries.getEnum(newItem));

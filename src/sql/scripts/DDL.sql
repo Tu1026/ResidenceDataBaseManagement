@@ -106,7 +106,7 @@ CREATE TABLE ResidentInfo(
                              studentNumber		int PRIMARY KEY,
                              email				varchar2(60) UNIQUE NOT NULL,
                              name				varchar2(80) NOT NULL,
-                             dob				varchar2(10),
+                             dob					varchar2(10),
                              yearsInResidence	int
 );
 

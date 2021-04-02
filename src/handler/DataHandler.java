@@ -229,6 +229,7 @@ public final class DataHandler implements DataHandlerDelegate {
     @Override
     public void runAdvancedQuery(AdvanceQueries query, String input, Consumer<Table> onSuccess, Consumer<String> onError) {
         String queryStr = AdvancedQueryList.QUERY_MAP.get(query);
+        System.out.println(query.toString());
 
         try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(queryStr), queryStr)) {
             if (queryStr.contains("?")) {
