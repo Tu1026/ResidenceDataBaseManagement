@@ -92,7 +92,7 @@ public final class DataHandler implements DataHandlerDelegate {
         queryBuilder.append("UPDATE ").append(tablesToLookup[0]);
         queryBuilder.append(" SET ").append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(updateObject.colToUpdate)).append(" = ? WHERE");
         for (String column: updateObject.conditionsToCheck.keySet()){
-            queryBuilder.append(" ").append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(column)).append(" LIKE ?").append(" AND");
+            queryBuilder.append(" ").append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(column)).append(" = ?").append(" AND");
         }
 
         String query = queryBuilder.toString().replaceAll("AND$", "").trim();
@@ -113,9 +113,8 @@ public final class DataHandler implements DataHandlerDelegate {
             if (updateObject.newValue.trim().equals("")){
                 updateObject.newValue = "(empty)";
             }
-            //onSuccess.accept("Updated row in column '" + updateObject.colToUpdate  +  "' \n of '"+ prettyTableName +
-                   // "' to '" + updateObject.newValue + "' successfully.\n Table reloaded");
-            onSuccess.accept(""); // DO NOT DISPLAY MSG
+
+            onSuccess.accept("");
 
         } catch (SQLException throwables) {
             onError.accept(throwables.getMessage());
@@ -131,10 +130,10 @@ public final class DataHandler implements DataHandlerDelegate {
             return;
         }
 
-        String query = "DELETE FROM ResidentInfo WHERE StudentNumber LIKE ?";
+        String query = "DELETE FROM ResidentInfo WHERE StudentNumber = ?";
 
         try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)){
-            ps.setObject(1, columnsToUpdate.get(1) + "%");
+            ps.setObject(1, columnsToUpdate.get(1));
             ps.executeUpdate();
             onSuccess.accept(null);
         } catch (SQLException throwables) {
@@ -229,9 +228,7 @@ public final class DataHandler implements DataHandlerDelegate {
 
     @Override
     public void runAdvancedQuery(AdvanceQueries query, String input, Consumer<Table> onSuccess, Consumer<String> onError) {
-        System.out.println(query.toString());
         String queryStr = AdvancedQueryList.QUERY_MAP.get(query);
-        System.out.println(queryStr);
 
         try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(queryStr), queryStr)) {
             if (queryStr.contains("?")) {

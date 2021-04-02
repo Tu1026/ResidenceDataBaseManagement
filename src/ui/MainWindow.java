@@ -4,6 +4,7 @@ package ui;
 import interfaces.ControllerDelegate;
 import interfaces.TableViewUI;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -136,16 +137,19 @@ public class MainWindow implements TableViewUI {
 //        insertButton.setVisible(false);
         insertButton.setDisable(true);
 
-        deleteRowButton = new Button("Delete the selected row");
+        deleteRowButton = new Button("Delete selected Resident");
         deleteRowButton.prefWidthProperty().bind(insertDeleteBox.widthProperty());
         insertDeleteBox.getChildren().add(deleteRowButton);
         deleteRowButton.setOnAction(event -> {
             List<String> listOfStrToDelete = new ArrayList<>();
-            String[] stringAr = tableView.getComponent().getSelectionModel().getSelectedItems().get(0).toString().split(",");
-            for (String str : stringAr) {
-                listOfStrToDelete.add(str.trim());
+            ObservableList<ObservableList<String>> selectedItems = tableView.getSelectionModel().getSelectedItems();
+            if (selectedItems.size() > 0) {
+                String [] rowArr = selectedItems.get(0).toString().split(",");
+                for (String str : rowArr) {
+                    listOfStrToDelete.add(str.trim());
+                }
+                controller.deleteTable(listOfStrToDelete);
             }
-            controller.deleteTable(listOfStrToDelete);
         });
 //        deleteRowButton.setVisible(false);
         deleteRowButton.setDisable(true);

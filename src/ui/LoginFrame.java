@@ -16,7 +16,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import model.AdvanceQueries;
 import model.OracleColumnNames;
 import model.OracleTableNames;
 import sql.AdvancedQueryList;
@@ -50,8 +49,6 @@ public class LoginFrame extends Application {
         Label password = new Label("Password");
         password.setLayoutX(32);
         password.setLayoutY(216);
-
-
 
         PasswordField passwordText = new PasswordField();
         passwordText.setPromptText("a<studentNumber>");
@@ -128,10 +125,6 @@ public class LoginFrame extends Application {
 
         primaryStage.setResizable(false);
         userNameText.requestFocus();
-        // autologin
-//        userNameText.setText("");
-//        passwordText.setText(" ");
-//        login(primaryStage, userNameText, passwordText, imgView);
     }
 
     private void login(Stage primaryStage, TextField userNameText, PasswordField passwordText) {

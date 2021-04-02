@@ -167,23 +167,21 @@ public class ResidentInsert {
         });
 
         residenceCombo.valueProperty().addListener((obs, oldItem, newItem) -> {
-            if (oldItem == null || newItem != null|| !oldItem.equals(newItem)) {
-                houseCombo.getItems().clear();
-                houseCombo.getSelectionModel().clearSelection();
-                floorCombo.getItems().clear();
-                floorCombo.getSelectionModel().clearSelection();
-                unitCombo.getItems().clear();
-                unitCombo.getSelectionModel().clearSelection();
+            houseCombo.getItems().clear();
+            houseCombo.getSelectionModel().clearSelection();
+            floorCombo.getItems().clear();
+            floorCombo.getSelectionModel().clearSelection();
+            unitCombo.getItems().clear();
+            unitCombo.getSelectionModel().clearSelection();
 
-                houseDataToMatch.clear();
-                String [] houseMatchData;
-                houseMatchData = newItem.split(",");
-                for (int i = 1; i < houseMatchData.length; i++){
-                    houseDataToMatch.add(houseMatchData[i]);
-                }
-                controller.getDataForStudentInsertion("HOUSE", houseColumnsToGet, houseColumnsToMatch, houseDataToMatch, this::updateHouse);
-
+            houseDataToMatch.clear();
+            String [] houseMatchData;
+            houseMatchData = newItem.split(",");
+            for (int i = 1; i < houseMatchData.length; i++){
+                houseDataToMatch.add(houseMatchData[i]);
             }
+            controller.getDataForStudentInsertion("HOUSE", houseColumnsToGet, houseColumnsToMatch, houseDataToMatch, this::updateHouse);
+
         });
 
         houseCombo.valueProperty().addListener((obs, oldItem, newItem) -> {

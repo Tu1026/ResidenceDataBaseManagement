@@ -169,5 +169,4 @@ public class AdvanceSearchPane extends GridPane {
     private void updateQueryDescription(AdvanceQueries advance) {
         queryExplaination.setText(queryDescription.get(advance));
     }
-
 }
