@@ -15,7 +15,7 @@ public class Controller implements ControllerDelegate {
 
     private final ConnectionHandlerDelegate connectionHandler;
     private DataHandlerDelegate dataHandler;
-    private TableViewUI ui;
+    private MainUIView ui;
     private String currentTable = null;
 
     public Controller() {
@@ -50,7 +50,7 @@ public class Controller implements ControllerDelegate {
     }
 
     @Override
-    public void setUI(TableViewUI ui) {
+    public void setUI(MainUIView ui) {
         this.ui = ui;
     }
 

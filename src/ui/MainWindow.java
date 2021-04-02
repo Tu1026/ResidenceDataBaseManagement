@@ -2,7 +2,7 @@ package ui;
 
 
 import interfaces.ControllerDelegate;
-import interfaces.TableViewUI;
+import interfaces.MainUIView;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainWindow implements TableViewUI {
+public class MainWindow implements MainUIView {
 
 
     public Scene tableScene;

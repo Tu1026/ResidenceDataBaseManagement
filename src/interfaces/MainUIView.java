@@ -2,7 +2,7 @@ package interfaces;
 
 import model.table.Table;
 
-public interface TableViewUI {
+public interface MainUIView {
 
     /**
      * Receives updates when a table has been queried to display changes

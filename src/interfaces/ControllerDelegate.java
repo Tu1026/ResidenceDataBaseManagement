@@ -27,7 +27,7 @@ public interface ControllerDelegate {
   * Sets specified TableUI
   * @param ui ui to use to display data
   */
- void setUI(TableViewUI ui);
+ void setUI(MainUIView ui);
 
  /**
   * Loads specified table from Oracle, returns all columns to TableViewUI
