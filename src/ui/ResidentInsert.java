@@ -230,9 +230,8 @@ public class ResidentInsert {
                 insertColumnConstraints, insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,insertColumnConstraints);
 
 
-        insertTheResidentIntoDB.setStyle("-fx-border-width: ")
-        masterGridPane.setGridLinesVisible(true);
-        masterGridPane.setStyle("-fx-background-color: #a3b316");
+//        masterGridPane.setGridLinesVisible(true);
+        masterGridPane.setStyle("-fx-background-color: #efefc1");
         this.scene = newScene;
     }
 
