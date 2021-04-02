@@ -17,9 +17,7 @@ public final class TableModel {
             }
             this.columnNames.add(column);
             this.columNamesList.add(column);
-
         }
-
     }
 
     public final Set<Column> getColumnNames() {

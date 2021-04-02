@@ -20,6 +20,7 @@ public class MyTableView extends TableView<ObservableList<String>>  {
 
     private final Consumer<UpdateObject> fireUpdateRequest;
     private final Consumer<Boolean> setIsUpdating;
+
     public MyTableView(Consumer<UpdateObject> fireUpdateRequest, Consumer<Boolean> setIsUpdating) {
         //this.setStyle("-fx-border-color: #9f9d9d");
         this.setStyle("-fx-focus-color: transparent; -fx-focus-faint-color: transparent; -fx-border-width: 1 1 1 1; -fx-border-color: #757575");
@@ -28,11 +29,7 @@ public class MyTableView extends TableView<ObservableList<String>>  {
         this.setIsUpdating = setIsUpdating;
     }
 
-    public TableView<ObservableList<String>> getComponent(){
-        return this;
-    }
-
-    //    Following the tutorial here to help generate dynamic columns https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
+    //   Following the tutorial here to help generate dynamic columns https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
     public void buildData(Table table) {
         ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
         this.getItems().clear();
@@ -123,7 +120,7 @@ public class MyTableView extends TableView<ObservableList<String>>  {
             }
         }
 
-            System.out.println(colToUpdate + " .. " + newValue);
+        System.out.println(colToUpdate + " .. " + newValue);
 
         UpdateObject obj = new UpdateObject();
         obj.colToUpdate = colToUpdate;

@@ -2,6 +2,7 @@ package ui;
 
 import interfaces.ControllerDelegate;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
@@ -31,10 +32,11 @@ public class ResidentInsert {
     private ComboBox<String> unitCombo;
     private ComboBox<String> floorCombo;
     private HashMap<String, String> insertMap;
+
     public ResidentInsert(ControllerDelegate controller){
         this.controller = controller;
         ColumnConstraints insertColumnConstraints = new ColumnConstraints();
-        insertColumnConstraints.setPercentWidth(10);
+        insertColumnConstraints.setPercentWidth(20);
 
 
         GridPane masterGridPane = new GridPane();
@@ -167,23 +169,21 @@ public class ResidentInsert {
         });
 
         residenceCombo.valueProperty().addListener((obs, oldItem, newItem) -> {
-            if (oldItem == null || newItem == null|| !oldItem.equals(newItem)) {
-                houseCombo.getItems().clear();
-                houseCombo.getSelectionModel().clearSelection();
-                floorCombo.getItems().clear();
-                floorCombo.getSelectionModel().clearSelection();
-                unitCombo.getItems().clear();
-                unitCombo.getSelectionModel().clearSelection();
+            houseCombo.getItems().clear();
+            houseCombo.getSelectionModel().clearSelection();
+            floorCombo.getItems().clear();
+            floorCombo.getSelectionModel().clearSelection();
+            unitCombo.getItems().clear();
+            unitCombo.getSelectionModel().clearSelection();
 
-                houseDataToMatch.clear();
-                String [] houseMatchData;
-                houseMatchData = newItem.split(",");
-                for (int i = 1; i < houseMatchData.length; i++){
-                    houseDataToMatch.add(houseMatchData[i]);
-                }
-                controller.getDataForStudentInsertion("HOUSE", houseColumnsToGet, houseColumnsToMatch, houseDataToMatch, this::updateHouse);
-
+            houseDataToMatch.clear();
+            String [] houseMatchData;
+            houseMatchData = newItem.split(",");
+            for (int i = 1; i < houseMatchData.length; i++){
+                houseDataToMatch.add(houseMatchData[i]);
             }
+            controller.getDataForStudentInsertion("HOUSE", houseColumnsToGet, houseColumnsToMatch, houseDataToMatch, this::updateHouse);
+
         });
 
         houseCombo.valueProperty().addListener((obs, oldItem, newItem) -> {
@@ -203,28 +203,35 @@ public class ResidentInsert {
         });
 
 
-        masterGridPane.add(emailBox,0,1);
-        masterGridPane.add(StudentNumberVBox, 1, 1);
-        masterGridPane.add(NameBox,2,1);
-        masterGridPane.add(DoBBox,3,1);
-        masterGridPane.add(YearsInResidenceBox,4,1);
-        masterGridPane.add(ResidenceBox,5,1);
-        masterGridPane.add(houseBox,6,1);
-        masterGridPane.add(floorBox,7,1);
-        masterGridPane.add(unitBox,8,1);
-        masterGridPane.add(insertBox,9,1);
+        masterGridPane.add(emailBox,0,0);
+        masterGridPane.add(StudentNumberVBox, 1, 0);
+        masterGridPane.add(NameBox,2,0);
+        masterGridPane.add(DoBBox,3,0);
+        masterGridPane.add(YearsInResidenceBox,4,0);
+        masterGridPane.add(ResidenceBox,0,1,2,1);
+        masterGridPane.add(houseBox,2,1);
+        masterGridPane.add(floorBox,3,1);
+        masterGridPane.add(unitBox,4,1);
+        masterGridPane.add(insertBox,2,2);
 //        masterGridPane.setGridLinesVisible(true);
 
-        Scene newScene = new Scene(masterGridPane, 1600,300);
+        Scene newScene = new Scene(masterGridPane, 700,300);
         RowConstraints masterRowConstraint1 = new RowConstraints();
-        masterRowConstraint1.setPercentHeight(30);
+        masterRowConstraint1.setPercentHeight(33);
         RowConstraints masterRowConstraint2 = new RowConstraints();
-        masterRowConstraint2.setPercentHeight(70);
+        masterRowConstraint2.setPercentHeight(34);
 
-        masterGridPane.getRowConstraints().addAll(masterRowConstraint1, masterRowConstraint2);
-        masterGridPane.getColumnConstraints().addAll(insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,
-                insertColumnConstraints, insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,insertColumnConstraints);
+        masterGridPane.setHgap(10);
+        masterGridPane.setVgap(10);
+        masterGridPane.setPadding(new Insets(20, 20, 10, 20));
 
+        masterGridPane.getRowConstraints().addAll(masterRowConstraint1, masterRowConstraint1, masterRowConstraint2);
+        masterGridPane.getColumnConstraints().addAll(insertColumnConstraints,insertColumnConstraints,insertColumnConstraints,
+                insertColumnConstraints,insertColumnConstraints);
+
+
+//        masterGridPane.setGridLinesVisible(true);
+        masterGridPane.setStyle("-fx-background-color: #ee0ba8");
         this.scene = newScene;
     }
 

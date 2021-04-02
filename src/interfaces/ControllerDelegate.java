@@ -1,5 +1,6 @@
 package interfaces;
 
+import model.AdvanceQueries;
 import model.table.Table;
 import model.UpdateObject;
 
@@ -26,7 +27,7 @@ public interface ControllerDelegate {
   * Sets specified TableUI
   * @param ui ui to use to display data
   */
- void setUI(TableViewUI ui);
+ void setUI(MainUIView ui);
 
  /**
   * Loads specified table from Oracle, returns all columns to TableViewUI
@@ -44,5 +45,7 @@ public interface ControllerDelegate {
  void deleteTable(List<String> rowData);
 
  void insertStudent(Map<String, String> data);
+
+ void runAdvancedQuery(AdvanceQueries query, String input);
 
 }

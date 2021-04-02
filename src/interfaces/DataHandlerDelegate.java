@@ -1,5 +1,6 @@
 package interfaces;
 
+import model.AdvanceQueries;
 import model.table.Table;
 import model.UpdateObject;
 
@@ -44,5 +45,7 @@ public interface DataHandlerDelegate {
     void filterTable(String tableToLookup, String filter, String column, List<String> columnsToDisplay, Consumer<Table> callback);
 
     void getSpecificTableData(String tableName, List<String> columnsToGet, List<String> columnsToMatch, List<String> dataToMatch, Consumer<Table> callback);
+
+    void runAdvancedQuery(AdvanceQueries query, String input, Consumer<Table> onSuccess, Consumer<String> onError);
 
 }

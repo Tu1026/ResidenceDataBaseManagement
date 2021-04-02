@@ -3,6 +3,7 @@ package controller;
 import handler.ConnectionHandler;
 import handler.DataHandler;
 import interfaces.*;
+import model.AdvanceQueries;
 import model.table.Table;
 import model.UpdateObject;
 
@@ -14,7 +15,7 @@ public class Controller implements ControllerDelegate {
 
     private final ConnectionHandlerDelegate connectionHandler;
     private DataHandlerDelegate dataHandler;
-    private TableViewUI ui;
+    private MainUIView ui;
     private String currentTable = null;
 
     public Controller() {
@@ -49,7 +50,7 @@ public class Controller implements ControllerDelegate {
     }
 
     @Override
-    public void setUI(TableViewUI ui) {
+    public void setUI(MainUIView ui) {
         this.ui = ui;
     }
 
@@ -67,15 +68,7 @@ public class Controller implements ControllerDelegate {
             currentTable = null;
         }
 
-        System.out.println("Displaying query results in table");
         ui.updateVisibleTable(resultTable);
-//        System.out.println("PKs: ");
-//        for (String key : resultTable.getPKs().keySet()) {
-//            System.out.println("Table --: " + key);
-//            for (String str : resultTable.getPKs().get(key)) {
-//                System.out.println("   " + str);
-//            }
-//        }
     }
 
     public void filter(String filter, String columnName, List<String> columnsToDisplay) {
@@ -103,11 +96,12 @@ public class Controller implements ControllerDelegate {
     }
 
     private void updateResponse(String response){
-        ui.displayMessage(response);
+        if (!response.trim().equals("")) {
+            ui.displayMessage(response);
+        }
         ui.reloadLast(this);
     }
 
-    //Todo:
     @Override
     public void deleteTable(List<String> rowData) {
         new Thread(() -> {
@@ -119,6 +113,13 @@ public class Controller implements ControllerDelegate {
     public void insertStudent(Map<String, String> data) {
         new Thread(() -> {
             dataHandler.insertTableData(data, ui::displayMessage, ui::displayError);
+        }).start();
+    }
+
+    @Override
+    public void runAdvancedQuery(AdvanceQueries query, String input) {
+        new Thread (() -> {
+            dataHandler.runAdvancedQuery(query, input, ui::updateVisibleTable, ui::displayError);
         }).start();
     }
 }

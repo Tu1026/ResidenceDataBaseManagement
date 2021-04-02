@@ -2,7 +2,7 @@ package ui;
 
 
 import interfaces.ControllerDelegate;
-import interfaces.TableViewUI;
+import interfaces.MainUIView;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -12,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -26,18 +25,21 @@ import model.table.Table;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 
-public class MainWindow implements TableViewUI {
+public class MainWindow implements MainUIView {
 
 
     public Scene tableScene;
     private final MyTableView tableView;
     private final FilterPane filterPane;
     private final ViewColumnsPane<String> viewColumnsPane;
+//    private final AggregatePane aggregateTest;
     private boolean isUpdating = false;
     private Button deleteRowButton = null;
+    private Button insertButton = null;
+
+
     // declare your filter combobox class
 
     public MainWindow(ControllerDelegate controller){
@@ -111,14 +113,7 @@ public class MainWindow implements TableViewUI {
         for (String table: OracleTableNames.PRETTY_NAMES) {
             selectTables.getItems().add(table);
         }
-
-        selectTables.getSelectionModel().selectFirst();
-        selectTables.valueProperty().addListener((obs, oldItem, newItem) -> {
-            if (!oldItem.equals(newItem)) {
-                controller.loadTable(newItem);
-                deleteRowButton.setVisible(newItem.equals("Resident"));
-            }
-        });
+        selectTables.getItems().add("Advance Search");
 
         GridPane.setMargin(selectTables, new Insets(0,0,10, 0));
         selectInsertDeleteBox.getChildren().add(selectTables);
@@ -127,30 +122,38 @@ public class MainWindow implements TableViewUI {
 
         VBox insertDeleteBox = new VBox(5);
 
-        Button insertButton = new Button("Insert a Resident");
+        insertButton = new Button("Insert a Resident");
         insertButton.prefWidthProperty().bind(insertDeleteBox.widthProperty());
         insertDeleteBox.getChildren().add(insertButton);
         selectInsertDeleteBox.getChildren().add(insertDeleteBox);
         insertButton.setOnAction(event -> {
             Stage insertStage = new Stage();
             Scene insertScene = new ResidentInsert(controller).getScene();
+            insertStage.setTitle("Insert a Resident Here");
             insertStage.setResizable(false);
             insertStage.setScene(insertScene);
             insertStage.show();
         });
+//        insertButton.setVisible(false);
+        insertButton.setDisable(true);
 
-        deleteRowButton = new Button("Delete the selected row");
+        deleteRowButton = new Button("Delete selected Resident");
         deleteRowButton.prefWidthProperty().bind(insertDeleteBox.widthProperty());
         insertDeleteBox.getChildren().add(deleteRowButton);
         deleteRowButton.setOnAction(event -> {
             List<String> listOfStrToDelete = new ArrayList<>();
-            String[] stringAr = tableView.getComponent().getSelectionModel().getSelectedItems().get(0).toString().split(",");
-            for (String str : stringAr) {
-                listOfStrToDelete.add(str.trim());
+            ObservableList<ObservableList<String>> selectedItems = tableView.getSelectionModel().getSelectedItems();
+            if (selectedItems.size() > 0) {
+                String [] rowArr = selectedItems.get(0).toString().split(",");
+                for (String str : rowArr) {
+                    listOfStrToDelete.add(str.trim());
+                }
+                controller.deleteTable(listOfStrToDelete);
             }
-            controller.deleteTable(listOfStrToDelete);
         });
-        deleteRowButton.setVisible(false);
+//        deleteRowButton.setVisible(false);
+        deleteRowButton.setDisable(true);
+
 
 
         GridPane.setHalignment(selectTables, HPos.CENTER);
@@ -171,11 +174,40 @@ public class MainWindow implements TableViewUI {
          * Bottom Pane
          * ==================
          */
-        SearchView searchView = new SearchView(controller);
-        outerPane.add(searchView, 0, 1, 2, 1);
-        GridPane.setMargin(searchView, new Insets(25, 0,10,11));
-        GridPane.setHalignment(searchView, HPos.CENTER);
-        GridPane.setValignment(searchView, VPos.CENTER);
+
+            AdvanceSearchPane searchView = new AdvanceSearchPane(controller);
+            outerPane.add(searchView, 0, 1, 2, 1);
+            GridPane.setMargin(searchView, new Insets(25, 0,10,11));
+            GridPane.setHalignment(searchView, HPos.CENTER);
+            GridPane.setValignment(searchView, VPos.CENTER);
+            searchView.setDisable(true);
+
+
+        /*
+        Action event for select table
+         */
+        selectTables.getSelectionModel().selectFirst();
+        selectTables.valueProperty().addListener((obs, oldItem, newItem) -> {
+            if (!oldItem.equals(newItem)) {
+                if(newItem.equals("Advance Search")) {
+                    filterPane.setDisable(true);
+                    viewColumnsPane.setDisable(true);
+                    searchView.setDisable(false);
+                    if (!searchView.runIfSelected()) {
+                        tableView.buildData(new Table(new String[]{}));
+                    }
+
+                }else {
+                    controller.loadTable(newItem);
+                    deleteRowButton.setDisable(!newItem.equals("Resident"));
+                    insertButton.setDisable(!newItem.equals("Resident"));
+                    filterPane.setDisable(false);
+                    viewColumnsPane.setDisable(false);
+                    searchView.setDisable(true);
+                }
+            }
+        });
+
 
         /*
          * INITIALIZE
@@ -198,6 +230,7 @@ public class MainWindow implements TableViewUI {
         return tableScene;
     }
 
+
     @Override
     public void updateVisibleTable(Table table) {
         Platform.runLater(() -> {
@@ -207,6 +240,7 @@ public class MainWindow implements TableViewUI {
             }
             filterPane.updateFilterList(columnNames, table.getName());
             viewColumnsPane.updateFilterList(columnNames, table.getName());
+//            aggregateTest.updateComboForAggregate(columnNames, table.getName(), "groupByCombo");
             tableView.buildData(table);
         });
     }
