@@ -1,10 +1,10 @@
 package interfaces;
 
+import model.AdvanceQueries;
 import model.table.Table;
-import model.table.TableModel;
+import model.UpdateObject;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -23,17 +23,14 @@ public interface DataHandlerDelegate {
      */
     void initializeDDL();
 
-
-    void performQuery(String query, Consumer<Table> callback);
-
     /**
      * Insert the specified model into the database
      * @param data model to be inserted into the database
      */
-    void insertTableData(TableModel data);
+    void insertTableData(Map<String, String> data, Consumer<String> onSuccess, Consumer<String> onError);
 
 
-    void updateTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError);
+    void updateTableData(String prettyTableName, UpdateObject updateObject, Consumer<String> onSuccess, Consumer<String> onError);
 
     void deleteTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError);
 
@@ -45,8 +42,10 @@ public interface DataHandlerDelegate {
      */
      void getTableData(String tableToLookup, Consumer<Table> callback);
 
-    void filterTable(String tableToLookup, String filter, String column, Consumer<Table> callback);
+    void filterTable(String tableToLookup, String filter, String column, List<String> columnsToDisplay, Consumer<Table> callback);
 
     void getSpecificTableData(String tableName, List<String> columnsToGet, List<String> columnsToMatch, List<String> dataToMatch, Consumer<Table> callback);
+
+    void runAdvancedQuery(AdvanceQueries query, String input, Consumer<Table> onSuccess, Consumer<String> onError);
 
 }

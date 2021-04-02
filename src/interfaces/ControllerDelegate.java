@@ -1,8 +1,9 @@
 package interfaces;
 
+import model.AdvanceQueries;
 import model.table.Table;
+import model.UpdateObject;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -10,12 +11,6 @@ import java.util.function.Consumer;
 public interface ControllerDelegate {
 
  ConnectionStateDelegate login(String username, String password);
-
- /**
-  * Performs specified query, returns all data to TableViewUI
-  * @param query queryy to perform
-  */
- void performQuery(String query);
 
  /**
   * Loads initial SQL script
@@ -32,7 +27,7 @@ public interface ControllerDelegate {
   * Sets specified TableUI
   * @param ui ui to use to display data
   */
- void setUI(TableViewUI ui);
+ void setUI(MainUIView ui);
 
  /**
   * Loads specified table from Oracle, returns all columns to TableViewUI
@@ -40,13 +35,17 @@ public interface ControllerDelegate {
   */
  void loadTable(String tableName);
 
- void filter(String filter, String column);
+ void filter(String filter, String column, List<String> columnsToDisplay);
 
  void getDataForStudentInsertion(String tableName, List<String> columnsToGet, List<String> columnsToMatch, List<String> dataToMatch, Consumer<Table> callback);
 
 
- void updateTable(List<String> rowData);
+ void updateTable(UpdateObject updateObject);
 
  void deleteTable(List<String> rowData);
+
+ void insertStudent(Map<String, String> data);
+
+ void runAdvancedQuery(AdvanceQueries query, String input);
 
 }

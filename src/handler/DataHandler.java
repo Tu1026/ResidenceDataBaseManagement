@@ -2,12 +2,11 @@ package handler;
 
 import interfaces.DataHandlerDelegate;
 import javafx.application.Platform;
-import model.OracleColumnNames;
+import model.*;
+import sql.AdvancedQueryList;
 import sql.PrintablePreparedStatement;
 import model.table.Column;
 import model.table.Table;
-import model.table.TableModel;
-import model.OracleTableNames;
 
 import javax.swing.*;
 import java.sql.*;
@@ -30,17 +29,98 @@ public final class DataHandler implements DataHandlerDelegate {
         new OracleSchemaBuilder().initializeSchema(connection);
     }
 
+
     @Override
-    public void insertTableData(TableModel data) {
-        throw new RuntimeException("Insert TableData not implemented yet");
+    public void insertTableData(Map<String, String> data, Consumer<String> onSuccess, Consumer<String> onError) {
+        String resInfo = "INSERT INTO RESIDENTINFO VALUES (?, ?, ?, ?, ?)";
+        String resAddress = "INSERT INTO RESIDENTADDRESS VALUES (?, ?, ?, ?, ?, ?)";
+
+        try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(resInfo), resInfo)){
+            connection.setAutoCommit(false);
+            ps.setObject(1, data.get("STUDENTNUMBER"));
+            ps.setObject(2, data.get("EMAIL"));
+            ps.setObject(3, data.get("NAME"));
+            ps.setObject(4, data.get("DOB"));
+            ps.setObject(5, data.get("YEARSINRESIDENCE"));
+            ps.executeUpdate();
+
+            PrintablePreparedStatement ps2 = new PrintablePreparedStatement(connection.prepareStatement(resAddress), resAddress);
+            ps2.setObject(1, data.get("EMAIL"));
+            ps2.setObject(2, data.get("UNUMBER"));
+            ps2.setObject(3, data.get("FNUMBER"));
+            ps2.setObject(4, data.get("HOUSENAME"));
+            ps2.setObject(5, data.get("RESSTADDRESS"));
+            ps2.setObject(6, data.get("RESZIPCODE"));
+            ps2.executeUpdate();
+
+            connection.commit();
+            connection.setAutoCommit(true);
+            onSuccess.accept("Student '" + data.get("NAME") + "' inserted successfully");
+        } catch (SQLException throwables) {
+            onError.accept(throwables.getMessage());
+            throwables.printStackTrace();
+        }
     }
 
     @Override
-    public void updateTableData(String prettyTableName, List<String> columnsToUpdate, Consumer<Table> onSuccess, Consumer<String> onError) {
+    public  void updateTableData(String prettyTableName, UpdateObject updateObject, Consumer<String> onSuccess, Consumer<String> onError) {
         String [] tablesToLookup = getTablesToLookup(prettyTableName);
-        if (tablesToLookup.length == 1){
 
+        updateObject.colToUpdate = updateObject.colToUpdate.trim();
+        if (tablesToLookup.length > 1) {
+            onError.accept("Cannot update table " + prettyTableName);
+            return;
         }
+
+        if (updateObject.conditionsToCheck.containsKey(updateObject.colToUpdate)) {
+            onError.accept("Column '" + updateObject.colToUpdate + "' cannot be updated");
+            return;
+        }
+
+        DataTypeErrors error = verifyDataType(prettyTableName, updateObject.colToUpdate, updateObject.newValue);
+
+        switch(error){
+            case VALID: break;
+            case NOT_A_STRING: onError.accept("Input for column '" + updateObject.colToUpdate + "' cannot be a number"); return;
+            case NOT_A_NUM: onError.accept("Input for column '" + updateObject.colToUpdate + "' must be a whole number"); return;
+            case TOO_LONG: onError.accept("Input is too long"); return;
+            case CANNOT_BE_NULL: onError.accept("Data in column '" + updateObject.colToUpdate + "' cannot be empty"); return;
+            case OTHER: onError.accept("Some other error occured"); return;
+        }
+
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("UPDATE ").append(tablesToLookup[0]);
+        queryBuilder.append(" SET ").append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(updateObject.colToUpdate)).append(" = ? WHERE");
+        for (String column: updateObject.conditionsToCheck.keySet()){
+            queryBuilder.append(" ").append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(column)).append(" = ?").append(" AND");
+        }
+
+        String query = queryBuilder.toString().replaceAll("AND$", "").trim();
+
+        try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)){
+            connection.setAutoCommit(false);
+            ps.setObject(1, updateObject.newValue);
+            int counter = 2;
+            for (String column: updateObject.conditionsToCheck.keySet()){
+                ps.setObject(counter, updateObject.conditionsToCheck.get(column));
+                counter++;
+            }
+
+           ps.executeUpdate();
+
+            connection.commit();
+            connection.setAutoCommit(true);
+            if (updateObject.newValue.trim().equals("")){
+                updateObject.newValue = "(empty)";
+            }
+
+            onSuccess.accept("");
+
+        } catch (SQLException throwables) {
+            onError.accept(throwables.getMessage());
+            throwables.printStackTrace();
+        }
+
     }
 
     @Override
@@ -50,10 +130,10 @@ public final class DataHandler implements DataHandlerDelegate {
             return;
         }
 
-        String query = "DELETE FROM ResidentInfo WHERE StudentNumber LIKE ?";
+        String query = "DELETE FROM ResidentInfo WHERE StudentNumber = ?";
 
         try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)){
-            ps.setObject(1, columnsToUpdate.get(1) + "%");
+            ps.setObject(1, columnsToUpdate.get(1));
             ps.executeUpdate();
             onSuccess.accept(null);
         } catch (SQLException throwables) {
@@ -81,20 +161,21 @@ public final class DataHandler implements DataHandlerDelegate {
 
 
     @Override
-    public void filterTable(String prettyTable, String filter, String column, Consumer<Table> onSuccess) {
+    public void filterTable(String prettyTable, String filter, String column, List<String> columnsToDisplay, Consumer<Table> onSuccess) {
         String[] tablesToLookup = getTablesToLookup(prettyTable);
-        String query = buildTableQuery(tablesToLookup);
-        filter = "%" + filter + "%";
+        String query = buildTableQuery(tablesToLookup, columnsToDisplay);
+        filter = "%" + filter.trim() + "%";
         String lowerCaseFilter = filter.toLowerCase();
-        String upperCaseFilter = filter.toUpperCase();
         column = OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(column);
-        query += " WHERE " + column + " LIKE ? OR " + column + " LIKE ?";
+        if (filter.length() != 2) {
+            query += " WHERE LOWER(" + column + ") LIKE ?";
+        }
         Table table = null;
 
         try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
-            ps.setObject(1, lowerCaseFilter);
-            ps.setObject(2, upperCaseFilter);
-
+            if (filter.length() != 2) {
+                ps.setObject(1, lowerCaseFilter);
+            }
             table = buildTable(prettyTable, tablesToLookup, ps);
 
         } catch (SQLException | ExecutionException | InterruptedException throwables) {
@@ -121,7 +202,7 @@ public final class DataHandler implements DataHandlerDelegate {
             query.append(" WHERE ");
 
             for (String key: columnsToMatch) {
-                query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(key)).append( " LIKE ").append("?").append(" AND ");
+                query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(key)).append( " = ").append("?").append(" AND ");
             }
         }
 
@@ -131,7 +212,7 @@ public final class DataHandler implements DataHandlerDelegate {
         Table table = null;
         try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(queryStr), queryStr)){
             for (int i = 0; i < columnsToMatch.size(); i++) {
-                ps.setString(i+1, "%" + dataToMatch.get(i).trim() +"%");
+                ps.setString(i+1, dataToMatch.get(i).trim());
             }
             table = buildTable(tableName, new String[]{tableName}, ps);
 
@@ -145,34 +226,44 @@ public final class DataHandler implements DataHandlerDelegate {
         }
     }
 
-    private Map<String, List<String>> getPKForTable(String[] tableToLookup) {
-        Map<String, List<String>> PKs = new HashMap<>();
-        for (String table : tableToLookup) {
-            PKs.put(table, getPKForTable(table));
-        }
-        return PKs;
-    }
+    @Override
+    public void runAdvancedQuery(AdvanceQueries query, String input, Consumer<Table> onSuccess, Consumer<String> onError) {
+        String queryStr = AdvancedQueryList.QUERY_MAP.get(query);
+        System.out.println(query.toString());
 
-    private List<String> getPKForTable(String oracleTableName) {
-        List<String> PK = new ArrayList<>();
-        String query = "SELECT column_name FROM user_cons_columns WHERE constraint_name = " +
-                "(SELECT constraint_name FROM all_constraints ac  WHERE UPPER(ac.table_name) = UPPER(?) AND CONSTRAINT_TYPE = 'P' AND ac.OWNER = USER)";
-        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false)) {
-            ps.setObject(1, oracleTableName);
-            ResultSet resultSet = ps.executeQuery();
-
-            while (resultSet.next()) {
-                for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++)
-                    PK.add(resultSet.getString(i));
+        try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(queryStr), queryStr)) {
+            if (queryStr.contains("?")) {
+                ps.setObject(1, input);
             }
-        }catch (SQLException e) {
-            e.printStackTrace();
+
+            Table table = executeQueryAndParse(ps);
+            onSuccess.accept(table);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            onError.accept(throwables.getMessage());
         }
-        return PK;
     }
 
     private String buildTableQuery(String[] tablesToLookup) {
-        StringBuilder query = new StringBuilder("SELECT * FROM ");
+        List<String> singleQuery = new ArrayList<>(Collections.singletonList("All"));
+        return buildTableQuery(tablesToLookup, singleQuery);
+    }
+
+    private String buildTableQuery(String[] tablesToLookup, List<String> columnsToQuery) {
+        StringBuilder query = new StringBuilder("SELECT ");
+
+        if (columnsToQuery.size() == 1 && columnsToQuery.get(0).equalsIgnoreCase("All")){
+            query.append("* ");
+        }else {
+            for (int i = 0; i < columnsToQuery.size() - 1; i++) {
+                query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(columnsToQuery.get(i))).append(", ");
+            }
+
+            query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(columnsToQuery.get(columnsToQuery.size() - 1))).append(" ");
+        }
+
+       query.append("FROM ");
         query.append(tablesToLookup[0]);
         if (tablesToLookup.length > 1) {
             for (int i = 1; i < tablesToLookup.length; i++) {
@@ -209,7 +300,6 @@ public final class DataHandler implements DataHandlerDelegate {
 
 
     private Table executeQueryAndParse(PreparedStatement ps) throws SQLException {
-        System.out.println("Running query ...");
         ResultSet results = ps.executeQuery();
         int cols = results.getMetaData().getColumnCount();
         String[] columnNames = new String[cols];
@@ -230,17 +320,102 @@ public final class DataHandler implements DataHandlerDelegate {
         return table;
     }
 
-    // TODO: Delete this in the future
-    @Override
-    public void performQuery(String query, Consumer<Table> callback) {
-        Table table = null;
-        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)) {
-            table = this.executeQueryAndParse(ps);
+    private Map<String, List<String>> getPKForTable(String[] tableToLookup) {
+        Map<String, List<String>> PKs = new HashMap<>();
+        for (String table : tableToLookup) {
+            PKs.put(table, getPKForTable(table));
+        }
+        return PKs;
+    }
+
+    private List<String> getPKForTable(String oracleTableName) {
+        List<String> PK = new ArrayList<>();
+        String query = "SELECT column_name FROM user_cons_columns WHERE constraint_name = " +
+                "(SELECT constraint_name FROM all_constraints ac  WHERE UPPER(ac.table_name) = UPPER(?) AND CONSTRAINT_TYPE = 'P' AND ac.OWNER = USER)";
+        try (PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false)) {
+            ps.setObject(1, oracleTableName);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++)
+                    PK.add(resultSet.getString(i));
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return PK;
+    }
+
+    private DataTypeErrors verifyDataType(String prettyTable, String colToUpdate, String newValue) {
+        String query = "SELECT data_type, data_length FROM all_tab_columns WHERE table_name = ? AND COLUMN_NAME = ?";
+        String query2 = "select CONSTRAINT_NAME from  USER_CONS_COLUMNS " +
+                "WHERE table_name = ? " +
+                "and column_name = ?";
+        try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)){
+            ps.setObject(1, OracleTableNames.GET_ORACLE_NAME.get(prettyTable));
+            ps.setObject(2, OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(colToUpdate));
+            ResultSet rs = ps.executeQuery();
+
+            rs.next();
+            String type = rs.getString("DATA_TYPE");
+            int length = rs.getInt("DATA_LENGTH");
+
+
+            PrintablePreparedStatement ps2 = new PrintablePreparedStatement(connection.prepareStatement(query2), query2);
+            ps2.setObject(1, OracleTableNames.GET_ORACLE_NAME.get(prettyTable));
+            ps2.setObject(2, OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(colToUpdate));
+
+            rs = ps2.executeQuery();
+            boolean hasNullConstraint = checkIfColumnHasNullConstraint(rs);
+
+            if (type.equalsIgnoreCase("Number")) {
+                if (!isInteger(newValue) && !valueIsNull(newValue)) {
+                    return DataTypeErrors.NOT_A_NUM;
+                }
+            }
+
+            if (type.equalsIgnoreCase("varchar2")) {
+                if (valueIsTooLong(newValue, length)) { return DataTypeErrors.TOO_LONG; }
+                if (isInteger(newValue)) { return DataTypeErrors.NOT_A_STRING; }
+            }
+
+            if (hasNullConstraint && valueIsNull(newValue)) { return DataTypeErrors.CANNOT_BE_NULL; }
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        } finally {
-            callback.accept(table);
+            return DataTypeErrors.OTHER;
+        }
+
+        return DataTypeErrors.VALID;
+    }
+
+    private boolean valueIsTooLong(String value, int length){
+        return value.length() > length;
+    }
+
+    private boolean valueIsNull(String newValue) {
+        return newValue.trim().equals("");
+    }
+
+    private boolean isInteger(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        }catch (NumberFormatException e){
+            return false;
         }
     }
 
+    private boolean checkIfColumnHasNullConstraint(ResultSet rs) throws SQLException {
+        boolean hasNull = false;
+        while (rs.next()) {
+            if (rs.getMetaData().getColumnCount() > 0){
+                hasNull = true;
+                break;
+            }
+        }
+        return hasNull;
+    }
 }
+
+

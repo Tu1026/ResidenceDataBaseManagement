@@ -19,7 +19,7 @@ public class TableRow {
 
     public void insert(Column column, String attributeData){
         if (attributeData == null) {
-            attributeData = "No Data";
+            attributeData = "(empty)";
         }
         data.put(column, attributeData.trim());
     }
