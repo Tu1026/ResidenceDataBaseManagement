@@ -10,12 +10,25 @@ import javafx.scene.layout.*;
 import model.AdvanceQueries;
 
 import javax.swing.*;
+import java.util.HashMap;
+import java.util.stream.Stream;
 
 public class AdvanceSearchPane extends GridPane {
     private final ComboBox<String> advanceCombo = new ComboBox<>();
     private final ControllerDelegate controller;
     private final TextField conditionField;
     private TextArea queryExplaination;
+    private final HashMap<String, String> queryDescription = new HashMap<String,String>() {{
+        put("GROUPBYEXPLAIN", "RAs, residence advisors, or SRA, senior residence advisors, are employees who work in the residence to support the residents. They could be long time employees who have " +
+                "worked for many years in the residence before but they could also be brand new employees that have never worked in residence before. " +
+                "Therefore, you can run this query to see for each of the age group what is the average years of experience among all the advisors");
+        put("NESTEDEXPLAIN", "A person is considered to be living on their own when there are no other people in the same unit. This query allows you find the number of people who are currently living on their own and " +
+                "have been in residence longer than everyone else (can have multiple) in each house");
+        put("JOINEXPLAIN", "Students of different age are all able to live in residence. Using this query you can find of all the students older than <X> what is the average age and the oldest age in each house");
+        put("DIVISIONEXPLAIN", "Different units have different capacity. Using this query you can find the house and information about it that has 'all' of the units with capacity 5 and no other house has a unit with a capacity of 5");
+        put("HAVINGEXPLAIN", "A unit can have vacancies if it can still allow new residents to move in. This query will show you how all the floors that have more than <X> vacancies in a house");
+    }};
+
 
     public AdvanceSearchPane(ControllerDelegate controller){
         this.controller = controller;
@@ -146,7 +159,7 @@ public class AdvanceSearchPane extends GridPane {
 
     private void updateQueryDescription(AdvanceQueries advance) {
         String explanation = advance.toString() + "EXPLAIN";
-        queryExplaination.setText(AdvanceQueries.valueOf(explanation).getText());
+        queryExplaination.setText(queryDescription.get(explanation));
 
     }
 
