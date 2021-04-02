@@ -440,14 +440,14 @@ VALUES(2, 2,  'male' , 1, (SELECT fNumber FROM Floor WHERE fNumber = 10 AND hous
        (SELECT resZipCode FROM Floor WHERE fNumber = 10 AND houseName = 'Haida' AND resStAddress = '2205 West Mall' AND resZipCode = 'V6T 1Z4'));
 
 INSERT INTO Unit
-VALUES(5, 2, 'female', 1, (SELECT fNumber FROM Floor WHERE fNumber = 4 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
+VALUES(5, 5, 'female', 4, (SELECT fNumber FROM Floor WHERE fNumber = 4 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
        (SELECT houseName FROM Floor WHERE fNumber = 4 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
        (SELECT resStAddress FROM Floor WHERE fNumber = 4 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
        (SELECT resZipCode FROM Floor WHERE fNumber = 4 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'));
 
 
 INSERT INTO Unit
-VALUES(13, 4, 'male', 3, (SELECT fNumber FROM Floor WHERE fNumber = 15 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
+VALUES(13, 5, 'male', 4, (SELECT fNumber FROM Floor WHERE fNumber = 15 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
        (SELECT houseName FROM Floor WHERE fNumber = 15 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
        (SELECT resStAddress FROM Floor WHERE fNumber = 15 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'),
        (SELECT resZipCode FROM Floor WHERE fNumber = 15 AND houseName = 'Building Five' AND resStAddress = '2205 Lower Mall' AND resZipCode = 'V6T 1Z4'));
