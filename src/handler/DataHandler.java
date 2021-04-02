@@ -53,7 +53,6 @@ public final class DataHandler implements DataHandlerDelegate {
             ps2.setObject(6, data.get("RESZIPCODE"));
             ps2.executeUpdate();
 
-
             connection.commit();
             connection.setAutoCommit(true);
             onSuccess.accept("Student '" + data.get("NAME") + "' inserted successfully");
@@ -114,8 +113,9 @@ public final class DataHandler implements DataHandlerDelegate {
             if (updateObject.newValue.trim().equals("")){
                 updateObject.newValue = "(empty)";
             }
-            onSuccess.accept("Updated row in column '" + updateObject.colToUpdate  +  "' \n of '"+ prettyTableName +
-                    "' to '" + updateObject.newValue + "' successfully.\n Table reloaded");
+            //onSuccess.accept("Updated row in column '" + updateObject.colToUpdate  +  "' \n of '"+ prettyTableName +
+                   // "' to '" + updateObject.newValue + "' successfully.\n Table reloaded");
+            onSuccess.accept(""); // DO NOT DISPLAY MSG
 
         } catch (SQLException throwables) {
             onError.accept(throwables.getMessage());
@@ -203,7 +203,7 @@ public final class DataHandler implements DataHandlerDelegate {
             query.append(" WHERE ");
 
             for (String key: columnsToMatch) {
-                query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(key)).append( " LIKE ").append("?").append(" AND ");
+                query.append(OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(key)).append( " = ").append("?").append(" AND ");
             }
         }
 
@@ -213,7 +213,7 @@ public final class DataHandler implements DataHandlerDelegate {
         Table table = null;
         try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(queryStr), queryStr)){
             for (int i = 0; i < columnsToMatch.size(); i++) {
-                ps.setString(i+1, "%" + dataToMatch.get(i).trim() +"%");
+                ps.setString(i+1, dataToMatch.get(i).trim());
             }
             table = buildTable(tableName, new String[]{tableName}, ps);
 
@@ -302,7 +302,6 @@ public final class DataHandler implements DataHandlerDelegate {
 
 
     private Table executeQueryAndParse(PreparedStatement ps) throws SQLException {
-        System.out.println("Running query ...");
         ResultSet results = ps.executeQuery();
         int cols = results.getMetaData().getColumnCount();
         String[] columnNames = new String[cols];
@@ -352,79 +351,37 @@ public final class DataHandler implements DataHandlerDelegate {
     private DataTypeErrors verifyDataType(String prettyTable, String colToUpdate, String newValue) {
         String query = "SELECT data_type, data_length FROM all_tab_columns WHERE table_name = ? AND COLUMN_NAME = ?";
         String query2 = "select CONSTRAINT_NAME from  USER_CONS_COLUMNS " +
-                "WHERE table_name = ?" +
+                "WHERE table_name = ? " +
                 "and column_name = ?";
         try(PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query)){
             ps.setObject(1, OracleTableNames.GET_ORACLE_NAME.get(prettyTable));
             ps.setObject(2, OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(colToUpdate));
             ResultSet rs = ps.executeQuery();
 
-            String type = "";
-            int length = 0;
+            rs.next();
+            String type = rs.getString("DATA_TYPE");
+            int length = rs.getInt("DATA_LENGTH");
 
-
-            while (rs.next()) {
-               for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                   if (rs.getMetaData().getColumnLabel(i).equalsIgnoreCase("data_type")) {
-                        type = rs.getString(i);
-                   }
-                   if (rs.getMetaData().getColumnLabel(i).equalsIgnoreCase("data_length")) {
-                       length = rs.getInt(i);
-                   }
-               }
-            }
 
             PrintablePreparedStatement ps2 = new PrintablePreparedStatement(connection.prepareStatement(query2), query2);
             ps2.setObject(1, OracleTableNames.GET_ORACLE_NAME.get(prettyTable));
             ps2.setObject(2, OracleColumnNames.GET_ORACLE_COLUMN_NAMES.get(colToUpdate));
 
             rs = ps2.executeQuery();
-            boolean hasNull = false;
-            while (rs.next()) {
-                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                    hasNull = true;
-                    if (rs.getString(i).equalsIgnoreCase("SYS_C00210215")){
-
-                    }
-
-                }
-            }
-
-            if (hasNull) {
-                if (newValue.trim().equals("")) {
-                    return DataTypeErrors.CANNOT_BE_NULL;
-                }
-            }
-
-            //System.out.println("Type: " + type + ", length: " + length);
+            boolean hasNullConstraint = checkIfColumnHasNullConstraint(rs);
 
             if (type.equalsIgnoreCase("Number")) {
-                try {
-                    Integer.parseInt(newValue);
-                }catch (NumberFormatException e){
-                    if (hasNull) {
-                        return DataTypeErrors.NOT_A_NUM;
-                    }
+                if (!isInteger(newValue) && !valueIsNull(newValue)) {
+                    return DataTypeErrors.NOT_A_NUM;
                 }
             }
 
             if (type.equalsIgnoreCase("varchar2")) {
-                if (newValue.length() > length) {
-                    return DataTypeErrors.TOO_LONG;
-                }
-                try {
-                    Integer.parseInt(newValue);
-                    return DataTypeErrors.NOT_A_STRING;
-                } catch (NumberFormatException e) {
-                   // Valid
-                }
+                if (valueIsTooLong(newValue, length)) { return DataTypeErrors.TOO_LONG; }
+                if (isInteger(newValue)) { return DataTypeErrors.NOT_A_STRING; }
             }
 
-            if (hasNull) {
-                if (newValue.trim().equals("")) {
-                    return DataTypeErrors.CANNOT_BE_NULL;
-                }
-            }
+            if (hasNullConstraint && valueIsNull(newValue)) { return DataTypeErrors.CANNOT_BE_NULL; }
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -432,6 +389,34 @@ public final class DataHandler implements DataHandlerDelegate {
         }
 
         return DataTypeErrors.VALID;
+    }
+
+    private boolean valueIsTooLong(String value, int length){
+        return value.length() > length;
+    }
+
+    private boolean valueIsNull(String newValue) {
+        return newValue.trim().equals("");
+    }
+
+    private boolean isInteger(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        }catch (NumberFormatException e){
+            return false;
+        }
+    }
+
+    private boolean checkIfColumnHasNullConstraint(ResultSet rs) throws SQLException {
+        boolean hasNull = false;
+        while (rs.next()) {
+            if (rs.getMetaData().getColumnCount() > 0){
+                hasNull = true;
+                break;
+            }
+        }
+        return hasNull;
     }
 }
 

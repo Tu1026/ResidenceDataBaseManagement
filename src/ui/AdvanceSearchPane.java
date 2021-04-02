@@ -11,22 +11,33 @@ import model.AdvanceQueries;
 
 import javax.swing.*;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
+
+import static model.AdvanceQueries.*;
 
 public class AdvanceSearchPane extends GridPane {
     private final ComboBox<String> advanceCombo = new ComboBox<>();
     private final ControllerDelegate controller;
     private final TextField conditionField;
-    private TextArea queryExplaination;
-    private final HashMap<String, String> queryDescription = new HashMap<String,String>() {{
-        put("GROUPBYEXPLAIN", "RAs, residence advisors, or SRA, senior residence advisors, are employees who work in the residence to support the residents. They could be long time employees who have " +
-                "worked for many years in the residence before but they could also be brand new employees that have never worked in residence before. " +
+    private final TextArea queryExplaination;
+    private final Map<AdvanceQueries, String> queryDescription = new HashMap<AdvanceQueries, String>() {{
+        put(GROUPBY, "RAs, residence advisors, or SRA, senior residence advisors, are employees who work in the residence to support the residents. " +
+                "They could be long time employees who have " +
+                "worked for many years in the residence, or they could also be brand new employees that have never worked in a residence before. " +
                 "Therefore, you can run this query to see for each of the age group what is the average years of experience among all the advisors");
-        put("NESTEDEXPLAIN", "A person is considered to be living on their own when there are no other people in the same unit. This query allows you find the number of people who are currently living on their own and " +
-                "have been in residence longer than everyone else (can have multiple) in each house");
-        put("JOINEXPLAIN", "Students of different age are all able to live in residence. Using this query you can find of all the students older than <X> what is the average age and the oldest age in each house");
-        put("DIVISIONEXPLAIN", "Different units have different capacity. Using this query you can find the house and information about it that has 'all' of the units with capacity 5 and no other house has a unit with a capacity of 5");
-        put("HAVINGEXPLAIN", "A unit can have vacancies if it can still allow new residents to move in. This query will show you how all the floors that have more than <X> vacancies in a house");
+
+        put(NESTED, "A person is considered to be living on their own when there are no other people in the same unit. " +
+                "This query allows you find the number of people who are currently living on their own and " +
+                "have been in residence longer than everyone else in each house");
+
+        put(JOIN, "Students of different age are all able to live in residence. Using this query you can find " +
+                "of all the students older than <X> what is the average age and the oldest age in each house");
+        put(DIVISION, "Different units have different capacity. Using this query you can find the house and information " +
+                "about it that has 'all' of the units with capacity 5 and no other house has a unit with a capacity of 5");
+
+        put(HAVING, "A unit can have vacancies if it can still allow new residents to move in. This query will show you how" +
+                " all the floors that have more than <X> vacancies in a house");
     }};
 
 
@@ -34,7 +45,7 @@ public class AdvanceSearchPane extends GridPane {
         this.controller = controller;
 
         Label lineLabel = new Label("Advanced Search");
-        Label queryLabel = new Label("  Detail explanation of this query:");
+        Label queryLabel = new Label("  Detail explanation of this search:");
         setStyle("-fx-border-width: 1 0 0 0; -fx-border-color: #838181");
 
         //-------------------Set up constraints-----------------------//
@@ -74,9 +85,7 @@ public class AdvanceSearchPane extends GridPane {
 
 
         for(AdvanceQueries query: AdvanceQueries.values()) {
-            if (!query.toString().endsWith("EXPLAIN")) {
                 advanceCombo.getItems().add(query.getText());
-            }
         }
 
         advanceCombo.setMaxWidth(300);
@@ -104,7 +113,7 @@ public class AdvanceSearchPane extends GridPane {
         //----------------Setting up action events-------------//
         advanceCombo.valueProperty().addListener((obs, oldItem, newItem) -> {
             if (oldItem == null || !oldItem.equals(newItem)) {
-                conditionField.setVisible(newItem.equals(AdvanceQueries.JOIN.getText()) ||
+                conditionField.setVisible(newItem.equals(JOIN.getText()) ||
                         newItem.equals(AdvanceQueries.HAVING.getText()));
                         updateQueryDescription(AdvanceQueries.getEnum(newItem));
             }
@@ -138,7 +147,7 @@ public class AdvanceSearchPane extends GridPane {
             return false;
         }
         AdvanceQueries enumVal = AdvanceQueries.getEnum(advanceCombo.getValue());
-        if (enumVal == AdvanceQueries.JOIN ||
+        if (enumVal == JOIN ||
                 enumVal == AdvanceQueries.HAVING) {
             if (conditionField.getText().trim().isEmpty()){
                 displayError("You must enter a condition for this special query");
@@ -158,10 +167,7 @@ public class AdvanceSearchPane extends GridPane {
     }
 
     private void updateQueryDescription(AdvanceQueries advance) {
-        String explanation = advance.toString() + "EXPLAIN";
-        queryExplaination.setText(queryDescription.get(explanation));
-
+        queryExplaination.setText(queryDescription.get(advance));
     }
-
 
 }
